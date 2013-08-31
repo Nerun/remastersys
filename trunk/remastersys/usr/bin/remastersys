@@ -436,6 +436,9 @@ fi
 echo "export LIVE_USERNAME=\"$LIVEUSER\"" > /etc/live/config.conf
 echo "export LIVE_USER_FULLNAME=\"Live session user\"" >> /etc/live/config.conf
 echo "export LIVE_HOSTNAME=\"$LIVEUSER\"" >> /etc/live/config.conf
+echo "export LIVE_USER_DEFAULT_GROUPS=\"audio,cdrom,dialout,floppy,video,plugdev,netdev,powerdev,adm,sudo\"" >> /etc/live/config.conf
+echo "export LIVE_LOCALES=\"pt_BR.UTF-8\"" >> /etc/live/config.conf
+echo "export LIVE_TIMEZONE=\"America/Sao_Paulo\"" >> /etc/live/config.conf
 if [ "$1" = "backup" ]; then
 echo "export LIVE_NOCONFIGS=\"user-setup,sudo,locales,locales-all,tzdata,gdm,gdm3,kdm,lightdm,lxdm,nodm,slim,xinit,keyboard-configuration,gnome-panel-data,gnome-power-manager,gnome-screensaver,kde-services,debian-installer-launcher,login\"" >> /etc/live/config.conf
 fi

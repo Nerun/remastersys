@@ -45,20 +45,20 @@ fi
 
 mainmenu () {
 
-CHOICES=`$DIALOGMENU $TITLE"$TITLETEXT" --button=Ok:0 --button=Exit:1 $MENU $TEXT"Please Select which option you would like?" \
-Backup "Backup Complete System including User Data" \
-Dist "Make a Distributable copy to share with friends - both cdfs and iso will be created" \
-Distcdfs "Make a Distributable copy cd filesystem only - good if you want to add files to the cd" \
-Distiso "Make a Distributable iso file only - cd filesystem must have been completed already" \
-DistBoot "Select your own picture to be the default ISOLINUX boot menu background" \
-DistGrub "Select your own picture to be the default GRUB boot loader background" \
-DistSkel "Make your user customized settings the default configuration for the system" \
-DistPlymouth "Select your own picture to be the background for a simple custom plymouth theme" \
-Modify "Modify the remastersys config file to customize options" \
-Skelclean "Clear out config files from /etc/skel to remove all customizations" \
-Clear "Clear out the remastersys working folder" \
-Viewlog "View the remastersys.log" \
-Info "About Remastersys Backup"`
+CHOICES=`$DIALOGMENU $TITLE"$TITLETEXT" --button=Ok:0 --button=Exit:1 $MENU $TEXT"Escolha o que deseja fazer:" \
+Backup "Backup completo do sistema incluindo arquivos do usuário" \
+Dist "Criar uma 'distribuição' num 'Live CD' - serão criados CDFS (sistema de arquivos de CD) e ISO (imagem gravável de CD)" \
+Distcdfs "Criar somente o CDFS de um Live CD - ideal, se você deseja adicionar arquivos ao CD" \
+Distiso "Criar somente a ISO de um Live CD - o CDFS deve ter sido criado anteriormente" \
+DistBoot "Selecionar imagem de fundo do menu do Live CD" \
+DistGrub "Selecionar imagem de fundo do GRUB boot loader" \
+DistSkel "Tornar as configurações personalizadas do usuário atual em configurações padrões do sistema do Live CD" \
+DistPlymouth "Selecionar imagem de fundo para o Plymouth" \
+Modify "Modificar as configurações do Remastersys" \
+Skelclean "Limpar as configurações de /etc/skel para remover todas as personalizações" \
+Clear "Limpar a pasta de trabalho do Remastersys" \
+Viewlog "Visualizar o arquivo de log do Remastersys" \
+Info "Sobre o Remastersys Backup"`
 
 if [ "$?" = "0" ]; then
 CHOICE=`echo $CHOICES | cut -d "|" -f 1`

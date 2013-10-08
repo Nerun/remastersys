@@ -1,17 +1,14 @@
-Remastersys Installer Information
-=================================
+Informação do Instalador do ReFiSeFuQui
+=======================================
 
-No Warranty is provided with this installer or remastersys in general.
+Nenhuma garantia é dada com este instalador ou com o refisefuqui em geral.
 
-It is a gui or text mode installer that only uses up to 3 partitions - 1 for the root filesystem, 1 optional for /home and 1 swap.
+Este é um instalador em modo visual ou linha de comando que usa apenas 3 partições - 1 para root, 1 para /home (opcional), e 1 para swap.
 
-The swap partition will be automatically formatted and the root filesystem and /home filesystem will be formatted ext3 or ext4 based on selection.
+A partição swap será formatada automaticamente e as partições root e /home serão formatadas em ext3 ou ext4 conforme selecionado.
 
-A single new user will be created on the new system unless it is from the backup mode.
+Um único usuários erá criado no novo sistema a não ser que se trate da instalção de um backup, que pode conter mais usuários.
 
-It runs cfdisk for partitioning unless you run gui in which case it uses gparted so it is highly recommended to create your partition or resize them
-before running the installer.
+O cfdisk é usado para particionamento a não ser que a interface visual esteja em uso, neste caso o gparted será a opção padrão. É altamente recomendável criar partições antes de usar o Instalador.
 
-The installer has been able to install a small system based on Openbox/PCManFM/xcompmgr/cairo-dock on
-a laptop with only 128MB of ram that was booted with the text only mode.  The installed system ran fine.
-
+O instalador foi capaz de instalar um sistema pequeno baseado em Openbox / PCManFM / xcompmgr / cairo-dock em um laptop com apenas 128MB de RAM, inicializado em modo somente texto. O sistema instalado rodou bem.

@@ -1,25 +1,29 @@
 #!/bin/bash
 
-# remastersys-grubconfig
-# by Tony Brijeski (c)2009 GPLv2
+#  ReFiSeFuQui created by "Nerun"
+#
+#  Copyright 2013 Under the GNU GPL2 License
+#
+#  Fork of Remastersys-grubconfig, created by Tony "Fragadelic" Brijeski
+#
+#  Remastersys-grubconfig (c) 2009 GPLv2
 
 if [ "$1" = "" ]; then
 echo
-echo "Usage is remastersys-grubconfig /mountedlocation [root|rootmbr]"
+echo "Uso: refisefuqui-grubconfig /localdemontagem [root|rootmbr]"
 echo
-echo "/mountedlocation                  You must specify the full path"
-echo "root                       Install grub to root partition"
-echo "                           MBR will be used if no option present"
+echo "/localdemontagem       Você deve especificar o caminho completo"
+echo "root                   Instala o grub na partição raiz"
+echo "                       A MBR será usada se nenhuma opção for dada"
+echo
+echo "Ex.: instalar na partição raiz da instalação atual"
+echo
+echo "    refisefuqui-grubconfig / root"
 echo
 echo
-echo "eg. to install to root partition of the current install"
+echo "Ex.: instalar na MBR em um drive montado - se estiver rodando do Live CD"
 echo
-echo "    remastersys-grubconfig / root"
-echo
-echo
-echo "eg. to install to mbr on a mounted drive - if running from livecd"
-echo
-echo "    remastersys-grubconfig /mnt/sda1"
+echo "    refisefuqui-grubconfig /mnt/sda1"
 echo
 exit 1
 fi
@@ -27,7 +31,7 @@ fi
 testroot="`whoami`"
 
 if [ "$testroot" != "root" ]; then
-echo "remastersys-grubconfig must be run with root privileges."
+echo "refisefuqui-grubconfig deve ser usado com privilégios de superusuário."
 exit 1
 fi
 
@@ -77,7 +81,3 @@ grub-install --no-floppy $GRUBLOC
 update-grub
 sync
 fi
-
-
-
-

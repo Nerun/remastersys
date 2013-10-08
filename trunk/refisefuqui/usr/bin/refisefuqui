@@ -1,67 +1,72 @@
 #!/bin/bash
 
-# remastersys script to make an installable livecd/dvd from a Debian installed 
+# refisefuqui script to make an installable livecd/dvd from a Debian installed 
 # and customized system
 #
+# -----------------------------------------------------------
 #
-#  Created by Tony "Fragadelic" Brijeski
+#  ReFiSeFuQui created by "Nerun"
+#
+#  Copyright 2013 Under the GNU GPL2 License
+#
+#  Fork of Remastersys, created by Tony "Fragadelic" Brijeski
+#
+#  Remastersys:
 #
 #  Copyright 2007-2012 Under the GNU GPL2 License
 #
 #  Originally Created February 12th, 2007
 #
-#
-#
-#
-#
+# -----------------------------------------------------------
 
 # checking to make sure script is running with root privileges
-. /etc/remastersys/remastersys.version
+
+# load refisefuqui version file
+. /etc/refisefuqui/refisefuqui.version
 
 testroot="`whoami`"
 
 if [ "$testroot" != "root" ]; then
-     echo "Usage of remastersys $REMASTERSYSVERSION is as follows:"
+     echo "Uso do ReFiSeFuQui $REFISEFUQUIVERSION:"
      echo " "
-     echo "   sudo remastersys backup|clean|dist [cdfs|iso] [filename.iso]"
+     echo "   sudo refisefuqui backup|clean|dist [cdfs|iso] [nome_do_arquivo.iso]"
      echo " "
      echo " "
-     echo "Examples:"
+     echo "Exemplos:"
      echo " "
-     echo "   sudo remastersys backup   (to make a livecd/dvd backup of your system)"
+     echo "   sudo refisefuqui backup   (cria um Live CD/DVD contendo um backup do seu sistema)"
      echo " "
-     echo "   sudo remastersys backup custom.iso"
-     echo "                             (to make a livecd/dvd backup and call the iso custom.iso)" 
+     echo "   sudo refisefuqui backup custom.iso"
+     echo "                             (cria um Live CD/DVD backup, e nomeia a ISO para custom.iso)" 
      echo " "
-     echo "   sudo remastersys clean    (to clean up temporary files of remastersys)"
+     echo "   sudo refisefuqui clean    (apaga os arquivos temporários do refisefuqui)"
      echo " "
-     echo "   sudo remastersys dist     (to make a distributable livecd/dvd of your system)"
+     echo "   sudo refisefuqui dist     (cria uma distribuição em Live CD/DVD do seu sistema)"
      echo " "
-     echo "   sudo remastersys dist cdfs"
-     echo "                             (to make a distributable livecd/dvd filesystem only)"
+     echo "   sudo refisefuqui dist cdfs"
+     echo "                             (cria apenas o sistema de arquivos da distribuição Live CD/DVD)"
      echo " "
-     echo "   sudo remastersys dist iso custom.iso"
-     echo "                             (to make a distributable iso named custom.iso but only"
-     echo "                              if the cdfs is already present)"
+     echo "   sudo refisefuqui dist iso custom.iso"
+     echo "                             (cria uma ISO da distribuição com o nome custom.iso, mas apenas"
+     echo "                              se o sistema de arquivos já tiver sido criado)"
      echo " "
-     echo "   cdfs and iso options should only be used if you wish to modify something on the"
-     echo "   cd before the iso is created.  An example of this would be to modify the isolinux"
-     echo "   portion of the livecd/dvd"
+     echo "   As opções cdfs e iso só deverãos er usadas se você quiser modificar alguma coisa no"
+     echo "   CD antes de criar a ISO.  Um exemplo seria para modificar a porção isolinux do"
+     echo "   Live CD/DVD."
      echo " "
 
      exit 1
 fi
 
-# load the remastersys.conf file 
+# load the refisefuqui.conf file 
+. /etc/refisefuqui.conf
 
-. /etc/remastersys.conf
-
-# if the remastersys.conf file is incorrect or missing, make sure to set defaults
+# if the refisefuqui.conf file is incorrect or missing, make sure to set defaults
 
 if [ "$LIVEUSER" = "" ]; then
-#Somebody must have removed the username from the configuration file
-#echo 
-#this is a custom live user
+# Somebody must have removed the username from the configuration file
+# echo 
+# this is a custom live user
 LIVEUSER="custom"
 fi
 
@@ -82,15 +87,15 @@ fi
 
 
 if [ "$WORKDIR" = "" ]; then
-WORKDIR="/home/remastersys/remastersys"
-BASEWORKDIR="/home/remastersys"
+WORKDIR="/home/refisefuqui/refisefuqui"
+BASEWORKDIR="/home/refisefuqui"
 else
 BASEWORKDIR="$WORKDIR"
-WORKDIR="$WORKDIR/remastersys"
+WORKDIR="$WORKDIR/refisefuqui"
 fi
 
 if [ "$LIVECDLABEL" = "" ]; then
-LIVECDLABEL="Custom Live CD"
+LIVECDLABEL="Live CD Personalizado"
 fi
 
 if [ "$ISOBOOT" != "GRUB" ]; then
@@ -98,9 +103,9 @@ ISOBOOT="ISOLINUX"
 fi
 
 if [ "$2" = "cdfs" ]; then
-echo "Creating the cd filesystem only"
+echo "Criando o sistema de arquivos apenas"
 elif [ "$2" = "iso" ]; then
-echo "Creating the iso file only"
+echo "Criando o arquivo ISO apenas"
 elif [ "$2" = "" ]; then
 echo " "
 else
@@ -118,48 +123,48 @@ fi
 case $1  in
 
   backup)
-     echo "System Backup Mode Selected"
+     echo "Selecionado Modo de Backup de Sistema"
      ;;
 
   clean)
-     echo "Removing the build directory now..."
+     echo "Removendo o diretório de trabalho agora..."
      rm -rf $WORKDIR
-     echo "Done...Exiting"
+     echo "Feito... Saindo"
      exit 0
      ;;
 
   dist)
-     echo "Distribution Mode Selected"
+     echo "Selecionado Modo de Distribuição"
      ;;
 
 
   *)
-     echo "Usage of remastersys $REMASTERSYSVERSION is as follows:"
+     echo "Uso do ReFiSeFuQui $REFISEFUQUIVERSION:"
      echo " "
-     echo "   sudo remastersys backup|clean|dist [cdfs|iso] [filename.iso]"
+     echo "   sudo refisefuqui backup|clean|dist [cdfs|iso] [nome_do_arquivo.iso]"
      echo " "
      echo " "
-     echo "Examples:"
+     echo "Exemplos:"
      echo " "
-     echo "   sudo remastersys backup   (to make a livecd/dvd backup of your system)"
+     echo "   sudo refisefuqui backup   (cria um Live CD/DVD contendo um backup do seu sistema)"
      echo " "
-     echo "   sudo remastersys backup custom.iso"
-     echo "                             (to make a livecd/dvd backup and call the iso custom.iso)" 
+     echo "   sudo refisefuqui backup custom.iso"
+     echo "                             (cria um Live CD/DVD backup, e nomeia a ISO para custom.iso)" 
      echo " "
-     echo "   sudo remastersys clean    (to clean up temporary files of remastersys)"
+     echo "   sudo refisefuqui clean    (apaga os arquivos temporários do refisefuqui)"
      echo " "
-     echo "   sudo remastersys dist     (to make a distributable livecd/dvd of your system)"
+     echo "   sudo refisefuqui dist     (cria uma distribuição em Live CD/DVD do seu sistema)"
      echo " "
-     echo "   sudo remastersys dist cdfs"
-     echo "                             (to make a distributable livecd/dvd filesystem only)"
+     echo "   sudo refisefuqui dist cdfs"
+     echo "                             (cria apenas o sistema de arquivos da distribuição Live CD/DVD)"
      echo " "
-     echo "   sudo remastersys dist iso custom.iso"
-     echo "                             (to make a distributable iso named custom.iso but only"
-     echo "                              if the cdfs is already present)"
+     echo "   sudo refisefuqui dist iso custom.iso"
+     echo "                             (cria uma ISO da distribuição com o nome custom.iso, mas apenas"
+     echo "                              se o sistema de arquivos já tiver sido criado)"
      echo " "
-     echo "   cdfs and iso options should only be used if you wish to modify something on the"
-     echo "   cd before the iso is created.  An example of this would be to modify the isolinux"
-     echo "   portion of the livecd/dvd"
+     echo "   As opções cdfs e iso só deverãos er usadas se você quiser modificar alguma coisa no"
+     echo "   CD antes de criar a ISO.  Um exemplo seria para modificar a porção isolinux do"
+     echo "   Live CD/DVD."
      echo " "
      exit 1
      ;;
@@ -170,7 +175,7 @@ esac
 cdfs (){
 
 # Step 3 - Create the CD tree in $WORKDIR/ISOTMP
-echo "Checking if the $WORKDIR folder has been created"
+echo "Verificando se a pasta $WORKDIR já foi criada"
 if [ -d "$WORKDIR" ]; then
 rm -rf $WORKDIR/dummysys/var/*
 rm -rf $WORKDIR/dummysys/etc/*
@@ -195,7 +200,7 @@ fi
 
 
 
-echo "Copying /var and /etc to temp area and excluding extra files"
+echo "Copiando /var e /etc para área temporária e excluindo arquivos extras"
 
 if [ "$EXCLUDES" != "" ]; then
 for addvar in $EXCLUDES ; do
@@ -203,20 +208,20 @@ VAREXCLUDES="$VAREXCLUDES --exclude='$addvar' "
 done
 fi
 
-# if this is kde, copy the adept_notifier_auto.desktop to /etc/remastersys so the installer can put it back as live-initramfs removes it altogether
+# if this is kde, copy the adept_notifier_auto.desktop to /etc/refisefuqui so the installer can put it back as live-initramfs removes it altogether
 if [ -f /usr/share/autostart/adept_notifier_auto.desktop ]; then
-cp /usr/share/autostart/adept_notifier_auto.desktop /etc/remastersys/
+cp /usr/share/autostart/adept_notifier_auto.desktop /etc/refisefuqui/
 fi
 
 # copy trackerd stuff as live-initramfs disables it
 if [ -f /etc/xdg/autostart/tracker-applet.desktop ]; then
-cp /etc/xdg/autostart/tracker-applet.desktop /etc/remastersys
+cp /etc/xdg/autostart/tracker-applet.desktop /etc/refisefuqui
 fi
 if [ -f /etc/xdg/autostart/trackerd.desktop ]; then
-cp /etc/xdg/autostart/trackerd.desktop.xdg /etc/remastersys
+cp /etc/xdg/autostart/trackerd.desktop.xdg /etc/refisefuqui
 fi
 if [ -f /usr/share/autostart/trackerd.desktop ]; then
-cp /usr/share/autostart/trackerd.desktop.share /etc/remastersys
+cp /usr/share/autostart/trackerd.desktop.share /etc/refisefuqui
 fi
 
 #cleanup leftover live script if it exists
@@ -254,18 +259,18 @@ fi
 if [ -f /etc/X11/default-display-manager ]; then
 
 if [ "$SHOWICON" = "1" ]; then
-echo "Copying Install Icon to Desktop for live user"
+echo "Copiando Ícone de Instalação para Área de trabalho do usuário do Live CD"
 
 if [ ! -d $WORKDIR/dummysys/etc/skel/Desktop ]; then
 mkdir -p $WORKDIR/dummysys/etc/skel/Desktop
 fi
 
 if [ "`grep kdm /etc/X11/default-display-manager`" = "" ]; then
-cp /usr/share/applications/remastersys-installer.desktop $WORKDIR/dummysys/etc/skel/Desktop/
-chmod +x $WORKDIR/dummysys/etc/skel/Desktop/remastersys-installer.desktop
+cp /usr/share/applications/refisefuqui-installer.desktop $WORKDIR/dummysys/etc/skel/Desktop/
+chmod +x $WORKDIR/dummysys/etc/skel/Desktop/refisefuqui-installer.desktop
 else
-cp /usr/share/applications/remastersys-installer-kde.desktop $WORKDIR/dummysys/etc/skel/Desktop/
-chmod +x $WORKDIR/dummysys/etc/skel/Desktop/remastersys-installer-kde.desktop
+cp /usr/share/applications/refisefuqui-installer-kde.desktop $WORKDIR/dummysys/etc/skel/Desktop/
+chmod +x $WORKDIR/dummysys/etc/skel/Desktop/refisefuqui-installer-kde.desktop
 fi
 
 fi
@@ -324,7 +329,7 @@ done
 
 # remove the non system users on the passwd and group files and copy them to dummysys
 
-# see if any temp users left over from previous versions of remastersys as the process has now changed
+# see if any temp users left over from previous versions of refisefuqui as the process has now changed
 
 grep '^[^:]*:[^:]*:[5-9][0-9][0-9]:' /etc/passwd | awk -F ":" '{print "/usr/sbin/userdel -f",$1}'> $WORKDIR/cleantmpusers
 . $WORKDIR/cleantmpusers
@@ -359,21 +364,21 @@ fi
 
 # copy over some of the necessary stuff for the livecd
 
-if [ -f /etc/remastersys/preseed/*.seed ]; then
-cp /etc/remastersys/preseed/* $WORKDIR/ISOTMP/preseed/
+if [ -f /etc/refisefuqui/preseed/*.seed ]; then
+cp /etc/refisefuqui/preseed/* $WORKDIR/ISOTMP/preseed/
 fi
 
 #BOOT Type selected is GRUB
 if [ "$ISOBOOT" = "GRUB" ]; then
 
-cp /etc/remastersys/isolinux/memtest.bin $WORKDIR/ISOTMP/memtest.bin
+cp /etc/refisefuqui/isolinux/memtest.bin $WORKDIR/ISOTMP/memtest.bin
 
 mkdir -p $WORKDIR/ISOTMP/boot/grub
 mkdir -p $WORKDIR/ISOTMP/usr/share/grub
 cp -a /boot/grub/* $WORKDIR/ISOTMP/boot/grub/
 cp -a /usr/share/grub/* $WORKDIR/ISOTMP/usr/share/grub/
-cp /etc/remastersys/grub/grub.cfg $WORKDIR/ISOTMP/boot/grub/grub.cfg
-cp /etc/remastersys/grub.png $WORKDIR/ISOTMP/boot/grub/grub.png
+cp /etc/refisefuqui/grub/grub.cfg $WORKDIR/ISOTMP/boot/grub/grub.cfg
+cp /etc/refisefuqui/grub.png $WORKDIR/ISOTMP/boot/grub/grub.png
 
 sed -i -e 's/__LIVECDLABEL__/'"$LIVECDLABEL"'/g' $WORKDIR/ISOTMP/boot/grub/grub.cfg
 
@@ -390,13 +395,13 @@ else
 
 mkdir -p $WORKDIR/ISOTMP/isolinux
 
-if [ `ls /etc/remastersys/customisolinux` ]; then
+if [ `ls /etc/refisefuqui/customisolinux` ]; then
 
-cp /etc/remastersys/customisolinux/* $WORKDIR/ISOTMP/isolinux/
+cp /etc/refisefuqui/customisolinux/* $WORKDIR/ISOTMP/isolinux/
 
 else
 
-cp /etc/remastersys/isolinux/* $WORKDIR/ISOTMP/isolinux/
+cp /etc/refisefuqui/isolinux/* $WORKDIR/ISOTMP/isolinux/
 
 sed -i -e 's/__LIVECDLABEL__/'"$LIVECDLABEL"'/g' $WORKDIR/ISOTMP/isolinux/menu.cfg
 
@@ -434,7 +439,7 @@ mkdir -p /etc/live
 fi
 
 echo "export LIVE_USERNAME=\"$LIVEUSER\"" > /etc/live/config.conf
-echo "export LIVE_USER_FULLNAME=\"Live session user\"" >> /etc/live/config.conf
+echo "export LIVE_USER_FULLNAME=\"Usuario do live cd\"" >> /etc/live/config.conf
 echo "export LIVE_HOSTNAME=\"$LIVEUSER\"" >> /etc/live/config.conf
 echo "export LIVE_USER_DEFAULT_GROUPS=\"audio,cdrom,dialout,floppy,video,plugdev,netdev,powerdev,adm,sudo\"" >> /etc/live/config.conf
 echo "export LIVE_LOCALES=\"pt_BR.UTF-8\"" >> /etc/live/config.conf
@@ -458,20 +463,20 @@ sed -i -e 's/ResultInactive=no/ResultInactive=yes/g' /lib/live/config/1100-polic
 
 
 
-echo "Setting up live options for $1 mode"
+echo "Configurando opções de Live CD para modo $1"
 
 # make a new initial ramdisk including the live scripts
 update-initramfs -t -c -k $(uname -r)
 
-echo "Copying your kernel and initrd for the livecd"
+echo "Copiando seu kernel e o initrd para o Live CD"
 cp /boot/vmlinuz-$(uname -r) $WORKDIR/ISOTMP/live/vmlinuz
 cp /boot/initrd.img-$(uname -r) $WORKDIR/ISOTMP/live/initrd.img
 
 # Step 5 - Make filesystem.squashfs
 
-if [ -f $WORKDIR/remastersys.log ]; then
-rm -f $WORKDIR/remastersys.log
-touch $WORKDIR/remastersys.log
+if [ -f $WORKDIR/refisefuqui.log ]; then
+rm -f $WORKDIR/refisefuqui.log
+touch $WORKDIR/refisefuqui.log
 fi
 
 
@@ -479,7 +484,7 @@ if [ -f $WORKDIR/ISOTMP/live/filesystem.squashfs ]; then
 rm -f $WORKDIR/ISOTMP/live/filesystem.squashfs
 fi
 
-echo "Creating filesystem.squashfs   ... this will take a while so be patient"
+echo "Criando filesystem.squashfs... Vai demorar um tempo, então seja paciente."
 
 if [ "$SQUASHFSOPTS" = "" ]; then
 SQUASHFSOPTS="-no-recovery -always-use-fragments -b 1M"
@@ -515,7 +520,7 @@ root/.bash_history \
 root/.lesshst \
 root/.nano_history \
 boot/grub \
-$BASEWORKDIR $EXCLUDES 2>>$WORKDIR/remastersys.log
+$BASEWORKDIR $EXCLUDES 2>>$WORKDIR/refisefuqui.log
 
 
 if [ "$1" = "backup" ]; then
@@ -537,36 +542,36 @@ sleep 1
 
 
 #add some stuff the log in case of problems so I can troubleshoot it easier
+echo "------------------------------------------------------" >>$WORKDIR/refisefuqui.log
+echo "Mount information" >>$WORKDIR/refisefuqui.log
+mount >>$WORKDIR/refisefuqui.log
+echo "------------------------------------------------------" >>$WORKDIR/refisefuqui.log
+echo "df information" >>$WORKDIR/refisefuqui.log
+df -h >>$WORKDIR/refisefuqui.log
+echo "------------------------------------------------------" >>$WORKDIR/refisefuqui.log
+echo "/etc/refisefuqui.conf info" >>$WORKDIR/refisefuqui.log
+cat /etc/refisefuqui.conf >>$WORKDIR/refisefuqui.log
+echo "------------------------------------------------------" >>$WORKDIR/refisefuqui.log
+echo "/etc/live/config.conf info" >>$WORKDIR/refisefuqui.log
+cat /etc/live/config.conf >>$WORKDIR/refisefuqui.log
+echo "------------------------------------------------------" >>$WORKDIR/refisefuqui.log
+echo "/etc/passwd info" >>$WORKDIR/refisefuqui.log
+cat $WORKDIR/dummysys/etc/passwd >>$WORKDIR/refisefuqui.log
+echo "------------------------------------------------------" >>$WORKDIR/refisefuqui.log
+echo "/etc/group info" >>$WORKDIR/refisefuqui.log
+cat $WORKDIR/dummysys/etc/group >>$WORKDIR/refisefuqui.log
+echo "------------------------------------------------------" >>$WORKDIR/refisefuqui.log
+echo "/etc/skel info" >>$WORKDIR/refisefuqui.log
+find /etc/skel/ >>$WORKDIR/refisefuqui.log
 echo "------------------------------------------------------" >>$WORKDIR/remastersys.log
-echo "Mount information" >>$WORKDIR/remastersys.log
-mount >>$WORKDIR/remastersys.log
-echo "------------------------------------------------------" >>$WORKDIR/remastersys.log
-echo "df information" >>$WORKDIR/remastersys.log
-df -h >>$WORKDIR/remastersys.log
-echo "------------------------------------------------------" >>$WORKDIR/remastersys.log
-echo "/etc/remastersys.conf info" >>$WORKDIR/remastersys.log
-cat /etc/remastersys.conf >>$WORKDIR/remastersys.log
-echo "------------------------------------------------------" >>$WORKDIR/remastersys.log
-echo "/etc/live/config.conf info" >>$WORKDIR/remastersys.log
-cat /etc/live/config.conf >>$WORKDIR/remastersys.log
-echo "------------------------------------------------------" >>$WORKDIR/remastersys.log
-echo "/etc/passwd info" >>$WORKDIR/remastersys.log
-cat $WORKDIR/dummysys/etc/passwd >>$WORKDIR/remastersys.log
-echo "------------------------------------------------------" >>$WORKDIR/remastersys.log
-echo "/etc/group info" >>$WORKDIR/remastersys.log
-cat $WORKDIR/dummysys/etc/group >>$WORKDIR/remastersys.log
-echo "------------------------------------------------------" >>$WORKDIR/remastersys.log
-echo "/etc/skel info" >>$WORKDIR/remastersys.log
-find /etc/skel/ >>$WORKDIR/remastersys.log
-echo "------------------------------------------------------" >>$WORKDIR/remastersys.log
-echo "/etc/X11/default-display-manager info" >>$WORKDIR/remastersys.log
-cat /etc/X11/default-display-manager >>$WORKDIR/remastersys.log
-echo "------------------------------------------------------" >>$WORKDIR/remastersys.log
-echo "Remastersys Version info" >>$WORKDIR/remastersys.log
-cat /etc/remastersys/remastersys.version >>$WORKDIR/remastersys.log
-echo "-----------------------------------------------------" >>$WORKDIR/remastersys.log
-echo "Command-line options = $@" >>$WORKDIR/remastersys.log
-echo "------------------------------------------------------" >>$WORKDIR/remastersys.log
+echo "/etc/X11/default-display-manager info" >>$WORKDIR/refisefuqui.log
+cat /etc/X11/default-display-manager >>$WORKDIR/refisefuqui.log
+echo "------------------------------------------------------" >>$WORKDIR/refisefuqui.log
+echo "ReFiSeFuQui Version info" >>$WORKDIR/refisefuqui.log
+cat /etc/refisefuqui/refisefuqui.version >>$WORKDIR/refisefuqui.log
+echo "-----------------------------------------------------" >>$WORKDIR/refisefuqui.log
+echo "Command-line options = $@" >>$WORKDIR/refisefuqui.log
+echo "------------------------------------------------------" >>$WORKDIR/refisefuqui.log
 
 
 sleep 1
@@ -574,8 +579,8 @@ sleep 1
 #checking the size of the compressed filesystem to ensure it meets the iso9660 spec for a single file" 
 SQUASHFSSIZE=`ls -s $WORKDIR/ISOTMP/live/filesystem.squashfs | awk -F " " '{print $1}'`
 if [ "$SQUASHFSSIZE" -gt "3999999" ]; then
-echo " The compressed filesystem is larger than the iso9660 specification allows for a single file. You must try to reduce the amount of data you are backing up and try again."
-echo " The compressed filesystem is larger than the iso9660 specification allows for a single file. You must try to reduce the amount of data you are backing up and try again.">>$WORKDIR/remastersys.log
+echo " O sistema de arquivos comprimido é maior do que permite a especificação iso9660 para um único arquivo. Você deve tentar reduzir a quantidade de arquivos que você está tentando fazer backup e tentar novamente."
+echo " O sistema de arquivos comprimido é maior do que permite a especificação iso9660 para um único arquivo. Você deve tentar reduzir a quantidade de arquivos que você está tentando fazer backup e tentar novamente.">>$WORKDIR/refisefuqui.log
 
 exit 1
 fi
@@ -593,8 +598,8 @@ fi
 # check to see if the cd filesystem exists
 
 if [ ! -f "$WORKDIR/ISOTMP/live/filesystem.squashfs" ]; then
-echo "The cd filesystem is missing.  Either there was a problem creating the compressed filesystem or you are trying to run sudo remastersys dist iso before sudo remastersys dist cdfs"
-echo "The cd filesystem is missing.  Either there was a problem creating the compressed filesystem or you are trying to run sudo remastersys dist iso before sudo remastersys dist cdfs" >>$WORKDIR/remastersys.log
+echo "Está faltando o sistema de arquivos do CD.  Ou houve um problema na criação do arquivo de sistema comprimido ou você está tentando rodar o comando sudo refisefuqui dist iso antes de sudo refisefuqui dist cdfs."
+echo "Está faltando o sistema de arquivos do CD.  Ou houve um problema na criação do arquivo de sistema comprimido ou você está tentando rodar o comando sudo refisefuqui dist iso antes de sudo refisefuqui dist cdfs." >>$WORKDIR/refisefuqui.log
 
 exit 1
 fi
@@ -602,8 +607,8 @@ fi
 #checking the size of the compressed filesystem to ensure it meets the iso9660 spec for a single file" 
 SQUASHFSSIZE=`ls -s $WORKDIR/ISOTMP/live/filesystem.squashfs | awk -F " " '{print $1}'`
 if [ "$SQUASHFSSIZE" -gt "3999999" ]; then
-echo " The compressed filesystem is larger than the iso9660 specification allows for a single file. You must try to reduce the amount of data you are backing up and try again."
-echo " The compressed filesystem is larger than the iso9660 specification allows for a single file. You must try to reduce the amount of data you are backing up and try again.">>$WORKDIR/remastersys.log
+echo " O sistema de arquivos comprimido é maior do que permite a especificação iso9660 para um único arquivo. Você deve tentar reduzir a quantidade de arquivos que você está tentando fazer backup e tentar novamente."
+echo " O sistema de arquivos comprimido é maior do que permite a especificação iso9660 para um único arquivo. Você deve tentar reduzir a quantidade de arquivos que você está tentando fazer backup e tentar novamente.">>$WORKDIR/refisefuqui.log
 
 exit 1
 fi
@@ -619,13 +624,13 @@ sleep 1
 if [ "$ISOBOOT" = "GRUB" ]; then
 
 echo "Creating $CUSTOMISO in $WORKDIR using grub-mkrescue"
-echo "Creating $CUSTOMISO in $WORKDIR using grub-mkrescue" >>$WORKDIR/remastersys.log
-grub-mkrescue -o $WORKDIR/$CUSTOMISO $WORKDIR/ISOTMP/ 2>>$WORKDIR/remastersys.log 1>>$WORKDIR/remastersys.log
+echo "Creating $CUSTOMISO in $WORKDIR using grub-mkrescue" >>$WORKDIR/refisefuqui.log
+grub-mkrescue -o $WORKDIR/$CUSTOMISO $WORKDIR/ISOTMP/ 2>>$WORKDIR/refisefuqui.log 1>>$WORKDIR/refisefuqui.log
 
 
 else
 echo "Creating $CUSTOMISO in $WORKDIR using $CREATEISO"
-echo "Creating $CUSTOMISO in $WORKDIR using $CREATEISO" >>$WORKDIR/remastersys.log
+echo "Creating $CUSTOMISO in $WORKDIR using $CREATEISO" >>$WORKDIR/refisefuqui.log
 $CREATEISO    \
  -quiet \
  -r    \
@@ -638,11 +643,11 @@ $CREATEISO    \
  -no-emul-boot    \
  -boot-load-size 4    \
  -boot-info-table    \
- -o $WORKDIR/$CUSTOMISO "$WORKDIR/ISOTMP" 2>>$WORKDIR/remastersys.log 1>>$WORKDIR/remastersys.log
+ -o $WORKDIR/$CUSTOMISO "$WORKDIR/ISOTMP" 2>>$WORKDIR/refisefuqui.log 1>>$WORKDIR/refisefuqui.log
 
 # create hybrid iso so it can be dd installed to a usb flash drive
 
-echo "Making the iso into a hybrid image so it can be imaged to a usb key or burned to optical media"
+echo "Tornando a ISO em uma imagem híbrida para poder ser instalada num pendrive ou gravada numa mídia óptica."
 
 isohybrid $WORKDIR/$CUSTOMISO
 fi
@@ -650,7 +655,7 @@ fi
 
 
 echo "Creating $CUSTOMISO.md5 in $WORKDIR"
-echo "Creating $CUSTOMISO.md5 in $WORKDIR" >>$WORKDIR/remastersys.log
+echo "Creating $CUSTOMISO.md5 in $WORKDIR" >>$WORKDIR/refisefuqui.log
 
 cd $WORKDIR
 md5sum $CUSTOMISO > $CUSTOMISO.md5
@@ -658,14 +663,14 @@ md5sum $CUSTOMISO > $CUSTOMISO.md5
 sleep 1
 
 
-echo "$WORKDIR/$CUSTOMISO is ready to be burned or tested in a virtual machine."
+echo "$WORKDIR/$CUSTOMISO está pronta para ser gravada ou testada em uma máquina vistual."
 echo " "
-echo "Check the size and if it is larger than 700MB you will need to burn it to a dvd"
+echo "Verifique o tamanho e se for maior do que 700MB você precisará gravá-la em um DVD."
 echo " "
 ls -hs $WORKDIR/$CUSTOMISO
-ls -hs $WORKDIR/$CUSTOMISO >> $WORKDIR/remastersys.log
+ls -hs $WORKDIR/$CUSTOMISO >> $WORKDIR/refisefuqui.log
 echo " " 
-echo "It is recommended to run 'sudo remastersys clean' once you have burned and tested the $CUSTOMISO"
+echo "É recomendável usar 'sudo refisefuqui clean' depois que você tiver gravado e testado a imagem $CUSTOMISO."
 echo " "
 
 

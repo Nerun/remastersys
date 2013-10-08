@@ -1,27 +1,23 @@
 #!/bin/sh
-# preinst script for remastersys
+# preinst script for refisefuqui-gui
 #
 # see: dh_installdeb(1)
 
 set -e
 
-if [ -d /remastersys ]
+if [ -d /refisefuqui ]
 then
-mv /remastersys /home
+mv /refisefuqui /home
 fi
 
-if [ -f /etc/remastersys.conf ]
+if [ -f /etc/refisefuqui.conf ]
 then
-mv /etc/remastersys.conf /etc/remastersys.conf.old
+mv /etc/refisefuqui.conf /etc/refisefuqui.conf.old
 fi
 
-if [ -f /etc/remastersys/isolinux/splash.png ]
+if [ -f /etc/refisefuqui/isolinux/splash.png ]
 then
-mv /etc/remastersys/isolinux/splash.png /etc/remastersys/isolinux/splash.png.saved
+mv /etc/refisefuqui/isolinux/splash.png /etc/refisefuqui/isolinux/splash.png.saved
 fi
-
-
 
 exit 0
-
-

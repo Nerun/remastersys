@@ -1,31 +1,31 @@
 # This is an example plymouth plugin script
 
 # Load the image
-remastersys_image = Image("__THEMEPIC__");
+refisefuqui_image = Image("__THEMEPIC__");
 
-# Create a sprite of the remastersys
-remastersys_sprite = Sprite(remastersys_image);
+# Create a sprite of the refisefuqui
+refisefuqui_sprite = Sprite(refisefuqui_image);
 
 # Add your code here
 screen_ratio = Window.GetHeight() / Window.GetWidth();
-remastersys_image_ratio = remastersys_image.GetHeight() / remastersys_image.GetWidth();
+refisefuqui_image_ratio = refisefuqui_image.GetHeight() / refisefuqui_image.GetWidth();
 
-if (screen_ratio > remastersys_image_ratio)
+if (screen_ratio > refisefuqui_image_ratio)
   {  # Screen ratio is taller than image ratio, we will match the screen height
-     scale_factor =  Window.GetHeight() / remastersys_image.GetHeight();
+     scale_factor =  Window.GetHeight() / refisefuqui_image.GetHeight();
   }
 else
   {  # Screen ratio is wider than image ratio, we will match the screen width
-     scale_factor =  Window.GetWidth() / remastersys_image.GetWidth();
+     scale_factor =  Window.GetWidth() / refisefuqui_image.GetWidth();
   }
 
-scaled_remastersys_image = remastersys_image.Scale(remastersys_image.GetWidth()  * scale_factor,
-                                         remastersys_image.GetHeight() * scale_factor);
-remastersys_sprite = Sprite(scaled_remastersys_image); # Create the a sprite using the scaled image
+scaled_refisefuqui_image = refisefuqui_image.Scale(refisefuqui_image.GetWidth()  * scale_factor,
+                                         refisefuqui_image.GetHeight() * scale_factor);
+refisefuqui_sprite = Sprite(scaled_refisefuqui_image); # Create the a sprite using the scaled image
 
-remastersys_sprite.SetX(Window.GetWidth()  / 2 - scaled_remastersys_image.GetWidth () / 2); # Place in the centre
-remastersys_sprite.SetY(Window.GetHeight() / 2 - scaled_remastersys_image.GetHeight() / 2);
-remastersys_sprite.SetZ(-10000); # Place right at the back
+refisefuqui_sprite.SetX(Window.GetWidth()  / 2 - scaled_refisefuqui_image.GetWidth () / 2); # Place in the centre
+refisefuqui_sprite.SetY(Window.GetHeight() / 2 - scaled_refisefuqui_image.GetHeight() / 2);
+refisefuqui_sprite.SetZ(-10000); # Place right at the back
 
 
 

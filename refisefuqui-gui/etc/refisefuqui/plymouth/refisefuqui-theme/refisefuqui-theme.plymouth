@@ -1,6 +1,6 @@
 [Plymouth Theme]
 Name=__THEMENAME__
-Description=This theme is the __THEMENAME__ Plymouth Theme
+Description=Este é o Tema Plymouth __THEMENAME__
 ModuleName=script
 
 [script]

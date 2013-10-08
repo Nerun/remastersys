@@ -1,19 +1,20 @@
 #!/bin/bash
 #
+#  refisefuqui-installer is an alternative installer for remastered livecd/dvd's
 #
-#  remastersys-installer is an alternative installer for remastered livecd/dvd's
+#  ReFiSeFuQui-installer by "Nerun"
 #
+#  Copyright 2013 Under the GNU GPL2 License
 #
-#  Created by Tony "Fragadelic" Brijeski
+#  Translation of Remastersys-installer, created by Tony "Fragadelic" Brijeski
+#
+#  Remastersys-installer:
 #
 #  Copyright 2008-2012 Under the GNU GPL2 License
 #
 #  Originally Created September 12th,2008
 #  Updated to replace zenity with yad July 2012
 #
-#
-#
-
 #  This script requires either yad or dialog to run
 #
 
@@ -22,7 +23,7 @@
 testroot="`whoami`"
 
 if [ "$testroot" != "root" ]; then
-echo " Must be run as root - exiting"
+echo " Deve ser usado como superusuário. Saindo."
 exit 1
 fi
 
@@ -41,7 +42,7 @@ YESNO="--yesno "
 MSGBOX="--msgbox "
 PASSWORD="--passwordbox "
 PARTITIONPROG="cfdisk"
-TITLETEXT="Remastersys Live Installer"
+TITLETEXT="Instalador ReFiSeFuQui"
 
 if [ "$1" = "gui" -o "$2" = "gui" ]; then
 GUI="$DISPLAY"
@@ -52,22 +53,22 @@ if [ "$GUI" != "" ]; then
 testyad=`which yad`
 
 if [ "$testyad" = "" ]; then
-echo " Yad not present - proceeding to install yad"
+echo " Yad ausente, será instalado agora."
 apt-get -y -q install yad
 testyad=`which yad`
 fi
 
 testgparted=`which gparted`
 if [ "$testgparted" = "" ]; then
-echo " Gparted not present - proceeding to install gparted"
+echo " Gparted ausente, será instalado agora."
 apt-get -y -q install gparted
 fi
 
 
 if [ "$testyad" != "" ]; then
-DIALOGMENU="`which yad` --window-icon=/usr/share/pixmaps/remastersys-installer.png --width=600 --height=400 --center"
-DIALOG="`which yad` --window-icon=/usr/share/pixmaps/remastersys-installer.png --center"
-TITLE="--always-print-result --dialog-sep --image=/usr/share/pixmaps/remastersys-installer.png --title="
+DIALOGMENU="`which yad` --window-icon=/usr/share/pixmaps/refisefuqui-installer.png --width=600 --height=400 --center"
+DIALOG="`which yad` --window-icon=/usr/share/pixmaps/refisefuqui-installer.png --center"
+TITLE="--always-print-result --dialog-sep --image=/usr/share/pixmaps/refisefuqui-installer.png --title="
 TEXT="--text="
 ENTRY="--entry "
 ENTRYTEXT="--entry-text "
@@ -81,7 +82,7 @@ PARTITIONPROG="xterm -e cfdisk"
 else
 PARTITIONPROG="gparted"
 fi
-TITLETEXT="Remastersys Live Installer"
+TITLETEXT="Instalador ReFiSeFuQui"
 fi
 
 
@@ -89,12 +90,12 @@ fi
 fi
 
 if [ "$DIALOG" = "" ]; then
-echo "Cannot find dialog or zenity.  Exiting."
+echo "Não foi possível encontrar o dialog ou o zenity.  Saindo."
 exit 1
 fi
 
 progressbar () {
-tail -f /usr/bin/remastersys-installer | $DIALOG $TITLE"$TITLETEXT" $TEXT"$@" --no-buttons --progress --pulsate --auto-close
+tail -f /usr/bin/refisefuqui-installer | $DIALOG $TITLE"$TITLETEXT" $TEXT"$@" --no-buttons --progress --pulsate --auto-close
 }
 
 
@@ -102,7 +103,7 @@ tail -f /usr/bin/remastersys-installer | $DIALOG $TITLE"$TITLETEXT" $TEXT"$@" --
 . /etc/live/config.conf
 . /etc/remastersys.conf
 if [ "$LIVECDLABEL" != "" ]; then
-TITLETEXT="$LIVECDLABEL Installer"
+TITLETEXT="Instalador do $LIVECDLABEL"
 fi
 
 
@@ -113,13 +114,13 @@ if [ "$GUI" = "" ]; then
 #
 #inform them what this is and ask if they want to continue
 
-$DIALOG $TITLE"$TITLETEXT" $YESNO $TEXT"This is the live installer.\n\nDo you want to continue?" $HEIGHT $WIDTH
+$DIALOG $TITLE"$TITLETEXT" $YESNO $TEXT"Este é o instalador do Live CD.\n\nDeseja continuar?" $HEIGHT $WIDTH
 
 if [ $? != 0 ]; then
 exit 0
 fi
 
-$DIALOG $TITLE"$TITLETEXT" $YESNO $TEXT"The Live Installer will use the US English locale and keyboard layout by default.\n\nWould you like to install with different locale and keyboard settings?\n\nThe Installer itself will still use English." $HEIGHT $WIDTH
+$DIALOG $TITLE"$TITLETEXT" $YESNO $TEXT"O Instalador usará o idioma e o layout de teclado Português do Brasil por padrão.\n\nVocê deseja instalar com um idioma e layout de teclado diferentes?\n\nO Instalador continuará a usar a língua portuguesa." $HEIGHT $WIDTH
 
 if [ $? = 0 ]; then
 
@@ -130,7 +131,7 @@ dpkg-reconfigure keyboard-configuration
 
 fi
 
-$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"We need to prepare a swap and install partition now.\n\n$PARTITIONPROG will allow you to create the new partitions.\n\nYou must create or have 1 install partition and 1 swap partition.\n\nIf you already have partitions setup then just quit $PARTITIONPROG and installation will continue.\n\nClick OK to continue." $HEIGHT $WIDTH
+$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Nós precisamos preparar o swap e instalar a partição agora.\n\n$PARTITIONPROG permitirá a você criar as novas pertições.\n\nVocê deve criar ou possuir ao menos 1 partição de sistema e 1 partição de swap.\n\nCaso você já possua as partições configuradas, apenas saia do $PARTITIONPROG e a instalação prosseguirá.\n\nClique OK para continuar." $HEIGHT $WIDTH
 
 #choose the drive to partition
 CKLIVE=`mount | grep "live" | grep -v "loop" | awk '{print $1}' | awk -F "/" '{print $3}' | sed -e 's/[0-9]//g'`
@@ -143,7 +144,7 @@ for i in $DRIVES; do
 done
 
 
-$DIALOG $TITLE"$TITLETEXT" $MENU $TEXT"Please select a drive to partition.\nIf the only option you see is to Quit the installer then no drives were found." $HEIGHT $WIDTH $MENUHEIGHT Exit "Quit the installer" $partdrivemenu 2>/tmp/choice.$$
+$DIALOG $TITLE"$TITLETEXT" $MENU $TEXT"Selecione um drive para particionar.\nSe a única opção que você vê é Sair do Instalador é porque nenhum drive foi localizado." $HEIGHT $WIDTH $MENUHEIGHT Exit "Sair do Instalador" $partdrivemenu 2>/tmp/choice.$$
 
 if [ "$?" = "0" ]; then
 PARTDRIVE=`cat /tmp/choice.$$`
@@ -153,7 +154,7 @@ fi
 rm /tmp/choice.$$
 
 if [ "$PARTDRIVE" = "Exit" ]; then
-  $DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Quitting the installer now." $HEIGHT $WIDTH
+  $DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Saindo do instalador agora." $HEIGHT $WIDTH
   exit 1
 fi
 
@@ -168,7 +169,7 @@ for i in $TARGETSWAP; do
  swappartmenu="$swappartmenu $swappart $swappartsize"
 done
 
-$DIALOG $TITLE"$TITLETEXT" $MENU $TEXT"Please select a swap partition to use.\nIf the only option you see is to Quit the installer then no swap partitions were found." $HEIGHT $WIDTH $MENUHEIGHT Exit "Quit the installer" $swappartmenu 2>/tmp/choice.$$
+$DIALOG $TITLE"$TITLETEXT" $MENU $TEXT"Selecione uma partição swap para usar.\nSe a única opção que você vê é Sair do Instalador é porque nenhuma partição swap foi localizada." $HEIGHT $WIDTH $MENUHEIGHT Exit "Sair do Instalador" $swappartmenu 2>/tmp/choice.$$
 
 if [ "$?" = "0" ]; then
 SWAP=`cat /tmp/choice.$$`
@@ -178,7 +179,7 @@ fi
 rm /tmp/choice.$$
 
 if [ "$SWAP" = "Exit" ]; then
-  $DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Quitting the installer now." $HEIGHT $WIDTH
+  $DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Saindo do Instalador agora." $HEIGHT $WIDTH
   exit 1
 fi
 
@@ -204,7 +205,7 @@ for i in $PARTINST; do
 done
 
 
-$DIALOG $TITLE"$TITLETEXT" $MENU $TEXT"Please select a partition to install the root system to.\nIf the only option you see is to Quit the installer then no partitions were found." $HEIGHT $WIDTH $MENUHEIGHT Exit "Quit the installer" $partmenu 2>/tmp/choice.$$
+$DIALOG $TITLE"$TITLETEXT" $MENU $TEXT"Selecione uma partição para instalar o sistema.\nSe a única opção que você vê é Sair do Instalador é porque nenhuma partição foi localizada." $HEIGHT $WIDTH $MENUHEIGHT Exit "Sair do Instalador" $partmenu 2>/tmp/choice.$$
 
 if [ "$?" = "0" ]; then
 TARGETPART=`cat /tmp/choice.$$`
@@ -214,12 +215,12 @@ fi
 rm /tmp/choice.$$
 
 if [ "$TARGETPART" = "Exit" ]; then
-  $DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Quitting the installer now." $HEIGHT $WIDTH
+  $DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Saindo do Instalador agora." $HEIGHT $WIDTH
   exit 1
 fi
 
 #choose filesystem type
-$DIALOG $TITLE"$TITLETEXT" $MENU $TEXT"Please select filesystem type for the root partition" $HEIGHT $WIDTH $MENUHEIGHT ext2 "Ext2 filesystem" ext3 "Ext3 filesystem" ext4 "Ext4 filesystem" 2>/tmp/choice.$$
+$DIALOG $TITLE"$TITLETEXT" $MENU $TEXT"Selecione o tipo de sistema de arquivos da partição raiz" $HEIGHT $WIDTH $MENUHEIGHT ext2 "Ext2" ext3 "Ext3" ext4 "Ext4" 2>/tmp/choice.$$
 
 if [ "$?" = "0" ]; then
 FSTYPE=`cat /tmp/choice.$$`
@@ -237,7 +238,7 @@ for i in $HOMEINST; do
   homepartmenu="$homepartmenu $homepart $homepartsize"
 done
 
-$DIALOG $TITLE"$TITLETEXT" $MENU $TEXT"Please select a partition to install /home to.\nIf the only option you see is root then no extra partitions were found." $HEIGHT $WIDTH $MENUHEIGHT root "put /home on the root partition" $homepartmenu 2>/tmp/choice.$$
+$DIALOG $TITLE"$TITLETEXT" $MENU $TEXT"Selecione uma partição para instalar a pasta /home.\nSe a única opção que você vê é a partição raiz (root), então é porque nenhuma outra partição foi encontrada." $HEIGHT $WIDTH $MENUHEIGHT root "coloque /home na partição raiz" $homepartmenu 2>/tmp/choice.$$
 
 if [ "$?" = "0" ]; then
 HOMEPART=`cat /tmp/choice.$$`
@@ -248,7 +249,7 @@ rm /tmp/choice.$$
 
 if [ "$HOMEPART" != "root" ]; then
 #choose filesystem type
-$DIALOG $TITLE"$TITLETEXT" $MENU $TEXT"Please select filesystem type for the home partition" $HEIGHT $WIDTH $MENUHEIGHT noformat "Do Not Format the home partition - not recommended unless you know what you are doing" ext2 "Ext2 filesystem" ext3 "Ext3 filesystem" ext4 "Ext4 filesystem" 2>/tmp/choice.$$
+$DIALOG $TITLE"$TITLETEXT" $MENU $TEXT"Selecione o tipo de sistema de arquivos da partição home" $HEIGHT $WIDTH $MENUHEIGHT noformat "Não formate a partição home - não é recomendado a não ser que você saiba o que está fazendo" ext2 "Ext2" ext3 "Ext3" ext4 "Ext4" 2>/tmp/choice.$$
 
 if [ "$?" = "0" ]; then
 HFSTYPE=`cat /tmp/choice.$$`
@@ -272,14 +273,14 @@ TARGETROOTPASS2="2"
 
 while [ "$TARGETROOTPASS" != "$TARGETROOTPASS2" ]; do
 
-$DIALOG $TITLE"$TITLETEXT" $PASSWORD $TEXT"Please enter the password for root." $HEIGHT $WIDTH 2>/tmp/choice.$$
+$DIALOG $TITLE"$TITLETEXT" $PASSWORD $TEXT"Digite a senha do root." $HEIGHT $WIDTH 2>/tmp/choice.$$
 if [ "$?" = "0" ]; then
 TARGETROOTPASS=`cat /tmp/choice.$$`
 else
 exit 1
 fi
 rm /tmp/choice.$$
-$DIALOG $TITLE"$TITLETEXT" $PASSWORD $TEXT"Please enter the password for root again." $HEIGHT $WIDTH 2>/tmp/choice.$$
+$DIALOG $TITLE"$TITLETEXT" $PASSWORD $TEXT"Digite a senha do root novamente." $HEIGHT $WIDTH 2>/tmp/choice.$$
 if [ "$?" = "0" ]; then
 TARGETROOTPASS2=`cat /tmp/choice.$$`
 else
@@ -288,7 +289,7 @@ fi
 rm /tmp/choice.$$
 
 if [ "$TARGETROOTPASS" != "$TARGETROOTPASS2" ]; then
-$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Passwords do not match. Lets try again." $HEIGHT $WIDTH
+$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"As senhas não conferem. Tente novamente." $HEIGHT $WIDTH
 fi
 
 done
@@ -297,7 +298,7 @@ rm /tmp/choice.$$
 
 #username input secton
 
-$DIALOG $TITLE"$TITLETEXT" $ENTRY $TEXT"Please enter the new user's real name to be setup on the installed system." $HEIGHT $WIDTH 2>/tmp/choice.$$
+$DIALOG $TITLE"$TITLETEXT" $ENTRY $TEXT"Digite o nome real do novo usuário para ser configurado no sistema instalado." $HEIGHT $WIDTH 2>/tmp/choice.$$
 if [ "$?" = "0" ]; then
 TARGETUSERFULLNAME=`cat /tmp/choice.$$`
 else
@@ -306,7 +307,7 @@ fi
 rm /tmp/choice.$$
 
 
-$DIALOG $TITLE"$TITLETEXT" $ENTRY $TEXT"Please enter the new username to be setup on the installed system.\nMust be in lowercase letters only." $HEIGHT $WIDTH 2>/tmp/choice.$$
+$DIALOG $TITLE"$TITLETEXT" $ENTRY $TEXT"Digite o nome de usuário a ser configurado no sistema instalado.\nApenas letras mínusculas." $HEIGHT $WIDTH 2>/tmp/choice.$$
 if [ "$?" = "0" ]; then
 TARGETUSER=`cat /tmp/choice.$$`
 else
@@ -326,14 +327,14 @@ TARGETPASS2="2"
 
 while [ "$TARGETPASS" != "$TARGETPASS2" ]; do
 
-$DIALOG $TITLE"$TITLETEXT" $PASSWORD $TEXT"Please enter the password for $TARGETUSER." $HEIGHT $WIDTH 2>/tmp/choice.$$
+$DIALOG $TITLE"$TITLETEXT" $PASSWORD $TEXT"Digite uma senha para $TARGETUSER." $HEIGHT $WIDTH 2>/tmp/choice.$$
 if [ "$?" = "0" ]; then
 TARGETPASS=`cat /tmp/choice.$$`
 else
 exit 1
 fi
 rm /tmp/choice.$$
-$DIALOG $TITLE"$TITLETEXT" $PASSWORD $TEXT"Please enter the password for $TARGETUSER again." $HEIGHT $WIDTH 2>/tmp/choice.$$
+$DIALOG $TITLE"$TITLETEXT" $PASSWORD $TEXT"Redigite a senha de $TARGETUSER para conferência." $HEIGHT $WIDTH 2>/tmp/choice.$$
 if [ "$?" = "0" ]; then
 TARGETPASS2=`cat /tmp/choice.$$`
 else
@@ -342,7 +343,7 @@ fi
 rm /tmp/choice.$$
 
 if [ "$TARGETPASS" != "$TARGETPASS2" ]; then
-$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Passwords do not match. Lets try again." $HEIGHT $WIDTH
+$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"As senhas não conferem. Tente novamente." $HEIGHT $WIDTH
 fi
 
 done
@@ -353,7 +354,7 @@ fi
 
 
 #hostname setup
-$DIALOG $TITLE"$TITLETEXT" $ENTRY $TEXT"Please enter the hostname for the installed system." $HEIGHT $WIDTH 2>/tmp/choice.$$
+$DIALOG $TITLE"$TITLETEXT" $ENTRY $TEXT"Digite o nome do host do sistema instalado" $HEIGHT $WIDTH 2>/tmp/choice.$$
 if [ "$?" = "0" ]; then
 TARGETHOSTNAME=`cat /tmp/choice.$$`
 else
@@ -374,14 +375,14 @@ for i in $Drives; do
 PartDrive="$i"
 
 if [ "$(echo "$PartDrive" | grep [0-9] )" = "" ]; then
- GrubMenu=("${GrubMenu[@]}" "$PartDrive" "Master boot record of disk")
+ GrubMenu=("${GrubMenu[@]}" "$PartDrive" "Master Boot Record (MBR) do disco")
 fi
 done
 
-GrubMenu=( "${GrubMenu[@]}" "root" "Root partition - safe choice if you use a different boot manager" "rootmbr" "MBR of the root partition - this is what you want for a usb install" )
+GrubMenu=( "${GrubMenu[@]}" "root" "Partição raiz - escolha segura se você usa um gerenciador de boot diferente" "rootmbr" "MBR da partição raiz - isto é o que você deseja para uma instalação via pendrive/USB" )
 
 #grub location
-$DIALOG $TITLE"$TITLETEXT" $MENU $TEXT"Please select where to install grub to.\n" $HEIGHT $WIDTH $MENUHEIGHT "${GrubMenu[@]}" 2>/tmp/choice.$$
+$DIALOG $TITLE"$TITLETEXT" $MENU $TEXT"Selecione onde instalar o grub.\n" $HEIGHT $WIDTH $MENUHEIGHT "${GrubMenu[@]}" 2>/tmp/choice.$$
 
 if [ "$?" = "0" ]; then
 GRUBLOCTEST=`cat /tmp/choice.$$`
@@ -389,16 +390,16 @@ fi
 rm /tmp/choice.$$
 
 if [ "$GRUBLOCTEST" = "root" ]; then
-GRUBLOCTEXT="root partition of $TARGETPART"
+GRUBLOCTEXT="partição raiz de $TARGETPART"
 GRUBLOC="/dev/$TARGETPART"
 elif [ "$GRUBLOCTEST" = "rootmbr" ]; then
-GRUBLOCTEXT="mbr of root partition of $TARGETPART"
+GRUBLOCTEXT="mbr da partição raiz de $TARGETPART"
 GRUBLOC="/dev/$PARTDRIVE"
 elif [ "$GRUBLOCTEST" = "" ]; then
 GrubSelectText
 exit 0
 else
-GRUBLOCTEXT="master boot record of $GRUBLOCTEST"
+GRUBLOCTEXT="mbr de $GRUBLOCTEST"
 GRUBLOC="/dev/$GRUBLOCTEST"
 fi
 
@@ -409,7 +410,7 @@ GrubSelectText
 #dpkg-reconfigure tzdata
 #Timezone setting
 
-$DIALOG $TITLE"$TITLETEXT" $YESNO $TEXT"Is your system clock set to your current local time?\n\nAnswering no will indicate it is set to UTC" $HEIGHT $WIDTH
+$DIALOG $TITLE"$TITLETEXT" $YESNO $TEXT"O relógio de seu sistema está configurado para hora local?\n\nRespondendo não indicará que ele está configurado para UTC." $HEIGHT $WIDTH
 if [ $? = 0 ]; then
 if [ "$(grep "UTC" /etc/adjtime)" != "" ]; then
  sed -i -e "s|UTC|LOCALTIME|g" /etc/adjtime
@@ -420,13 +421,13 @@ if [ "$(grep "LOCALTIME" /etc/adjtime)" != "" ]; then
 fi
 fi
 
-cat /usr/share/zoneinfo/zone.tab | awk '{print $3}' | grep "/" | sort > /tmp/remastersys.zoneinfo
-for i in `cat /tmp/remastersys.zoneinfo`; do
+cat /usr/share/zoneinfo/zone.tab | awk '{print $3}' | grep "/" | sort > /tmp/refisefuqui.zoneinfo
+for i in `cat /tmp/refisefuqui.zoneinfo`; do
 ZONES="$ZONES $i Timezone"
 done
-rm /tmp/remastersys.zoneinfo
+rm /tmp/refisefuqui.zoneinfo
 
-$DIALOG $TITLE"$TITLETEXT" $MENU $TEXT"Please select a timezone for your system" $HEIGHT $WIDTH $MENUHEIGHT Exit "Quit the installer" $ZONES 2>/tmp/choice.$$
+$DIALOG $TITLE"$TITLETEXT" $MENU $TEXT"Selecione uma zona de tempo para seu sistema" $HEIGHT $WIDTH $MENUHEIGHT Exit "Sair do Instalador" $ZONES 2>/tmp/choice.$$
 
 if [ "$?" = "0" ]; then
 ZONESINFO=`cat /tmp/choice.$$`
@@ -436,7 +437,7 @@ fi
 rm /tmp/choice.$$
 
 if [ "$ZONESINFO" = "Exit" ]; then
-  $DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Quitting the installer now." $HEIGHT $WIDTH
+  $DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Saindo do Instalador agora." $HEIGHT $WIDTH
   exit 1
 fi
 echo "$ZONESINFO" > /etc/timezone
@@ -448,21 +449,21 @@ cp /usr/share/zoneinfo/$ZONESINFO /etc/localtime
 #$SETXSERVER
 
 if [ "$HOMEPART" != "root" ]; then
-HOMETEXT=", $HOMEPART will be formatted $HFSTYPE for /home "
+HOMETEXT="$HOMEPART será formatado em $HFSTYPE para uso como /home"
 fi
 
 if [ "$HFSTYPE" = "noformat" ]; then
-HOMETEXT=", $HOMEPART will not be formatted but used for \n/home "
+HOMETEXT="$HOMEPART não será formatado, mas será usado como \n/home"
 fi
 
 
 if [ "$testmode" = "" ]; then
-$DIALOG $TITLE"$TITLETEXT" $YESNO $TEXT"Please verify that this information is correct.\n\nNew user $TARGETUSER will be created on the $FSTYPE formatted $TARGETPART partition$HOMETEXT and grub will be installed to the $GRUBLOCTEXT.\n\nDo you want to continue?" $HEIGHT $WIDTH
+$DIALOG $TITLE"$TITLETEXT" $YESNO $TEXT"Confirme se esta informação está correta.\n\nO novo usuário $TARGETUSER será criado na partição $TARGETPART; o sistema de arquivos é $FSTYPE; $HOMETEXT; e, o grub será instalado em $GRUBLOCTEXT.\n\nDeseja continuar?" $HEIGHT $WIDTH
 if [ $? != 0 ]; then
 exit 0
 fi
 else
-$DIALOG $TITLE"$TITLETEXT" $YESNO $TEXT"Please verify that this information is correct.\nYour backup mode system will be installed on $FSTYPE formatted $TARGETPART partition$HOMETEXT and grub will be installed to the $GRUBLOCTEXT.\n\nDo you want to continue?" $HEIGHT $WIDTH
+$DIALOG $TITLE"$TITLETEXT" $YESNO $TEXT"Confirme se esta informação está correta.\nSeu sistema de backup será instalado na partição $TARGETPART; o sistema de arquivos é $FSTYPE; $HOMETEXT; e, o grub será instalado em $GRUBLOCTEXT.\n\nDeseja continuar?" $HEIGHT $WIDTH
 if [ $? != 0 ]; then
 exit 0
 fi
@@ -488,11 +489,11 @@ else
 #inform them what this is and ask if they want to continue
 
 if [ "$testyad" = "" ]; then
-xmessage "Yad not found.You can run cli mode by issuing 'sudo remastersys-installer' in a terminal window"
+xmessage "Yad não encontrado. Você pode usar em modo linha de comando digitando 'sudo refisefuqui-installer' em uma janela de terminal."
 exit 1
 fi
 
-$DIALOG $TITLE"$TITLETEXT" $YESNO $TEXT"This is the live installer.  Do you want to continue?"
+$DIALOG $TITLE"$TITLETEXT" $YESNO $TEXT"Este é o Instalador do Live CD.  Deseja continuar?"
 
 if [ $? != 0 ]; then
 exit 0
@@ -506,7 +507,7 @@ else
 FRONTEND="kde"
 fi
 
-$DIALOG $TITLE"$TITLETEXT" $YESNO $TEXT"The Live Installer will use the US English locale and keyboard layout by default.\n\nWould you like to install with different locale and keyboard settings?\n\nThe Installer itself will still use English."
+$DIALOG $TITLE"$TITLETEXT" $YESNO $TEXT"O Instalador usará o idioma e o layout de teclado Português do Brasil por padrão.\n\nVocê deseja instalar com um idioma e layout de teclado diferentes?\n\nO Instalador continuará a usar a língua portuguesa."
 
 if [ $? = 0 ]; then
 
@@ -520,7 +521,7 @@ fi
 #fix for gparted being inhibited by udisks-daemon
 killall -KILL udisks-daemon
 
-$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"We need to prepare a swap and install partition now.\n\n$PARTITIONPROG will allow you to create the new partitions.\n\nYou must create or have 1 install partition and 1 swap partition.\n\nIf you already have partitions setup then just quit $PARTITIONPROG and installation will continue.\n\nClick OK to continue."
+$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Nós precisamos preparar o swap e instalar a partição agora.\n\n$PARTITIONPROG permitirá a você criar as novas pertições.\n\nVocê deve criar ou possuir ao menos 1 partição de sistema e 1 partição de swap.\n\nCaso você já possua as partições configuradas, apenas saia do $PARTITIONPROG e a instalação prosseguirá.\n\nClique OK para continuar."
 
 #choose the drive to partition
 CKLIVE=`mount | grep "live" | grep -v "loop" | awk '{print $1}' | awk -F "/" '{print $3}' | sed -e 's/[0-9]//g'`
@@ -535,13 +536,13 @@ done
 PARTDRIVE=""
 while [ "$PARTDRIVE" = "" ]
 do
-PARTDRIVE=`$DIALOGMENU $TITLE"$TITLETEXT" $MENU  $TEXT"Please select a drive to partition.\nIf the only option you see is to Quit the installer then no drives were found." Exit "Quit the installer" $partdrivemenu`
+PARTDRIVE=`$DIALOGMENU $TITLE"$TITLETEXT" $MENU  $TEXT"Selecione um drive para particionar.\nSe a única opção que você vê é Sair do Instalador é porque nenhum drive foi localizado." Exit "Sair do Instalador" $partdrivemenu`
 done
 
 PARTDRIVE=`echo $PARTDRIVE | cut -d "|" -f 1`
 
 if [ "$PARTDRIVE" = "Exit" ]; then
-  $DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Quitting the installer now."
+  $DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Saindo do Instalador agora."
   exit 1
 fi
 
@@ -559,13 +560,13 @@ done
 SWAP=""
 while [ "$SWAP" = "" ]
 do
-SWAP=`$DIALOGMENU $TITLE"$TITLETEXT" $MENU  $TEXT"Please select a swap partition to use.\nIf the only option you see is to Quit the installer then no swap partitions were found." Exit "Quit the installer" $swappartmenu`
+SWAP=`$DIALOGMENU $TITLE"$TITLETEXT" $MENU  $TEXT"Selecione uma partição swap para usar.\nSe a única opção que você vê é Sair do Instalador é porque nenhuma partição swap foi localizada." Exit "Sair do Instalador" $swappartmenu`
 done
 
 SWAP=`echo $SWAP | cut -d "|" -f 1`
 
 if [ "$SWAP" = "Exit" ]; then
-  $DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Quitting the installer now."
+  $DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Saindo do Instalador agora."
   exit 1
 fi
 
@@ -592,19 +593,19 @@ done
 TARGETPART=""
 while [ "$TARGETPART" = "" ]
 do
-TARGETPART=`$DIALOGMENU $TITLE"$TITLETEXT" $MENU  $TEXT"Please select a partition to install the root system to.\nIf the only option you see is to Quit the installer then no partitions were found." Exit "Quit the installer" $partmenu`
+TARGETPART=`$DIALOGMENU $TITLE"$TITLETEXT" $MENU  $TEXT"Selecione uma partição para instalar o sistema.\nSe a única opção que você vê é Sair do Instalador é porque nenhuma partição foi localizada." Exit "Sair do Instalador" $partmenu`
 done
 
 TARGETPART=`echo $TARGETPART | cut -d "|" -f 1`
 
 if [ "$TARGETPART" = "Exit" ]; then
-  $DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Quitting the installer now."
+  $DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Saindo do Instalador agora."
   exit 1
 fi
 FSTYPE=""
 while [ "$FSTYPE" = "" ]
 do
-FSTYPE=`$DIALOGMENU $TITLE"$TITLETEXT" $MENU  $TEXT"Please select filesystem type for the root partition" ext2 "Ext2 filesystem" ext3 "Ext3 filesystem" ext4 "Ext4 filesystem"`
+FSTYPE=`$DIALOGMENU $TITLE"$TITLETEXT" $MENU  $TEXT"Selecione o tipo de sistema de arquivos da partição raiz" ext2 "Ext2" ext3 "Ext3" ext4 "Ext4"`
 done
 
 FSTYPE=`echo $FSTYPE | cut -d "|" -f 1`
@@ -620,7 +621,7 @@ done
 HOMEPART=""
 while [ "$HOMEPART" = "" ]
 do
-HOMEPART=`$DIALOGMENU $TITLE"$TITLETEXT" $MENU  $TEXT"Please select a partition to install /home to.\nIf the only option you see is root then no extra partitions were found." root "put /home on the root partition" $homepartmenu`
+HOMEPART=`$DIALOGMENU $TITLE"$TITLETEXT" $MENU  $TEXT"Selecione uma partição para instalar a pasta /home.\nSe a única opção que você vê é a partição raiz (root), então é porque nenhuma outra partição foi encontrada." root "coloque /home na partição raiz" $homepartmenu`
 done
 
 HOMEPART=`echo $HOMEPART | cut -d "|" -f 1`
@@ -629,7 +630,7 @@ if [ "$HOMEPART" != "root" ]; then
 HFSTYPE=""
 while [ "$HFSTYPE" = "" ]
 do
-HFSTYPE=`$DIALOGMENU $TITLE"$TITLETEXT" $MENU  $TEXT"Please select filesystem type for the home partition" noformat "Do Not Format the home partition - not recommended unless you know what you are doing" ext2 "Ext2 filesystem" ext3 "Ext3 filesystem" ext4 "Ext4 filesystem"`
+HFSTYPE=`$DIALOGMENU $TITLE"$TITLETEXT" $MENU  $TEXT"Selecione o tipo de sistema de arquivos da partição home" noformat "Não formate a partição home - não é recomendado a não ser que você saiba o que está fazendo" ext2 "Ext2" ext3 "Ext3" ext4 "Ext4"`
 done
 fi
 
@@ -643,13 +644,13 @@ if [ "$testmode" = "" ]; then
 while [ "$PASSOK" != "Yes" ]; do
 
 CHOICES=`$DIALOGMENU $TITLE"$TITLETEXT" --form \
---field="Password for root":H \
---field="Password for root again":H \
---field="New User Real Name" \
---field="New Username" \
---field="Password for new user":H \
---field="Password for new user again":H \
---field="Host Name for the computer"`
+--field="Senha para o root":H \
+--field="Senha para o root (repita)":H \
+--field="Nome real do novo usuário" \
+--field="Nome do novo usuário" \
+--field="Senha para o novo usuário":H \
+--field="Senha para o novo usuário (repita)":H \
+--field="Nome do Host para o computador"`
 
 if [ "$?" = "0" ]; then
 TARGETROOTPASS=`echo $CHOICES | cut -d "|" -f 1`
@@ -660,7 +661,7 @@ TARGETPASS=`echo $CHOICES | cut -d "|" -f 5`
 TARGETPASS2=`echo $CHOICES | cut -d "|" -f 6`
 TARGETHOSTNAME=`echo $CHOICES | cut -d "|" -f 7`
 else 
-  $DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Quitting the installer now."
+  $DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Saindo do Instalador agora."
   exit 1
 fi
 
@@ -675,23 +676,23 @@ fi
 [ "$TARGETHOSTNAME" != "" ] && \
 PASSOK="Yes"
 
-[ "$TARGETROOTPASS" = "" ] && $DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Root password is blank."
+[ "$TARGETROOTPASS" = "" ] && $DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Senha de Root em branco."
 
-[ "$TARGETROOTPASS" != "$TARGETROOTPASS2" ] && $DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Root passwords do not match."
+[ "$TARGETROOTPASS" != "$TARGETROOTPASS2" ] && $DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Senhas digitadas para o Root não conferem."
 
-[ "$TARGETUSERFULLNAME" = "" ] && $DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"User Full Name is blank."
+[ "$TARGETUSERFULLNAME" = "" ] && $DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Nome completo do usuário em branco."
 
-[ "$TARGETUSER" = "" ] && $DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Username is blank."
+[ "$TARGETUSER" = "" ] && $DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Nome de usuário em branco."
 
-[ "$TARGETUSER" = "$LIVE_USERNAME" ] && $DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Username can't be the same as the live username."
+[ "$TARGETUSER" = "$LIVE_USERNAME" ] && $DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Nome de usuário não pode ser o mesmo do usuário do Live CD."
 
-[ "$TARGETPASS" = "" ] && $DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"User password is blank."
+[ "$TARGETPASS" = "" ] && $DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Senha de usuário em branco."
 
-[ "$TARGETPASS" != "$TARGETPASS2" ] && $DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"User passwords do not match."
+[ "$TARGETPASS" != "$TARGETPASS2" ] && $DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Senhas digitadas para o usuário não conferem."
 
-[ "$TARGETROOTPASS" = "$TARGETPASS" ] && $DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Root and user passwords are the same.\n\nPlease use different passwords."
+[ "$TARGETROOTPASS" = "$TARGETPASS" ] && $DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"As senhas de Root e do usuário são iguais.\n\nUse senhas diferentes."
 
-[ "$TARGETHOSTNAME" = "" ] && $DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Host Name is blank."
+[ "$TARGETHOSTNAME" = "" ] && $DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Nome do Host em branco."
 
 
 done
@@ -716,14 +717,14 @@ for i in $Drives; do
 PartDrive="$i"
 
 if [ "$(echo "$PartDrive" | grep [0-9] )" = "" ]; then
- GrubMenu=("${GrubMenu[@]}" "$PartDrive" "Master boot record of disk")
+ GrubMenu=("${GrubMenu[@]}" "$PartDrive" "Master Boot Record do disco")
 fi
 done
 
-GrubMenu=( "${GrubMenu[@]}" "root" "Root partition - safe choice if you use a different boot manager" "rootmbr" "MBR of the root partition - this is what you want for a usb install" )
+GrubMenu=( "${GrubMenu[@]}" "root" "Partição raiz - escolha segura se você usa um gerenciador de boot diferente" "rootmbr" "MBR da partição raiz - isto é o que você deseja para uma instalação via pendrive/USB" )
 
 #grub location
-GRUBLOCTEST=$($DIALOGMENU $TITLE"$TITLETEXT" $MENU $TEXT"Please select where to install grub to.\n" "${GrubMenu[@]}")
+GRUBLOCTEST=$($DIALOGMENU $TITLE"$TITLETEXT" $MENU $TEXT"Selecione onde instalar o grub.\n" "${GrubMenu[@]}")
 
 ret="$?"
 
@@ -738,13 +739,13 @@ fi
 GRUBLOCTEST=$(echo "$GRUBLOCTEST" | awk -F '|' '{print $1}')
 
 if [ "$GRUBLOCTEST" = "root" ]; then
-GRUBLOCTEXT="root partition of $TARGETPART"
+GRUBLOCTEXT="partição raiz de $TARGETPART"
 GRUBLOC="/dev/$TARGETPART"
 elif [ "$GRUBLOCTEST" = "rootmbr" ]; then
-GRUBLOCTEXT="mbr of root partition of $TARGETPART"
+GRUBLOCTEXT="mbr da partição raiz de $TARGETPART"
 GRUBLOC="/dev/$PARTDRIVE"
 else
-GRUBLOCTEXT="master boot record of $GRUBLOCTEST"
+GRUBLOCTEXT="master boot record de $GRUBLOCTEST"
 GRUBLOC="/dev/$GRUBLOCTEST"
 fi
 
@@ -755,7 +756,7 @@ GrubSelectGUI
 
 #Timezone setting
 
-$DIALOG $TITLE"$TITLETEXT" $YESNO $TEXT"Is your system clock set to your current local time?\n\nAnswering no will indicate it is set to UTC"
+$DIALOG $TITLE"$TITLETEXT" $YESNO $TEXT"O relógio de seu sistema está configurado para hora local?\n\nRespondendo não indicará que ele está configurado para UTC."
 if [ $? = 0 ]; then
 if [ "$(grep "UTC" /etc/adjtime)" != "" ]; then
  sed -i -e "s|UTC|LOCALTIME|g" /etc/adjtime
@@ -766,22 +767,22 @@ if [ "$(grep "LOCALTIME" /etc/adjtime)" != "" ]; then
 fi
 fi
 
-cat /usr/share/zoneinfo/zone.tab | awk '{print $3}' | grep "/" | sort > /tmp/remastersys.zoneinfo
-for i in `cat /tmp/remastersys.zoneinfo`; do
+cat /usr/share/zoneinfo/zone.tab | awk '{print $3}' | grep "/" | sort > /tmp/refisefuqui.zoneinfo
+for i in `cat /tmp/refisefuqui.zoneinfo`; do
 ZONES="$ZONES $i Timezone"
 done
-rm /tmp/remastersys.zoneinfo
+rm /tmp/refisefuqui.zoneinfo
 
 ZONESINFO=""
 while [ "$ZONESINFO" = "" ]
 do
-ZONESINFO=`$DIALOGMENU $TITLE"$TITLETEXT" $MENU  $TEXT"Please select a timezone for your system" Exit "Quit the installer" $ZONES`
+ZONESINFO=`$DIALOGMENU $TITLE"$TITLETEXT" $MENU  $TEXT"Selecione uma zona de tempo para seu sistema" Exit "Sair do Instalador" $ZONES`
 done
 
 ZONESINFO=`echo $ZONESINFO | cut -d "|" -f 1`
 
 if [ "$ZONESINFO" = "Exit" ]; then
-  $DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Quitting the installer now."
+  $DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Saindo do Instalador agora."
   exit 1
 fi
 
@@ -797,28 +798,29 @@ cp /usr/share/zoneinfo/$ZONESINFO /etc/localtime
 #fi
 
 if [ "$HOMEPART" != "root" ]; then
-HOMETEXT=", $HOMEPART will be formatted $HFSTYPE for /home "
+HOMETEXT="$HOMEPART será formatado em $HFSTYPE para uso como /home"
 fi
 
 if [ "$HFSTYPE" = "noformat" ]; then
-HOMETEXT=", $HOMEPART will not be formatted but used for \n/home "
+HOMETEXT="$HOMEPART não será formatado, mas será usado como \n/home"
 fi
 
 if [ "$testmode" = "" ]; then
-$DIALOG $TITLE"$TITLETEXT" $YESNO $TEXT"Please verify that this information is correct.\n\nNew user $TARGETUSER will be created on the $FSTYPE formatted $TARGETPART partition$HOMETEXT and grub will be installed to the $GRUBLOCTEXT.\n\nDo you want to continue?"
+$DIALOG $TITLE"$TITLETEXT" $YESNO $TEXT"Confirme se esta informação está correta.\n\nO novo usuário $TARGETUSER será criado na partição $TARGETPART; o sistema de arquivos é $FSTYPE; $HOMETEXT; e, o grub será instalado em $GRUBLOCTEXT.\n\nDeseja continuar?"
 if [ $? != 0 ]; then
-  $DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Quitting the installer now."
+  $DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Saindo do Instalador agora."
   exit 1
 
 fi
 else
-$DIALOG $TITLE"$TITLETEXT" $YESNO $TEXT"Please verify that this information is correct.\n\nYour backup mode system will be installed on $FSTYPE formatted $TARGETPART partition$HOMETEXT and grub will be installed to the $GRUBLOCTEXT.\n\nDo you want to continue?"
+$DIALOG $TITLE"$TITLETEXT" $YESNO $TEXT"Confirme se esta informação está correta.\nSeu sistema de backup será instalado na partição $TARGETPART; o sistema de arquivos é $FSTYPE; $HOMETEXT; e, o grub será instalado em $GRUBLOCTEXT.\n\nDeseja continuar?"
 if [ $? != 0 ]; then
-  $DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Quitting the installer now."
+  $DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Saindo do Instalador agora."
   exit 1
 
 fi
 fi
+
 
 
 #END GUI MODE#########################################################################################################################################
@@ -835,27 +837,27 @@ fi
 #
 #
 #
-#install_to_hd section##########################################################################################################################
+#install_to_hd section################################################################################################################################
 #
 #
 #
 
 
 if [ "$GUI" != "" ]; then
-progressbar "Setting up SWAP Now...Please Wait \n" &
+progressbar "Configurando o SWAP agora... Por favor aguarde. \n" &
 fi
 
 sleep 2
-echo "Preparing swap partition now"
+echo "Preparando a partição swap agora."
 mkswap /dev/$SWAP
 swapon /dev/$SWAP
 if [ "$GUI" != "" ]; then
 killall -KILL tail
 fi
 if [ "$GUI" != "" ]; then
-progressbar "Formatting $TARGETPART Now...Please Wait \n" &
+progressbar "Formatando $TARGETPART agora... Por favor aguarde. \n" &
 fi
-echo "Formatting the $TARGETPART partition now"
+echo "Formatando a partição $TARGETPART agora."
 
 ## Preserve kernel options in the new grub system
 NewGrubDefLine="$(cat /proc/cmdline | awk -F 'config ' '{print $2}' | awk -F ' BOOT' '{print $1}')"
@@ -867,16 +869,16 @@ sed -i -e "s/$OldGrubLine/GRUB_CMDLINE_LINUX=\"\"/g" /etc/default/grub
 
 #make the filesystem and mount the partition on /TARGET
 if [ "`mount | grep $TARGETPART`" ]; then
-echo "Unmounting the partition we are going to use and format now"
+echo "Desmontando e formatando a partição que iremos usar."
 umount /dev/$TARGETPART
 fi
 mke2fs -t $FSTYPE /dev/$TARGETPART
 mkdir -p /TARGET
 sleep 2
-echo "Mounting the TARGET partition now"
+echo "Montando a partição TARGET agora."
 mount /dev/$TARGETPART /TARGET -o rw
 sleep 2
-echo "Using tune2fs to prevent the forced checks on boot"
+echo "Usando tune2fs para prevenir as verificações forçadas na inicialização."
 tune2fs -c 0 -i 0 /dev/$TARGETPART 
 rm -rf "/TARGET/lost+found"
 if [ "$GUI" != "" ]; then
@@ -885,16 +887,16 @@ fi
 if [ "$HOMEPART" != "root" ]; then
 if [ "$HFSTYPE" != "noformat" ]; then
 if [ "$GUI" != "" ]; then
-progressbar "Formatting $HOME Now...Please Wait \n" &
+progressbar "Formatando $HOME agora... Por favor aguarde. \n" &
 fi
-echo "Formatting the $HOME partition now"
+echo "Formatando a partição $HOME agora."
 if [ "`mount | grep $HOMEPART`" ]; then
-echo "Unmounting the partition we are going to use and format now"
+echo "Desmontando e formatando a partição que iremos usar."
 umount /dev/$HOMEPART
 fi
 mke2fs -t $HFSTYPE /dev/$HOMEPART
 fi
-echo "Mounting the TARGET home partition now"
+echo "Montando a partição TARGET agora."
 mkdir -p /TARGET/home
 mount /dev/$HOMEPART /TARGET/home -o rw
 tune2fs -c 0 -i 0 /dev/$HOMEPART
@@ -927,9 +929,9 @@ else
 LIVEMODE="BACKUP"
 fi
 
-cat > /var/log/remastersys-installer.log <<FOO
+cat > /var/log/refisefuqui-installer.log <<FOO
 ==============================
-Remastersys-Installer log file
+ReFiSeFuQui-Installer log file
 ==============================
 LIVEMODE=$LIVEMODE
 ==============================================================
@@ -953,32 +955,32 @@ GRUBLOC=$GRUBLOC
 ==============================================================
 FOO
 
-echo "==============================================================" >> /var/log/remastersys-installer.log
-echo "MOUNTS" >> /var/log/remastersys-installer.log
-echo "==============================================================" >> /var/log/remastersys-installer.log
-mount >> /var/log/remastersys-installer.log
-echo "==============================================================" >> /var/log/remastersys-installer.log
-echo "FDISK listing" >> /var/log/remastersys-installer.log
-echo "==============================================================" >> /var/log/remastersys-installer.log
-fdisk -l >> /var/log/remastersys-installer.log
-echo "==============================================================" >> /var/log/remastersys-installer.log
-echo "live config listing" >> /var/log/remastersys-installer.log
-echo "==============================================================" >> /var/log/remastersys-installer.log
-cat /etc/live/config.conf >> /var/log/remastersys-installer.log
-echo "==============================================================" >> /var/log/remastersys-installer.log
-echo "End of Log" >> /var/log/remastersys-installer.log
-echo "==============================================================" >> /var/log/remastersys-installer.log
+echo "==============================================================" >> /var/log/refisefuqui-installer.log
+echo "MOUNTS" >> /var/log/refisefuqui-installer.log
+echo "==============================================================" >> /var/log/refisefuqui-installer.log
+mount >> /var/log/refisefuqui-installer.log
+echo "==============================================================" >> /var/log/refisefuqui-installer.log
+echo "FDISK listing" >> /var/log/refisefuqui-installer.log
+echo "==============================================================" >> /var/log/refisefuqui-installer.log
+fdisk -l >> /var/log/refisefuqui-installer.log
+echo "==============================================================" >> /var/log/refisefuqui-installer.log
+echo "live config listing" >> /var/log/refisefuqui-installer.log
+echo "==============================================================" >> /var/log/refisefuqui-installer.log
+cat /etc/live/config.conf >> /var/log/refisefuqui-installer.log
+echo "==============================================================" >> /var/log/refisefuqui-installer.log
+echo "End of Log" >> /var/log/refisefuqui-installer.log
+echo "==============================================================" >> /var/log/refisefuqui-installer.log
 
 
 
 if [ "$GUI" != "" ]; then
-progressbar "Copying the files to the TARGET System...Please Wait \n" &
+progressbar "Copiando os arquivos para o Sistema TARGET... Por favor aguarde. \n" &
 fi
 
 
 # copy the live system to the hd
-echo "Copying the live system to the hard drive now."
-echo "This may take a while so please wait until completed."
+echo "Copiando o sistema do Live CD para o disco rígido."
+echo "Isto pode demorar um pouco então por favor seja paciente."
 
 
             
@@ -991,18 +993,18 @@ fi
 mkdir -p /TARGET/{proc,mnt,run,sys,media/cdrom}
 
 #remove the live installer from the desktop of /etc/skel/Desktop
-if [ -f /TARGET/etc/skel/Desktop/remastersys-installer.desktop -o -f /TARGET/etc/skel/Desktop/remastersys-installer-ked.desktop ]; then
-rm -f /TARGET/etc/skel/Desktop/remastersys-installer*.desktop
+if [ -f /TARGET/etc/skel/Desktop/refisefuqui-installer.desktop -o -f /TARGET/etc/skel/Desktop/refisefuqui-installer-ked.desktop ]; then
+rm -f /TARGET/etc/skel/Desktop/refisefuqui-installer*.desktop
 fi
 
-echo "Completed copying the files."
+echo "Cópia de arquivos completada."
 if [ "$GUI" != "" ]; then
 killall -KILL tail
 fi
 if [ "$GUI" != "" ]; then
-progressbar "Performing post-install steps now...Please Wait\n" &
+progressbar "Executando passos pós-instalação... Por favor aguarde.\n" &
 fi
-echo "Performing post-install steps now"
+echo "Executando passos pós-instalação."
 
 #prepare the chroot environment for some post install changes
 mount -o bind /proc /TARGET/proc
@@ -1065,20 +1067,20 @@ if [ -f /TARGET/usr/sbin/anacron.debian ]; then
 rm -f /TARGET/usr/sbin/anacron
 fi
 
-# fix adept_notifier by copying the file we saved when remastersys first ran as live-initramfs removes it
-if [ -f /TARGET/etc/remastersys/adept_notifier_auto.desktop ]; then
-mv /TARGET/etc/remastersys/adept_notifier_auto.desktop /TARGET/usr/share/autostart/adept_notifier_auto.desktop
+# fix adept_notifier by copying the file we saved when refisefuqui first ran as live-initramfs removes it
+if [ -f /TARGET/etc/refisefuqui/adept_notifier_auto.desktop ]; then
+mv /TARGET/etc/refisefuqui/adept_notifier_auto.desktop /TARGET/usr/share/autostart/adept_notifier_auto.desktop
 fi
 
 # copy trackerd stuff as live-initramfs disables it
-if [ -f /TARGET/etc/remastersys/tracker-applet.desktop ]; then
-mv /TARGET/etc/remastersys/tracker-applet.desktop /TARGET/etc/xdg/autostart/tracker-applet.desktop
+if [ -f /TARGET/etc/refisefuqui/tracker-applet.desktop ]; then
+mv /TARGET/etc/refisefuqui/tracker-applet.desktop /TARGET/etc/xdg/autostart/tracker-applet.desktop
 fi
-if [ -f /TARGET/etc/remastersys/trackerd.desktop.xdg ]; then
-mv /TARGET/etc/remastersys/trackerd.desktop.xdg /TARGET/etc/xdg/autostart/trackerd.desktop
+if [ -f /TARGET/etc/refisefuqui/trackerd.desktop.xdg ]; then
+mv /TARGET/etc/refisefuqui/trackerd.desktop.xdg /TARGET/etc/xdg/autostart/trackerd.desktop
 fi
-if [ -f /TARGET/etc/remastersys/trackerd.desktop.share ]; then
-mv /TARGET/etc/remastersys/trackerd.desktop.share /TARGET/usr/share/autostart/trackerd.desktop
+if [ -f /TARGET/etc/refisefuqui/trackerd.desktop.share ]; then
+mv /TARGET/etc/refisefuqui/trackerd.desktop.share /TARGET/usr/share/autostart/trackerd.desktop
 fi
 
 #restore original inittab as live-initramfs changes it
@@ -1137,11 +1139,11 @@ fi
 #cleanup live polkit file from new install
 rm -f /TARGET/var/lib/polkit-1/localauthority/10-vendor.d/10-live-cd.pkla
 
-if [ -f /etc/remastersys/remastersys-installer.conf ]; then
-. /etc/remastersys/remastersys-installer.conf
+if [ -f /etc/refisefuqui/refisefuqui-installer.conf ]; then
+. /etc/refisefuqui/refisefuqui-installer.conf
 fi
 if [ "$DEFAULTGROUPS" = "" ]; then
-DEFAULTGROUPS="audio,cdrom,dialout,floppy,video,plugdev,netdev"
+DEFAULTGROUPS="audio,cdrom,dialout,floppy,video,plugdev,netdev,sudo"
 fi
 
 cat > /TARGET/bin/tempinstallerscript <<FOO
@@ -1199,30 +1201,30 @@ killall -KILL tail
 fi
 # Setup grub
 
-cat > /tmp/Remastersys-Grub-Install << FOO
+cat > /tmp/ReFiSeFuQui-Grub-Install << FOO
 #!/bin/bash
 chroot /TARGET grub-install --force --no-floppy "$GRUBLOC"
 chroot /TARGET update-grub
 exit 0
 FOO
 
-chmod +x /tmp/Remastersys-Grub-Install
+chmod +x /tmp/ReFiSeFuQui-Grub-Install
 
 if [ "$GUI" != "" ]; then
-progressbar "Installing and setting up grub...Please Wait\n" &
-xterm -e /tmp/Remastersys-Grub-Install
+progressbar "Instalando e configurando o grub... Por favor aguarde.\n" &
+xterm -e /tmp/ReFiSeFuQui-Grub-Install
 sleep 1
-rm -rf /tmp/Remastersys-Grub-Install
+rm -rf /tmp/ReFiSeFuQui-Grub-Install
 else
-echo "Installing and setting up grub."
-/tmp/Remastersys-Grub-Install
+echo "Instalando e configurando o grub."
+/tmp/ReFiSeFuQui-Grub-Install
 sleep 1
-rm -rf /tmp/Remastersys-Grub-Install
+rm -rf /tmp/ReFiSeFuQui-Grub-Install
 fi
 
-echo "Post-install has completed."
+echo "Passos pós-instalação completados."
 echo
-echo "Unmounting the TARGET partition."
+echo "Desmontando a partição TARGET."
 sleep 1
 umount /TARGET/proc
 sleep 1
@@ -1240,7 +1242,7 @@ killall -KILL tail
 fi
 
 
-$DIALOG $TITLE"$TITLETEXT" $YESNO $TEXT"Installation is complete.\n\nIf everything went well you should have your new system installed and ready.\n\nDo you want to reboot now to try it out?" $HEIGHT $WIDTH
+$DIALOG $TITLE"$TITLETEXT" $YESNO $TEXT"A instalação foi completada.\n\nSe tudo correu bem você deve ter seu novo sistema instalado e pronto para ser usado.\n\nDeseja reiniciar agora para testar o novo sistema?" $HEIGHT $WIDTH
 
 if [ $? != 0 ]; then
 exit 0

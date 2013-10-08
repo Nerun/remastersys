@@ -1,10 +1,14 @@
 #!/bin/bash
 
-# remastersys-skelcopy script to copy user data to /etc/skel 
+# refisefuqui-skelcopy script to copy user data to /etc/skel 
 # 
+#  ReFiSeFuQui-skelcopy translated by "Nerun"
 #
+#  Copyright 2013 Under the GNU GPL2 License
 #
-#  Created by Tony "Fragadelic" Brijeski
+#  Translation of Remastersys-skelcopy, created by Tony "Fragadelic" Brijeski
+#
+#  Remastersys-skelcopy:
 #
 #  Copyright 2011,2012 Under the GNU GPL2 License
 #
@@ -13,14 +17,14 @@
 testroot="`whoami`"
 
 if [ "$testroot" != "root" ]; then
-    echo "Must be root"
+    echo "Deve ser superusuário."
     exit 1
 fi
 
 SKELUSER="$1"
 if [ "$SKELUSER" = "" ]; then
-    echo "Usage is: remastersys-skelcopy username"
-    echo "Where username is a valid user on the system"
+    echo "Uso: refisefuqui-skelcopy nomeusuario"
+    echo "Onde nomeusuario é um usuário válido no sistema"
     exit 1
 fi
 
@@ -28,7 +32,7 @@ SKELFOLDER=`grep "^$SKELUSER:" /etc/passwd | awk -F ":" '{print $6}'`
 
 if [ -d "$SKELFOLDER" ]; then
     cd $SKELFOLDER
-    echo "Cleaning up /etc/skel of the files we will copy over"
+    echo "Limpando /etc/skel dos arquivos que iremos sobrescrever"
     rm -rf /etc/skel/.bacon
     rm -rf /etc/skel/.xscreensaver
     rm -rf /etc/skel/.gconf
@@ -49,7 +53,7 @@ if [ -d "$SKELFOLDER" ]; then
     rm -rf /etc/skel/.razor
     rm -rf /etc/skel/.wbar
     rm -rf /etc/skel/.mplayer
-    echo "Copying config files to /etc/skel"
+    echo "Copiando arquivos de configuração para /etc/skel"
     rsync -a .bacon /etc/skel/
     rsync -a .xscreensaver /etc/skel
     sed -i -e "s/$SKELUSER//g" /etc/skel/.xscreensaver
@@ -95,6 +99,6 @@ if [ -d "$SKELFOLDER" ]; then
     chown -R root:root /etc/skel
 
 else
-    echo "$1 either not found or doesn't have a proper home folder - exiting."
+    echo "$1 ou não foi encontrado ou não possui um nome de pasta apropriado - saindo."
     exit 1
 fi

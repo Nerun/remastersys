@@ -1,4 +1,4 @@
-/etc/refisefuqui/remastersys.version
+/etc/refisefuqui/refisefuqui.version
 /etc/refisefuqui/preseed/custom.seed
 /etc/refisefuqui/isolinux/vesamenu.c32
 /etc/refisefuqui/isolinux/stdmenu.cfg

@@ -1,21 +1,20 @@
 #!/bin/bash
 
-# remastersys-gui script to make an installable livecd/dvd from a Debian installed 
+# refisefuqui-gui script to make an installable livecd/dvd from a Debian installed 
 # and customized system
 #
 #
-#  Created by Tony "Fragadelic" Brijeski
+#  ReFiSeFuQui created by "Nerun"
+#  Copyright 2013 Under the GNU GPL2 License
 #
+#  Fork of Remastersys, created by Tony "Fragadelic" Brijeski
+#
+#  Remastersys:
 #  Copyright 2007-2012 Under the GNU GPL2 License
-#
 #  Created October 28th, 2007,2008
 #  Updated July 2012
-#
-#  keeping version number in sync with main remastersys script
-#
-#
+
 #  This script requires yad to run
-#
 testyad=`which yad`
 
 if [ "$testyad" = "" ]; then
@@ -23,9 +22,9 @@ apt-get -y -q install yad
 fi
 
 if [ "$testyad" != "" ]; then
-DIALOGMENU="`which yad` --window-icon=/usr/share/icons/remastersys.png --width=750 --height=400 --center"
-DIALOG="`which yad` --window-icon=/usr/share/icons/remastersys.png --center"
-TITLE="--always-print-result --dialog-sep --image=/usr/share/icons/remastersys.png --title="
+DIALOGMENU="`which yad` --window-icon=/usr/share/icons/refisefuqui.png --width=750 --height=400 --center"
+DIALOG="`which yad` --window-icon=/usr/share/icons/refisefuqui.png --center"
+TITLE="--always-print-result --dialog-sep --image=/usr/share/icons/refisefuqui.png --title="
 TEXT="--text="
 ENTRY="--entry "
 ENTRYTEXT="--entry-text "
@@ -33,13 +32,13 @@ FILESELECTION="--file "
 MENU="--list --column=Pick --column=Info"
 YESNO=" --button=Yes:0 --button=No:1 "
 MSGBOX=" --button=Ok:0 "
-TITLETEXT="Remastersys Backup"
+TITLETEXT="Criador de ReFiSeFuQui"
 fi
 
 testroot="`whoami`"
 
 if [ "$testroot" != "root" ]; then
-$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"This must be run with root privileges."
+$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Deve ser executado com privilégios de superusuário."
 exit 1
 fi
 
@@ -47,18 +46,18 @@ mainmenu () {
 
 CHOICES=`$DIALOGMENU $TITLE"$TITLETEXT" --button=Ok:0 --button=Exit:1 $MENU $TEXT"Escolha o que deseja fazer:" \
 Backup "Backup completo do sistema incluindo arquivos do usuário" \
-Dist "Criar uma 'distribuição' num 'Live CD' - serão criados CDFS (sistema de arquivos de CD) e ISO (imagem gravável de CD)" \
-Distcdfs "Criar somente o CDFS de um Live CD - ideal, se você deseja adicionar arquivos ao CD" \
-Distiso "Criar somente a ISO de um Live CD - o CDFS deve ter sido criado anteriormente" \
-DistBoot "Selecionar imagem de fundo do menu do Live CD" \
-DistGrub "Selecionar imagem de fundo do GRUB boot loader" \
-DistSkel "Tornar as configurações personalizadas do usuário atual em configurações padrões do sistema do Live CD" \
+Dist "Criar 'distribuição' em 'Live CD/DVD' - serão criados CDFS (sistema de arquivos de CD) e ISO (imagem gravável de CD)" \
+Distcdfs "Criar somente o CDFS de um Live CD/DVD - ideal, se você deseja adicionar arquivos ao CD" \
+Distiso "Criar somente a ISO de um Live CD/DVD - o CDFS deve ter sido criado anteriormente" \
+DistBoot "Selecionar imagem de fundo para o menu de inicialização do Live CD/DVD" \
+DistGrub "Selecionar imagem de fundo para o carregador de inicialização GRUB" \
+DistSkel "Tornar as configurações personalizadas do usuário atual em configurações padrões do sistema do Live CD/DVD" \
 DistPlymouth "Selecionar imagem de fundo para o Plymouth" \
-Modify "Modificar as configurações do Remastersys" \
+Modify "Modificar as configurações do ReFiSeFuQui" \
 Skelclean "Limpar as configurações de /etc/skel para remover todas as personalizações" \
-Clear "Limpar a pasta de trabalho do Remastersys" \
-Viewlog "Visualizar o arquivo de log do Remastersys" \
-Info "Sobre o Remastersys Backup"`
+Clear "Limpar a pasta de trabalho do ReFiSeFuQui" \
+Viewlog "Visualizar o arquivo de log do ReFiSeFuQui" \
+Info "Sobre o Criador de ReFiSeFuQui"`
 
 if [ "$?" = "0" ]; then
 CHOICE=`echo $CHOICES | cut -d "|" -f 1`
@@ -86,28 +85,31 @@ elif [ "$CHOICE" = "Modify" ]; then
 modifymenu
 elif [ "$CHOICE" = "Skelclean" ]; then
 find /etc/skel/ -type f -exec rm -f '{}' \;
-$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"The /etc/skel/ config files have been cleared out."
+$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Os arquivos de configuração em /etc/skel/ foram apagados."
 mainmenu
 elif [ "$CHOICE" = "Clear" ]; then
 cleanmenu
 elif [ "$CHOICE" = "Viewlog" ]; then
-. /etc/remastersys.conf
-if [ -f "$WORKDIR/remastersys/remastersys.log" ]; then
-$DIALOG $TITLE"$TITLETEXT" --width=750 --height=400 --text-info --filename="$WORKDIR/remastersys/remastersys.log"
+. /etc/refisefuqui.conf
+if [ -f "$WORKDIR/refisefuqui/refisefuqui.log" ]; then
+$DIALOG $TITLE"$TITLETEXT" --width=750 --height=400 --text-info --filename="$WORKDIR/refisefuqui/refisefuqui.log"
 else
-$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"The remastersys.log file does not exist"
+$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"O arquivo refisefuqui.log não existe."
 fi
 mainmenu
 elif [ "$CHOICE" = "Info" ]; then
-. /etc/remastersys/remastersys.version
-$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Remastersys Backup is the Graphical Frontend \n\
-to remastersys which is the command line utility \n\
-that can take a Debian or variant installed system \n\
-and turn it back into a distributable livecd/dvd \n\
-or make a complete system backup including \n\
-the /home directory and all user files contained within.\n\n\
-This is version $REMASTERSYSVERSION.\n\n\
-Remastersys Backup and remastersys were created by Tony Brijeski."
+. /etc/refisefuqui/refisefuqui.version
+$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"
+
+O Criador de ReFiSeFuQui é uma interface visual para o \n\
+refisefuqui, que é uma ferramenta em linha de comando que \n\
+transforma um sistema Debian instalado (ou derivado) em \n\
+uma distribuição em Live CD ou DVD. Podendo ser usado \n\
+também como uma ferramenta de backup completo, incluindo \n\
+a pasta /home e todos os dados de usuários.\n\n\
+Esta é a versão $REMASTERSYSVERSION.\n\n\
+Criador de ReFiSeFuQui e ReFiSeFuQui foram criados por Nerun, \n\
+como um fork do Remastersys, de Tony Brijeski, já descontinuado."
 mainmenu
 else
 exit 0
@@ -116,72 +118,72 @@ fi
 }
 
 backupmenu () {
-$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"You have selected Backup Mode.\n\nDo not interrupt this process.\n\nClick OK to Start the Backup LiveCD/DVD process."
-xterm -fn 9x15 -e "remastersys backup"
+$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Você escolheu o Modo de Backup.\n\nNão interrompa este processo.\n\nClique em OK para iniciar o processo de criação do LiveCD/DVD de Backup."
+xterm -fn 9x15 -e "refisefuqui backup"
 
-. /etc/remastersys.conf
+. /etc/refisefuqui.conf
 
-SQUASHFSSIZE=`ls -s $WORKDIR/remastersys/ISOTMP/live/filesystem.squashfs | awk -F " " '{print $1}'`
+SQUASHFSSIZE=`ls -s $WORKDIR/refisefuqui/ISOTMP/live/filesystem.squashfs | awk -F " " '{print $1}'`
 if [ "$SQUASHFSSIZE" -gt "3999999" ]; then
-$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"The compressed filesystem is larger than the \niso9660 specification allows for a single file.\n\nYou must try to reduce the amount of data you \nare backing up and try again."
+$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"O sistema de arquivos comprimido é maior do \nque permite a especificação iso9660 para um único arquivo.\n\nVocê deve tentar reduzir a quantidade \nde arquivos que você está tentando fazer backup \ne tentar novamente."
 exit 1
 fi
-$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Your $CUSTOMISO and $CUSTOMISO.md5 files are ready \nin $WORKDIR/remastersys.\nIt is recommended to test it in a virtual machine or \non a rewritable cd/dvd to ensure it works as desired.\n\nClick on OK to return to the main menu."
+$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Seus arquivos $CUSTOMISO e $CUSTOMISO.md5 estão prontos \nem $WORKDIR/refisefuqui.\nÉ recomendável testá-los em uma máquina virtual ou \nem um CD/DVD regravável para se certificar que ele funciona conforme desejado.\n\nClique em OK para retornar ao menu principal."
 mainmenu
 
 }
 
 distmenu () {
-$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"You have selected Dist Mode.\n\nClick OK to Start the Distributable LiveCD/DVD process."
-xterm -fn 9x15 -e "remastersys dist"
+$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Você escolheu o Modo Dist.\n\nClique em OK para iniciar o processo de criação da Distribuição LiveCD/DVD."
+xterm -fn 9x15 -e "refisefuqui dist"
 
-. /etc/remastersys.conf
+. /etc/refisefuqui.conf
 
-SQUASHFSSIZE=`ls -s $WORKDIR/remastersys/ISOTMP/live/filesystem.squashfs | awk -F " " '{print $1}'`
+SQUASHFSSIZE=`ls -s $WORKDIR/refisefuqui/ISOTMP/live/filesystem.squashfs | awk -F " " '{print $1}'`
 if [ "$SQUASHFSSIZE" -gt "3999999" ]; then
-$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"The compressed filesystem is larger than the \niso9660 specification allows for a single file.\n\nYou must try to reduce the amount of data you \nare backing up and try again."
+$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"O sistema de arquivos comprimido é maior do \nque permite a especificação iso9660 para um único arquivo.\n\nVocê deve tentar reduzir a quantidade \nde arquivos que você está tentando fazer backup \ne tentar novamente."
 exit 1
 fi
-$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Your $CUSTOMISO and $CUSTOMISO.md5 files are ready \nin $WORKDIR/remastersys.\nIt is recommended to test it in a virtual machine or \non a rewritable cd/dvd to ensure it works as desired.\n\nClick on OK to return to the main menu."
+$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Seus arquivos $CUSTOMISO e $CUSTOMISO.md5 estão prontos \nem $WORKDIR/refisefuqui.\nÉ recomendável testá-los em uma máquina virtual ou \nem um CD/DVD regravável para se certificar que ele funciona conforme desejado.\n\nClique em OK para retornar ao menu principal."
 mainmenu
 
 }
 
 distcdfsmenu () {
-$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"You have selected Dist CDFS Mode.  Click OK to Start the Distributable LiveCD/DVD filesystem build process."
-xterm -fn 9x15 -e "remastersys dist cdfs"
+$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Você escolheu o Modo Dist CDFS.  Clique em OK para iniciar o processo de criação do sistema de arquivos da Distribuição LiveCD/DVD."
+xterm -fn 9x15 -e "refisefuqui dist cdfs"
 
-. /etc/remastersys.conf
+. /etc/refisefuqui.conf
 
-SQUASHFSSIZE=`ls -s $WORKDIR/remastersys/ISOTMP/live/filesystem.squashfs | awk -F " " '{print $1}'`
+SQUASHFSSIZE=`ls -s $WORKDIR/refisefuqui/ISOTMP/live/filesystem.squashfs | awk -F " " '{print $1}'`
 if [ "$SQUASHFSSIZE" -gt "3999999" ]; then
-$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"The compressed filesystem is larger than the \niso9660 specification allows for a single file.\n\nYou must try to reduce the amount of data you \nare backing up and try again."
+$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"O sistema de arquivos comprimido é maior do \nque permite a especificação iso9660 para um único arquivo.\n\nVocê deve tentar reduzir a quantidade \nde arquivos que você está tentando fazer backup \ne tentar novamente."
 exit 1
 fi
 
-$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Your livecd filesystem is ready in $WORKDIR/remastersys.\nYou can now add files to the cd and \nthen run the iso only option when you are done.\n\nClick on OK to return to the main menu."
+$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Seu sistema de arquivos do Live CD/DVD está pronto em $WORKDIR/refisefuqui.\nVocê pode agora adicionar arquivos ao CD \ne então executar a opção Dist ISO quando você estiver pronto.\n\nClique em OK para retornar ao menu principal."
 mainmenu
 
 }
 
 distisomenu () {
-. /etc/remastersys.conf
-if [ -f "$WORKDIR/remastersys/ISOTMP/live/filesystem.squashfs" ]; then
-$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"You have selected Dist ISO Mode.\n\nClick OK to create the iso file."
-xterm -fn 9x15 -e "remastersys dist iso"
+. /etc/refisefuqui.conf
+if [ -f "$WORKDIR/refisefuqui/ISOTMP/live/filesystem.squashfs" ]; then
+$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Você escolheu o Modo Dist ISO.\n\nClique em OK para criar o arquivo ISO."
+xterm -fn 9x15 -e "refisefuqui dist iso"
 
-. /etc/remastersys.conf
+. /etc/refisefuqui.conf
 
-SQUASHFSSIZE=`ls -s $WORKDIR/remastersys/ISOTMP/live/filesystem.squashfs | awk -F " " '{print $1}'`
+SQUASHFSSIZE=`ls -s $WORKDIR/refisefuqui/ISOTMP/live/filesystem.squashfs | awk -F " " '{print $1}'`
 if [ "$SQUASHFSSIZE" -gt "3999999" ]; then
-$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"The compressed filesystem is larger than the \niso9660 specification allows for a single file.\n\nYou must try to reduce the amount of data you are backing up and try again."
+$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"O sistema de arquivos comprimido é maior do \nque permite a especificação iso9660 para um único arquivo.\n\nVocê deve tentar reduzir a quantidade \nde arquivos que você está tentando fazer backup \ne tentar novamente."
 exit 1
 fi
-$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Your $CUSTOMISO and $CUSTOMISO.md5 files are ready in $WORKDIR/remastersys.\n\nIt is recommended to test it in a virtual machine or \non a rewritable cd/dvd to ensure it works as desired.\nClick on OK to return to the main menu."
+$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Seus arquivos $CUSTOMISO e $CUSTOMISO.md5 estão prontos \nem $WORKDIR/refisefuqui.\nÉ recomendável testá-los em uma máquina virtual ou \nem um CD/DVD regravável para se certificar que ele funciona conforme desejado.\n\nClique em OK para retornar ao menu principal."
 mainmenu
 
 else
-$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"The livecd filesystem does not exist.\n\nClick OK to go back to the main menu and\ntry the normal Dist mode or the Dist CDFS again."
+$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"O sistema de arquivos do Live CD/DVD não existe.\n\nClique OK para voltar ao menu principal e\ntentar o Modo Dist ou o Modo Dist CDFS novamente."
 mainmenu
 exit0
 fi
@@ -189,30 +191,30 @@ fi
 
 
 distbootmenu () {
-$DIALOG $TITLE"Remastersys Backup" $MSGBOX $TEXT"This will allow you to choose \
-your own picture to \nbe the background for the LIVE boot menu. \n\
-Please note that it MUST be a 640x480 pixel png file.  \nYou must create \
-this picture or resize it with a proper \ngraphics editor as this tool does \
-not have the ability to change the size \nor type of picture. \
+$DIALOG $TITLE"Criador de ReFiSeFuQui" $MSGBOX $TEXT"Isto lhe permitirá escolher \
+sua própria figura para ser \na iamgem de fundo do menu do Live CD/DVD. \n\
+A imagem DEVE ter 640x480 pixels e estar em formato PNG.  \nVocê deve criar \
+esta imagem ou redimensioná-la com um editor \ngráfico apropriado uma vez que \
+esta ferramenta não possui a habilidade de fazê-lo. \
 \n\
 \n\
-Click OK to continue."
+Clique em OK para continuar."
 
-BOOTPIC=`$DIALOG $TITLE"Remastersys Backup" --width=750 --height=400 $FILESELECTION`
+BOOTPIC=`$DIALOG $TITLE"Criador de ReFiSeFuQui" --width=750 --height=400 $FILESELECTION`
 if [ "$BOOTPIC" != "" ]; then
-mv /etc/remastersys/isolinux/splash.png \
-/etc/remastersys/isolinux/splash.png.`date +%F%T | sed -e "s/-//g" | sed -e "s/://g"`
+mv /etc/refisefuqui/isolinux/splash.png \
+/etc/refisefuqui/isolinux/splash.png.`date +%F%T | sed -e "s/-//g" | sed -e "s/://g"`
 
-cp $BOOTPIC /etc/remastersys/isolinux/splash.png
+cp $BOOTPIC /etc/refisefuqui/isolinux/splash.png
 
 
-$DIALOG $TITLE"Remastersys Backup" $MSGBOX $TEXT"$BOOTPIC has been copied \
-to \n/etc/remastersys/isolinux/splash.png becoming \nthe default background \
-for the LIVE menu. \nClick OK to continue."
+$DIALOG $TITLE"Criador de ReFiSeFuQui" $MSGBOX $TEXT"$BOOTPIC foi copiado \
+para \n/etc/refisefuqui/isolinux/splash.png se tornando \na imagem de fundo padrão \
+para o menu do Live CD/DVD. \nClique em OK para continuar."
 
 else
 
-$DIALOG $TITLE"Remastersys Backup" $MSGBOX $TEXT"You didn't select any file. \n\nClick OK to continue."
+$DIALOG $TITLE"Criador de ReFiSeFuQui" $MSGBOX $TEXT"Você não selecionou qualquer arquivo. \n\nClique em OK para continuar."
 fi
 
 
@@ -220,24 +222,24 @@ mainmenu
 }
 
 distgrubmenu () {
-$DIALOG $TITLE"Remastersys Backup" $MSGBOX $TEXT"This will allow you to choose \
-your own png picture \nto be the background for the GRUB boot loader. \
-Click OK to continue."
+$DIALOG $TITLE"Criador de ReFiSeFuQui" $MSGBOX $TEXT"Isto lhe permitirá escolher \
+sua própria imagem PNG \ncomo imagem de fundo para o gerenciador de boot GRUB. \
+Clique em OK para continuar."
 
-GRUBPIC=`$DIALOG $TITLE"Remastersys Backup" --width=750 --height=400 $FILESELECTION`
+GRUBPIC=`$DIALOG $TITLE"Criador de ReFiSeFuQui" --width=750 --height=400 $FILESELECTION`
 if [ "$GRUBPIC" != "" ]; then
 
 
-$DIALOG $TITLE"Remastersys Backup" $MSGBOX $TEXT"$GRUBPIC has been \ncopied \
-to /etc/remastersys/grub.png \nand is the default background for grub. \nClick \
-OK to update grub with the new settings \nso you can see your picture on the next boot."
+$DIALOG $TITLE"Criador de ReFiSeFuQui" $MSGBOX $TEXT"$GRUBPIC foi copiado \
+para /etc/refisefuqui/grub.png \ne é a imagem de fundo padrão para o GRUB. \nClique \
+OK para atualizar o GRUB com as novas configurações \npara poder ver a imagem na próxima inicialização."
 if [ "$?" = "0" ]; then
 
-$DIALOG $TITLE"Remastersys Backup" --no-buttons --progress --pulsate $TEXT"Updating grub now. \n\
-Please wait." &
+$DIALOG $TITLE"Criador de ReFiSeFuQui" --no-buttons --progress --pulsate $TEXT"Atualizando GRUB agora. \n\
+Por favor aguarde." &
 PICFILE=`echo $GRUBPIC | awk -F"/" '{print $NF}'`
-cp $GRUBPIC /etc/remastersys/grub.png
-NEWGRUBPIC="/etc/remastersys/grub.png"
+cp $GRUBPIC /etc/refisefuqui/grub.png
+NEWGRUBPIC="/etc/refisefuqui/grub.png"
 
 sed -i -e "/GRUB_BACKGROUND/d" /etc/default/grub
 
@@ -251,25 +253,25 @@ FOO
 update-grub
 killall -KILL yad
 
-$DIALOG $TITLE"Remastersys Backup" $MSGBOX $TEXT"GRUB has been updated. Click OK to continue."
+$DIALOG $TITLE"Criador de ReFiSeFuQui" $MSGBOX $TEXT"GRUB foi atualizado. Clique em OK para continuar."
 fi
 else
 
-$DIALOG $TITLE"Remastersys Backup" $MSGBOX $TEXT"You didn't select any file. \n\nClick OK to continue."
+$DIALOG $TITLE"Criador de ReFiSeFuQui" $MSGBOX $TEXT"Você não selecionou qualquer arquivo. \n\nClique em OK para continuar."
 fi
 mainmenu
 }
 
 distskelmenu () {
 
-$DIALOG $TITLE"Remastersys Backup" $MSGBOX $TEXT"This will put your user desktop \
-and application settings \nin /etc/skel so they become the default for the live system. \n\
-This includes desktop background and other personalized \napplication settings that \
-aren't hardcoded to the current \nusers home folder. \
+$DIALOG $TITLE"Criador de ReFiSeFuQui" $MSGBOX $TEXT"Isto colocará a área de trabalho de seu usuário \
+e configurações de aplicativos \nem /etc/skel tornando-os o padrão para o sistema do Live CD/DVD. \n\
+Incluem-se papel de parede e outras configurações \nde aplicativos que \
+não estão definidas a pasta home \ndo usuário. \
 \n\
-Need to compile a list of valid users. \n\
-It may take a few seconds to complete so be patient. \n\
-Click OK to prepare the list."
+É preciso compilar uma lista dos usuários válidos. \n\
+Pode levar alguns minutos para concluir, então seja paciente. \n\
+Clique em OK para preparar a lista."
 
 
 j="0"
@@ -287,8 +289,8 @@ done
 done
 
 
-SKELUSER=`$DIALOG $TITLE"$TITLETEXT" $MENU $TEXT"\nPlease select a user whose \
-settings \nyou would like to make the default." \
+SKELUSER=`$DIALOG $TITLE"$TITLETEXT" $MENU $TEXT"\nSelecione um usuário cujas \
+configurações \nvocê deseja tornar padrões." \
 ${userchoice[0]} ${userchoice[0]} \
 ${userchoice[1]} ${userchoice[1]} \
 ${userchoice[2]} ${userchoice[2]} \
@@ -313,28 +315,28 @@ PWD=`pwd`
 TESTUSER=`grep "$PWD" /etc/passwd | awk -F ":" '{print $1}'`
 
 if [ "$TESTUSER" != "$SKELUSER" ]; then
-$DIALOG $TITLE"Remastersys Backup" $MSGBOX $TEXT"The user you chose does not have \
-a proper home directory.  \nClick OK to return to the main menu."
-echo need to be in the user directory....exiting
+$DIALOG $TITLE"Criador de ReFiSeFuQui" $MSGBOX $TEXT"O usuário escolhido não possui um \
+diretório home.  \nClique em OK para retornar ao menu principal."
+echo "É preciso estar no diretório de usuário... Saindo."
 mainmenu
 fi
 
 
-$DIALOG $TITLE"Remastersys Backup" --no-buttons --progress --pulsate $TEXT"Copying your $SKELUSER user settings to /etc/skel now. \n\
-Please wait." &
+$DIALOG $TITLE"Criador de ReFiSeFuQui" --no-buttons --progress --pulsate $TEXT"Copiando as configurações de $SKELUSER para /etc/skel agora. \n\
+Por favor aguarde." &
 
-remastersys-skelcopy $SKELUSER
+refisefuqui-skelcopy $SKELUSER
 
 killall -KILL yad
 
-$DIALOG $TITLE"Remastersys Backup" $MSGBOX $TEXT"The settings for $SKELUSER have \
-been copied to /etc/skel.  \nIn order to test it out you need to create a new user \
-and see \nif your settings have been applied.  \n\
-Click OK to return to the main menu."
+$DIALOG $TITLE"Criador de ReFiSeFuQui" $MSGBOX $TEXT"As configurações de $SKELUSER foram \
+copiadas para /etc/skel.  \nPara poder testá-las você precisa criar um novo usuário \
+e ver \nse suas configurações foram aplicadas.  \n\
+Clique em OK para retornar ao menu principal."
 
 else
 
-$DIALOG $TITLE"Remastersys Backup" $MSGBOX $TEXT"You didn't select any user. \n\nClick OK to continue."
+$DIALOG $TITLE"Criador de ReFiSeFuQui" $MSGBOX $TEXT"Você não selecionou qualquer usuário. \n\nClique em OK para continuar."
 
 fi
 mainmenu
@@ -343,46 +345,46 @@ mainmenu
 
 distplymouthmenu () {
 
-$DIALOG $TITLE"Remastersys Backup" $MSGBOX $TEXT"This will allow you to create \
-your own \nsimple plymouth theme using a png picture of your own. \
-Click OK to continue."
+$DIALOG $TITLE"Criador de ReFiSeFuQui" $MSGBOX $TEXT"Isto lhe permitirá criar \
+seu próprio \ntema plymouth usando uma imagem PNG de sua escolha. \
+Clique em OK para continuar."
 
-THEMENAME=`$DIALOG $TITLE"Remastersys Backup" $ENTRY $TEXT"Enter your plymouth theme name. eg. Remastersys Theme"`
+THEMENAME=`$DIALOG $TITLE"Criador de ReFiSeFuQui" $ENTRY $TEXT"Digite nome de seu tema plymouth. Ex.: Tema ReFiSeFuQui."`
 THEMEDIR=`echo $THEMENAME | sed -e 's/ //g' | awk '{print tolower ($0)}'`
 
-$DIALOG $TITLE"Remastersys Backup" $MSGBOX $TEXT"This will allow you to choose \
-your own picture \nto be the background for the plymouth theme. \n\
-It should be a 1920x1080 png file that you have already created. \n\
-Click OK to continue."
+$DIALOG $TITLE"Criador de ReFiSeFuQui" $MSGBOX $TEXT"Isto lhe permitirá escolher \
+sua própria figura \npara ser a iamgem de fundo de seu tema plymouth. \n\
+Deve ser um arquivo PNG de 1920x1080 pixels que você já tenha criado. \n\
+Clique em OK para continuar."
 
 
-THEMEPICFULL=`$DIALOG $TITLE"Remastersys Backup" --width=750 --height=400 $FILESELECTION`
+THEMEPICFULL=`$DIALOG $TITLE"Criador de ReFiSeFuQui" --width=750 --height=400 $FILESELECTION`
 if [ "$THEMEPICFULL" != "" ]; then
 
 THEMEPIC=`echo $THEMEPICFULL | awk -F "/" '{print $NF}'`
 
-$DIALOG $TITLE"Remastersys Backup" $MSGBOX $TEXT"Your plymouth theme name is $THEMENAME \n\
-and the picture you chose was $THEMEPIC.  \nIf this is what you want, \
-click OK to create \nthe new plymouth theme and set it as default. \n\
-This may take a while so please be patient."
+$DIALOG $TITLE"Criador de ReFiSeFuQui" $MSGBOX $TEXT"O nome de seu tema plymouth é $THEMENAME \n\
+e a imagem que você escolheu é $THEMEPIC.  \nSe isto for o que você deseja, \
+clique em OK para criar \no novo tema plymouth e defini-lo como padrão. \n\
+Pode demorar um pouco, então seja paciente."
 if [ "$?" = "0" ]; then
 
-$DIALOG $TITLE"Remastersys Backup" --no-buttons --progress --pulsate $TEXT"Creating your plymouth theme $THEMENAME now. \n\
-Please wait." &
+$DIALOG $TITLE"Criador de ReFiSeFuQui" --no-buttons --progress --pulsate $TEXT"Criando seu tema plymouth $THEMENAME agora. \n\
+Por favor aguarde." &
 
 mkdir -p /usr/share/plymouth/themes/$THEMEDIR
 
 sed -e 's/__THEMENAME__/'"$THEMENAME"'/g' -e 's/__THEMEDIR__/'"$THEMEDIR"'/g' \
-/etc/remastersys/plymouth/remastersys-theme/remastersys-theme.plymouth \
+/etc/refisefuqui/plymouth/refisefuqui-theme/refisefuqui-theme.plymouth \
 > /usr/share/plymouth/themes/$THEMEDIR/$THEMEDIR.plymouth
 
 sed -e 's/__THEMEPIC__/'"$THEMEPIC"'/g' \
-/etc/remastersys/plymouth/remastersys-theme/remastersys-theme.script \
+/etc/refisefuqui/plymouth/refisefuqui-theme/refisefuqui-theme.script \
 > /usr/share/plymouth/themes/$THEMEDIR/$THEMEDIR.script
 
 cp "$THEMEPICFULL" /usr/share/plymouth/themes/$THEMEDIR/
 
-cp /etc/remastersys/plymouth/remastersys-theme/*.png \
+cp /etc/refisefuqui/plymouth/refisefuqui-theme/*.png \
 /usr/share/plymouth/themes/$THEMEDIR/
 
 sed -i -e '/Theme/d' /etc/plymouth/plymouthd.conf
@@ -401,16 +403,16 @@ killall -KILL yad
 
 sleep 1
 
-$DIALOG $TITLE"Remastersys Backup" $MSGBOX $TEXT"Your plymouth theme named $THEMENAME \n\
-with the picture $THEMEPIC has been created \nand set as the default. \n\
-Click OK to return to the main menu."
+$DIALOG $TITLE"Criador de ReFiSeFuQui" $MSGBOX $TEXT"O seu tema plymouth de nome $THEMENAME \n\
+com a imagem $THEMEPIC foi criado \ne definido como padrão. \n\
+Clique em OK para retornar ao menu principal."
 
 fi
 
 
 else
 
-$DIALOG $TITLE"Remastersys Backup" $MSGBOX $TEXT"You didn't select any file. \n\nClick OK to continue."
+$DIALOG $TITLE"Criador de ReFiSeFuQui" $MSGBOX $TEXT"Você não selecionou qualquer arquivo. \n\nClique em OK para continuar."
 
 fi
 
@@ -420,8 +422,8 @@ mainmenu
 
 modifymenu () {
 
-if [ -f /etc/remastersys.conf ]; then
-. /etc/remastersys.conf
+if [ -f /etc/refisefuqui.conf ]; then
+. /etc/refisefuqui.conf
 fi
 
 if [ "$SQUASHFSOPTS" = "" ]; then
@@ -430,14 +432,14 @@ fi
 
 
 CHOICES=`$DIALOGMENU $TITLE"$TITLETEXT" --button=Save:0 --button=Back:1 --form \
---field="Live Username" "$LIVEUSER" \
---field="Live System Name" "$LIVECDLABEL" \
---field="Live ISO Filename" "$CUSTOMISO" \
---field="Live Boot using GRUB or ISOLINUX" "$ISOBOOT" \
---field="Working Directory for Remastersys" "$WORKDIR" \
---field="Options for mksquashfs" " $SQUASHFSOPTS" \
---field="Show install icon on desktop" "$SHOWICON" \
---field="Excluded files and folders" " $EXCLUDES"`
+--field="Nome de usuário do Live CD/DVD" "$LIVEUSER" \
+--field="Nome do Sistema do Live CD/DVD" "$LIVECDLABEL" \
+--field="Nome da ISO do Live CD/DVD" "$CUSTOMISO" \
+--field="Inicialização com GRUB ou com ISOLINUX" "$ISOBOOT" \
+--field="Pasta de trabalho do ReFiSeFuQui" "$WORKDIR" \
+--field="Opções para mksquashfs" " $SQUASHFSOPTS" \
+--field="Exibir ícone de instalação na área de trabalho" "$SHOWICON" \
+--field="Arquivos e pastas não inclusos" " $EXCLUDES"`
 
 
 if [ "$?" = "0" ]; then
@@ -454,7 +456,7 @@ mainmenu
 fi
 
 if [ "$LIVEUSER" = "" ]; then
-LIVEUSER="custom"
+LIVEUSER="live"
 fi
 #make sure live user is all lowercase
 LIVEUSER="`echo $LIVEUSER | awk '{print tolower ($0)}'`"
@@ -475,7 +477,7 @@ fi
 
 
 if [ "$WORKDIR" = "" ]; then
-WORKDIR="/home/remastersys"
+WORKDIR="/home/refisefuqui"
 fi
 
 if [ "$SQUASHFSOPTS" = "" ]; then
@@ -495,7 +497,7 @@ SHOWICON="0"
 fi
 
 
-cat > /etc/remastersys.conf <<FOO
+cat > /etc/refisefuqui.conf <<FOO
 #Remastersys Global Configuration File
 
 
@@ -536,23 +538,21 @@ SHOWICON="$SHOWICON"
 FOO
 
 if [ "$?" = "0" ]; then
-$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Configuration Saved. Click OK to return to the modify menu."
+$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Configuração salva. Clique em OK para retornar ao menu de modificação."
 else
-$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Configuration Save Error. Click OK to return to the modify menu."
+$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Erro ao salvar Configuração. Clique em OK para retornar ao menu de modificação."
 fi
 modifymenu
 
 }
 
 cleanmenu () {
-$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"This will remove all the files from the temporary directory. Click OK to proceed."
-xterm -fn 9x15 -e "remastersys clean"
-$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Completed. Click OK to return to the main menu."
+$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Todos os arquivos da pasta temporária serão apagados. Clique em OK para continuar."
+xterm -fn 9x15 -e "refisefuqui clean"
+$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Completado. Clique em OK para retornar ao menu principal."
 mainmenu
 
 }
-
-
 
 
 mainmenu

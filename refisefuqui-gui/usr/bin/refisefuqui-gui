@@ -108,8 +108,8 @@ uma distribuição em Live CD ou DVD. Podendo ser usado \n\
 também como uma ferramenta de backup completo, incluindo \n\
 a pasta /home e todos os dados de usuários.\n\n\
 Esta é a versão $REFISEFUQUIVERSION.\n\n\
-Criador de ReFiSeFuQui criado por Nerun, \n\
-como um fork do Remastersys, de Tony Brijeski, descontinuado. "
+Criador de ReFiSeFuQui por Daniel 'Nerun' Rodrigues. \n\n\
+Fork do Remastersys, de Tony Brijeski (descontinuado)."
 mainmenu
 else
 exit 0

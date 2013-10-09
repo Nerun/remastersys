@@ -29,7 +29,7 @@ TEXT="--text="
 ENTRY="--entry "
 ENTRYTEXT="--entry-text "
 FILESELECTION="--file "
-MENU="--list --column=Pick --column=Info"
+MENU="--list --column=Opções --column=Explicações"
 YESNO=" --button=Yes:0 --button=No:1 "
 MSGBOX=" --button=Ok:0 "
 TITLETEXT="Criador de ReFiSeFuQui"
@@ -46,7 +46,7 @@ mainmenu () {
 
 CHOICES=`$DIALOGMENU $TITLE"$TITLETEXT" --button=Ok:0 --button=Exit:1 $MENU $TEXT"Escolha o que deseja fazer:" \
 Backup "Backup completo do sistema incluindo arquivos do usuário" \
-Dist "Criar 'distribuição' em 'Live CD/DVD' - serão criados CDFS (sistema de arquivos de CD) e ISO (imagem gravável de CD)" \
+Dist "Criar 'distribuição' em Live CD/DVD - serão criados CDFS (sistema de arquivos de CD) e ISO (imagem gravável de CD)" \
 Distcdfs "Criar somente o CDFS de um Live CD/DVD - ideal, se você deseja adicionar arquivos ao CD" \
 Distiso "Criar somente a ISO de um Live CD/DVD - o CDFS deve ter sido criado anteriormente" \
 DistBoot "Selecionar imagem de fundo para o menu de inicialização do Live CD/DVD" \
@@ -57,7 +57,7 @@ Modify "Modificar as configurações do ReFiSeFuQui" \
 Skelclean "Limpar as configurações de /etc/skel para remover todas as personalizações" \
 Clear "Limpar a pasta de trabalho do ReFiSeFuQui" \
 Viewlog "Visualizar o arquivo de log do ReFiSeFuQui" \
-Info "Sobre o Criador de ReFiSeFuQui"`
+Sobre "Sobre o Criador de ReFiSeFuQui"`
 
 if [ "$?" = "0" ]; then
 CHOICE=`echo $CHOICES | cut -d "|" -f 1`
@@ -94,10 +94,10 @@ elif [ "$CHOICE" = "Viewlog" ]; then
 if [ -f "$WORKDIR/refisefuqui/refisefuqui.log" ]; then
 $DIALOG $TITLE"$TITLETEXT" --width=750 --height=400 --text-info --filename="$WORKDIR/refisefuqui/refisefuqui.log"
 else
-$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"O arquivo refisefuqui.log não existe."
+$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"O arquivo refisefuqui.log não existe. "
 fi
 mainmenu
-elif [ "$CHOICE" = "Info" ]; then
+elif [ "$CHOICE" = "Sobre" ]; then
 . /etc/refisefuqui/refisefuqui.version
 $DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"
 
@@ -107,9 +107,9 @@ transforma um sistema Debian instalado (ou derivado) em \n\
 uma distribuição em Live CD ou DVD. Podendo ser usado \n\
 também como uma ferramenta de backup completo, incluindo \n\
 a pasta /home e todos os dados de usuários.\n\n\
-Esta é a versão $REMASTERSYSVERSION.\n\n\
-Criador de ReFiSeFuQui e ReFiSeFuQui foram criados por Nerun, \n\
-como um fork do Remastersys, de Tony Brijeski, já descontinuado."
+Esta é a versão $REFISEFUQUIVERSION.\n\n\
+Criador de ReFiSeFuQui criado por Nerun, \n\
+como um fork do Remastersys, de Tony Brijeski, descontinuado. "
 mainmenu
 else
 exit 0
@@ -118,7 +118,7 @@ fi
 }
 
 backupmenu () {
-$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Você escolheu o Modo de Backup.\n\nNão interrompa este processo.\n\nClique em OK para iniciar o processo de criação do LiveCD/DVD de Backup."
+$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Você escolheu o Modo de Backup.\n\nNão interrompa este processo.\n\nClique em OK para iniciar o processo de criação do LiveCD/DVD de Backup. "
 xterm -fn 9x15 -e "refisefuqui backup"
 
 . /etc/refisefuqui.conf
@@ -128,7 +128,7 @@ if [ "$SQUASHFSSIZE" -gt "3999999" ]; then
 $DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"O sistema de arquivos comprimido é maior do \nque permite a especificação iso9660 para um único arquivo.\n\nVocê deve tentar reduzir a quantidade \nde arquivos que você está tentando fazer backup \ne tentar novamente."
 exit 1
 fi
-$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Seus arquivos $CUSTOMISO e $CUSTOMISO.md5 estão prontos \nem $WORKDIR/refisefuqui.\nÉ recomendável testá-los em uma máquina virtual ou \nem um CD/DVD regravável para se certificar que ele funciona conforme desejado.\n\nClique em OK para retornar ao menu principal."
+$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Seus arquivos $CUSTOMISO e $CUSTOMISO.md5 estão prontos\nem $WORKDIR/refisefuqui.\n\nÉ recomendável testá-los em uma máquina virtual ou em um CD/DVD\nregravável para se certificar que ele funciona conforme desejado.\n\nClique em OK para retornar ao menu principal."
 mainmenu
 
 }
@@ -144,7 +144,7 @@ if [ "$SQUASHFSSIZE" -gt "3999999" ]; then
 $DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"O sistema de arquivos comprimido é maior do \nque permite a especificação iso9660 para um único arquivo.\n\nVocê deve tentar reduzir a quantidade \nde arquivos que você está tentando fazer backup \ne tentar novamente."
 exit 1
 fi
-$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Seus arquivos $CUSTOMISO e $CUSTOMISO.md5 estão prontos \nem $WORKDIR/refisefuqui.\nÉ recomendável testá-los em uma máquina virtual ou \nem um CD/DVD regravável para se certificar que ele funciona conforme desejado.\n\nClique em OK para retornar ao menu principal."
+$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Seus arquivos $CUSTOMISO e $CUSTOMISO.md5 estão prontos\nem $WORKDIR/refisefuqui.\n\nÉ recomendável testá-los em uma máquina virtual ou em um CD/DVD\nregravável para se certificar que ele funciona conforme desejado.\n\nClique em OK para retornar ao menu principal."
 mainmenu
 
 }
@@ -179,7 +179,7 @@ if [ "$SQUASHFSSIZE" -gt "3999999" ]; then
 $DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"O sistema de arquivos comprimido é maior do \nque permite a especificação iso9660 para um único arquivo.\n\nVocê deve tentar reduzir a quantidade \nde arquivos que você está tentando fazer backup \ne tentar novamente."
 exit 1
 fi
-$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Seus arquivos $CUSTOMISO e $CUSTOMISO.md5 estão prontos \nem $WORKDIR/refisefuqui.\nÉ recomendável testá-los em uma máquina virtual ou \nem um CD/DVD regravável para se certificar que ele funciona conforme desejado.\n\nClique em OK para retornar ao menu principal."
+$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Seus arquivos $CUSTOMISO e $CUSTOMISO.md5 estão prontos\nem $WORKDIR/refisefuqui.\n\nÉ recomendável testá-los em uma máquina virtual ou em um CD/DVD\nregravável para se certificar que ele funciona conforme desejado.\n\nClique em OK para retornar ao menu principal."
 mainmenu
 
 else
@@ -547,7 +547,7 @@ modifymenu
 }
 
 cleanmenu () {
-$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Todos os arquivos da pasta temporária serão apagados. Clique em OK para continuar."
+$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Todos os arquivos da pasta temporária serão apagados.\n\nClique em OK para continuar."
 xterm -fn 9x15 -e "refisefuqui clean"
 $DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Completado. Clique em OK para retornar ao menu principal."
 mainmenu

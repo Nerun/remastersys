@@ -1,16 +1,16 @@
-?package(remastersys):needs="x11" section="Applications/System/Administration" \
-	title="Remastersys Backup" \
-	icon="/usr/share/icons/remastersys.png" \
-	command="remsu /usr/bin/remastersys-gui"
-?package(remastersys):needs="x11" section="Applications/System/Administration" \
-	title="Remastersys Grub Restore" \
-	icon="/usr/share/icons/remastersys.png" \
-	command="remsu /usr/bin/remastersys-grub-restore gui"
-?package(remastersys):needs="x11" section="Applications/System/Administration" \
-	title="Live Installer" \
-	icon="/usr/share/pixmaps/remastersys-installer.png" \
-	command="remsu /usr/bin/remastersys-installer gui"
-?package(remastersys):needs="x11" section="Applications/System/Administration" \
-	title="Remastersys USB Startup Tool" \
-	icon="/usr/share/icons/remastersys.png" \
-	command="remsu /usr/bin/remastersys-usb-key-copy-tool"
+?package(refisefuqui):needs="x11" section="Applications/System/Administration" \
+	title="ReFiSeFuQui Criador de Live CD" \
+	icon="/usr/share/icons/refisefuqui.png" \
+	command="remsu /usr/bin/refisefuqui-gui"
+?package(refisefuqui):needs="x11" section="Applications/System/Administration" \
+	title="ReFiSeFuQui Restaurador do GRUB" \
+	icon="/usr/share/icons/refisefuqui.png" \
+	command="remsu /usr/bin/refisefuqui-grub-restore gui"
+?package(refisefuqui):needs="x11" section="Applications/System/Administration" \
+	title="ReFiSeFuQui Instalar Live CD no HD" \
+	icon="/usr/share/pixmaps/refisefuqui-installer.png" \
+	command="remsu /usr/bin/refisefuqui-installer gui"
+?package(refisefuqui):needs="x11" section="Applications/System/Administration" \
+	title="ReFiSeFuQui Ferramenta de USB Inicializável" \
+	icon="/usr/share/icons/refisefuqui.png" \
+	command="remsu /usr/bin/refisefuqui-usb-key-copy-tool"

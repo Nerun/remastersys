@@ -1,10 +1,10 @@
 
 [Desktop Entry]
-Name=Remastersys USB Startup Disk Tool
-GenericName=USB Startup Disk Tool
-Comment=USB Startup Disk Tool
-Exec=remsu /usr/bin/remastersys-usb-key-copy-tool
-Icon=/usr/share/icons/remastersys.png
+Name=ReFiSeFuQui Ferramenta de USB Inicializável
+GenericName=Ferramenta de USB Inicializável
+Comment=Ferramenta de criação de USB inicializável
+Exec=remsu /usr/bin/refisefuqui-usb-key-copy-tool
+Icon=/usr/share/icons/refisefuqui.png
 Terminal=false
 MultipleArgs=false
 Type=Application

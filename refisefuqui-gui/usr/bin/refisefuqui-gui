@@ -53,10 +53,10 @@ DistBoot "Selecionar imagem de fundo para o menu de inicialização do Live CD/D
 DistGrub "Selecionar imagem de fundo para o carregador de inicialização GRUB" \
 DistSkel "Tornar as configurações personalizadas do usuário atual em configurações padrões do sistema do Live CD/DVD" \
 DistPlymouth "Selecionar imagem de fundo para o Plymouth" \
-Modify "Modificar as configurações do ReFiSeFuQui" \
-Skelclean "Limpar as configurações de /etc/skel para remover todas as personalizações" \
-Clear "Limpar a pasta de trabalho do ReFiSeFuQui" \
-Viewlog "Visualizar o arquivo de log do ReFiSeFuQui" \
+Configurar "Modificar as configurações do ReFiSeFuQui" \
+Limpar "Limpar a pasta de trabalho do ReFiSeFuQui" \
+LimparSkel "Limpar as configurações de /etc/skel para remover todas as personalizações" \
+Log "Visualizar o arquivo de log do ReFiSeFuQui" \
 Sobre "Sobre o Criador de ReFiSeFuQui"`
 
 if [ "$?" = "0" ]; then
@@ -81,15 +81,15 @@ elif [ "$CHOICE" = "DistSkel" ]; then
 distskelmenu
 elif [ "$CHOICE" = "DistPlymouth" ]; then
 distplymouthmenu
-elif [ "$CHOICE" = "Modify" ]; then
+elif [ "$CHOICE" = "Configurar" ]; then
 modifymenu
-elif [ "$CHOICE" = "Skelclean" ]; then
+elif [ "$CHOICE" = "Limpar" ]; then
+cleanmenu
+elif [ "$CHOICE" = "LimparSkel" ]; then
 find /etc/skel/ -type f -exec rm -f '{}' \;
 $DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Os arquivos de configuração em /etc/skel/ foram apagados."
 mainmenu
-elif [ "$CHOICE" = "Clear" ]; then
-cleanmenu
-elif [ "$CHOICE" = "Viewlog" ]; then
+elif [ "$CHOICE" = "Log" ]; then
 . /etc/refisefuqui.conf
 if [ -f "$WORKDIR/refisefuqui/refisefuqui.log" ]; then
 $DIALOG $TITLE"$TITLETEXT" --width=750 --height=400 --text-info --filename="$WORKDIR/refisefuqui/refisefuqui.log"

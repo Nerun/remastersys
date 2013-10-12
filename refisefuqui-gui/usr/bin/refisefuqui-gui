@@ -264,13 +264,12 @@ mainmenu
 
 distskelmenu () {
 
-$DIALOG $TITLE"Criador de ReFiSeFuQui" $MSGBOX $TEXT"Isto colocará a área de trabalho de seu usuário \
-e configurações de aplicativos \nem /etc/skel tornando-os o padrão para o sistema do Live CD/DVD. \n\
-Incluem-se papel de parede e outras configurações \nde aplicativos que \
-não estão definidas a pasta home \ndo usuário. \
-\n\
-É preciso compilar uma lista dos usuários válidos. \n\
-Pode levar alguns minutos para concluir, então seja paciente. \n\
+$DIALOG $TITLE"Criador de ReFiSeFuQui" $MSGBOX $TEXT"Isto colocará a área de trabalho de seu usuário e as configurações de aplicativos \n\
+em /etc/skel tornando-os o padrão para o sistema do Live CD/DVD. \n\n\
+Incluem-se papel de parede e outras configurações de aplicativos que não estão \n\
+definidas na pasta home do usuário. \n\
+É preciso compilar uma lista dos usuários válidos. Pode levar alguns minutos para \n\
+concluir, então seja paciente. \n\n\
 Clique em OK para preparar a lista."
 
 
@@ -289,8 +288,7 @@ done
 done
 
 
-SKELUSER=`$DIALOG $TITLE"$TITLETEXT" $MENU $TEXT"\nSelecione um usuário cujas \
-configurações \nvocê deseja tornar padrões." \
+SKELUSER=`$DIALOG $TITLE"$TITLETEXT" $MENU $TEXT"\nSelecione um usuário cujas configurações \nvocê deseja tornar padrões." \
 ${userchoice[0]} ${userchoice[0]} \
 ${userchoice[1]} ${userchoice[1]} \
 ${userchoice[2]} ${userchoice[2]} \
@@ -315,8 +313,7 @@ PWD=`pwd`
 TESTUSER=`grep "$PWD" /etc/passwd | awk -F ":" '{print $1}'`
 
 if [ "$TESTUSER" != "$SKELUSER" ]; then
-$DIALOG $TITLE"Criador de ReFiSeFuQui" $MSGBOX $TEXT"O usuário escolhido não possui um \
-diretório home.  \nClique em OK para retornar ao menu principal."
+$DIALOG $TITLE"Criador de ReFiSeFuQui" $MSGBOX $TEXT"O usuário escolhido não possui um diretório home. \nClique em OK para retornar ao menu principal."
 echo "É preciso estar no diretório de usuário... Saindo."
 mainmenu
 fi
@@ -329,9 +326,10 @@ refisefuqui-skelcopy $SKELUSER
 
 killall -KILL yad
 
-$DIALOG $TITLE"Criador de ReFiSeFuQui" $MSGBOX $TEXT"As configurações de $SKELUSER foram \
-copiadas para /etc/skel.  \nPara poder testá-las você precisa criar um novo usuário \
-e ver \nse suas configurações foram aplicadas.  \n\
+$DIALOG $TITLE"Criador de ReFiSeFuQui" $MSGBOX $TEXT"
+As configurações de $SKELUSER foram copiadas para /etc/skel. Para\n\
+testá-las você precisa criar um novo usuário e ver se suas \n\
+configurações foram aplicadas. \n\n\
 Clique em OK para retornar ao menu principal."
 
 else

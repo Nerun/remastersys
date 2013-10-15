@@ -109,7 +109,9 @@ também como uma ferramenta de backup completo, incluindo \n\
 a pasta /home e todos os dados de usuários.\n\n\
 Esta é a versão $REFISEFUQUIVERSION.\n\n\
 Criador de ReFiSeFuQui por Daniel 'Nerun' Rodrigues. \n\n\
-Fork do Remastersys, de Tony Brijeski (descontinuado)."
+Fork do Remastersys, de Tony Brijeski (descontinuado). \n\n\
+Visite http://linuxernoob.blogspot.com.br/ para obter \n\
+mais informações ou ajuda em nosso fórum."
 mainmenu
 else
 exit 0

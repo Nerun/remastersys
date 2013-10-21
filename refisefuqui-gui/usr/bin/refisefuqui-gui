@@ -44,7 +44,7 @@ fi
 
 mainmenu () {
 
-CHOICES=`$DIALOGMENU $TITLE"$TITLETEXT" --button=Ok:0 --button=Exit:1 $MENU $TEXT"Escolha o que deseja fazer:" \
+CHOICES=`$DIALOGMENU $TITLE"$TITLETEXT" --button=Ok:0 --button=Sair:1 $MENU $TEXT"Escolha o que deseja fazer:" \
 Backup "Backup completo do sistema incluindo arquivos do usuário" \
 Dist "Criar 'distribuição' em Live CD/DVD - serão criados CDFS (sistema de arquivos de CD) e ISO (imagem gravável de CD)" \
 Distcdfs "Criar somente o CDFS de um Live CD/DVD - ideal, se você deseja adicionar arquivos ao CD" \

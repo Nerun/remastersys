@@ -1201,6 +1201,7 @@ chmod 755 /TARGET/bin/tempinstallerscript
 chroot /TARGET /bin/tempinstallerscript
 rm /TARGET/bin/tempinstallerscript
 rm -rf /TARGET/lib/live
+rm -rf /TARGET/etc/live
 if [ "$GUI" != "" ]; then
 killall -KILL tail
 fi

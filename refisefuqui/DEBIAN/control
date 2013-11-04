@@ -4,7 +4,7 @@ Section: system
 Installed-Size: 1393
 Maintainer: Nerun <nerunblogs@gmail.com>
 Architecture: all
-Version: 1.0.2-1
+Version: 1.0.3-1
 Depends: coreutils, dialog, memtest86+, mkisofs | genisoimage, findutils, grub-pc, syslinux| xorriso, os-prober, bash, passwd, sed, squashfs-tools, live-boot, live-config, live-config-sysvinit, live-boot-initramfs-tools, rsync, mount, laptop-detect, util-linux, hwdata
 Conffiles:
  /etc/refisefuqui/refisefuqui.version 304e7095d4a49c03516912622eac7b1a

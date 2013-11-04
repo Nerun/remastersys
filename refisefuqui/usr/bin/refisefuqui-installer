@@ -262,8 +262,9 @@ fi
 
 
 
-#check mode and get new user info if it is a dist mode
-testmode=`grep "1000" /etc/passwd | grep -v "Live"`
+# "NOCONFIGS=\"user-setup" means it is backup mode
+# "" means it is dist mode
+testmode=`grep "NOCONFIGS=\"user-setup" /etc/live/config.conf`
 
 if [ "$testmode" = "" ]; then
 
@@ -453,7 +454,7 @@ HOMETEXT="$HOMEPART será formatado em $HFSTYPE para uso como /home"
 fi
 
 if [ "$HFSTYPE" = "noformat" ]; then
-HOMETEXT="$HOMEPART não será formatado, mas será usado como \n/home"
+HOMETEXT="$HOMEPART não será formatado, mas será usado como /home"
 fi
 
 
@@ -636,8 +637,9 @@ fi
 
 HFSTYPE=`echo $HFSTYPE | cut -d "|" -f 1`
 
-#check mode and get new user info if it is a dist mode
-testmode=`grep "1000" /etc/passwd | grep -v "Live"`
+# "NOCONFIGS=\"user-setup" means it is backup mode
+# "" means it is dist mode
+testmode=`grep "NOCONFIGS=\"user-setup" /etc/live/config.conf`
 
 if [ "$testmode" = "" ]; then
 
@@ -802,7 +804,7 @@ HOMETEXT="$HOMEPART será formatado em $HFSTYPE para uso como /home"
 fi
 
 if [ "$HFSTYPE" = "noformat" ]; then
-HOMETEXT="$HOMEPART não será formatado, mas será usado como \n/home"
+HOMETEXT="$HOMEPART não será formatado, mas será usado como /home"
 fi
 
 if [ "$testmode" = "" ]; then
@@ -921,7 +923,9 @@ if [ "$GUI" != "" ]; then
 killall -KILL tail
 fi
 
-testmode=`grep "1000" /etc/passwd | grep -v "Live"`
+# "NOCONFIGS=\"user-setup" means it is backup mode
+# "" means it is dist mode
+testmode=`grep "NOCONFIGS=\"user-setup" /etc/live/config.conf`
 
 if [ "$testmode" = "" ]; then
 LIVEMODE="DIST"

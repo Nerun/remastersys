@@ -4,8 +4,8 @@ Section: system
 Installed-Size: 193
 Maintainer: Nerun <nerunblogs@gmail.com>
 Architecture: all
-Version: 1.0.3-1
-Depends: gparted, xterm, yad, read-edid, xresprobe, refisefuqui (>= 1.0.3-1)
+Version: 1.0.4
+Depends: gparted, xterm, yad, read-edid, xresprobe, refisefuqui (>= 1.0.4)
 Description: Interface visual para o ReFiSeFuQui
  Esta é a interface visual para o ReFiSeFuQui.
  Instale o refisefuqui para poder usar este programa.

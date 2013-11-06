@@ -30,7 +30,7 @@ ENTRY="--entry "
 ENTRYTEXT="--entry-text "
 FILESELECTION="--file "
 MENU="--list --column=Opções --column=Explicações"
-YESNO=" --button=Yes:0 --button=No:1 "
+YESNO=" --button=Sim:0 --button=Não:1 "
 MSGBOX=" --button=Ok:0 "
 TITLETEXT="Criador de ReFiSeFuQui"
 fi

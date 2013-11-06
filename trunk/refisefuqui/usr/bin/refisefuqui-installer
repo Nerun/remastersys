@@ -73,7 +73,7 @@ TEXT="--text="
 ENTRY="--entry "
 ENTRYTEXT="--entry-text "
 MENU="--list --column=Pick --column=Info"
-YESNO=" --button=Yes:0 --button=No:1 "
+YESNO=" --button=Sim:0 --button=Não:1 "
 MSGBOX=" --button=Ok:0 "
 PASSWORD="--entry --hide-text "
 testgparted=`which gparted`

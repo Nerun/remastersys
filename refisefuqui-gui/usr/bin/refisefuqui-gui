@@ -431,7 +431,7 @@ SQUASHFSOPTS="-no-recovery -always-use-fragments -b 1M"
 fi
 
 
-CHOICES=`$DIALOGMENU $TITLE"$TITLETEXT" --button=Save:0 --button=Back:1 --form \
+CHOICES=`$DIALOGMENU $TITLE"$TITLETEXT" --button=Salvar:0 --button=Voltar:1 --form \
 --field="Nome de usuário do Live CD/DVD" "$LIVEUSER" \
 --field="Nome do Sistema do Live CD/DVD" "$LIVECDLABEL" \
 --field="Nome da ISO do Live CD/DVD" "$CUSTOMISO" \

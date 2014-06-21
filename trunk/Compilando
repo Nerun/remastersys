@@ -4,16 +4,14 @@
 
 3º) Edite os arquivos:
 
-/refisefuqui-gui/DEBIAN/control
-/refisefuqui/DEBIAN/control
+/refisefuqui/DEBIAN/control (versão, tamanho e md5sums)
 /refisefuqui/etc/refisefuqui/refisefuqui.version
 /refisefuqui/usr/share/doc/refisefuqui/changelog.Debian.gz
 /refisefuqui/usr/share/doc/refisefuqui/changelog.gz
 
-4º) Clicar nos scripts geradores de md5sumaker
+4º) Clicar no script gerador de md5sumaker
 
-5º) Editar os arquivos de md5sums excluindo a linha do próprio md5sumaker em:
-/refisefuqui-gui/DEBIAN/control
+5º) Editar o arquivo de md5sums excluindo a linha do próprio md5sumaker em:
 /refisefuqui/DEBIAN/control
 
 6º) Editar o /refisefuqui/DEBIAN/control para atualizar o md5sum do /refisefuqui/etc/refisefuqui/refisefuqui.version, usando "md5sum refisefuqui.version" para calcular o novo md5sum

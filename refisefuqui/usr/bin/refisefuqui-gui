@@ -4,7 +4,7 @@
 # and customized system
 #
 #  ReFiSeFuQui created by "Nerun"
-#  Copyright 2013-2014 Under the GNU GPL2 License
+#  Copyright 2013-2015 Under the GNU GPL2 License
 #
 #  Fork of Remastersys, created by Tony "Fragadelic" Brijeski
 #
@@ -14,314 +14,209 @@
 #  Updated July 2012
 
 #  This script requires yad to run
+testyad=`which yad`
+
+if [ "$testyad" = "" ]; then
+apt-get -y -q install yad
+fi
+
+if [ "$testyad" != "" ]; then
+DIALOGMENU="`which yad` --window-icon=/usr/share/icons/refisefuqui.png --width=750 --height=400 --center"
+DIALOG="`which yad` --window-icon=/usr/share/icons/refisefuqui.png --center"
+TITLE="--always-print-result --dialog-sep --image=/usr/share/icons/refisefuqui.png --title="
+TEXT="--text="
+ENTRY="--entry "
+ENTRYTEXT="--entry-text "
+FILESELECTION="--file "
+MENU="--list --column=Opções --column=Explicações"
+YESNO=" --button=Sim:0 --button=Não:1 "
+MSGBOX=" --button=Ok:0 "
+TITLETEXT="Criador de ReFiSeFuQui"
+fi
 
 testroot="`whoami`"
 
-#if [ "$testroot" != "root" ]; then
-#$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Deve ser executado com privilégios de superusuário."
-#exit 1
-#fi
-
-testzenity=`which zenity`
-
-if [ "$testzenity" = "" ]; then
-	apt-get -y -q install zenity
+if [ "$testroot" != "root" ]; then
+$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Deve ser executado com privilégios de superusuário."
+exit 1
 fi
 
 mainmenu () {
 
-	if [ "$testzenity" != "" ]; then
-		OUT=$(zenity --list --width=810 --height=368 \
-		  --title="Criador de ReFiSeFuQui" \
-		  --column="Opções" --column="Descrição" \
-			Backup "Backup completo do sistema incluindo arquivos do usuário" \
-			Dist "Criar 'distribuição' em Live CD/DVD. Cria CDFS (sistema de arquivos de CD) e ISO (imagem gravável de CD)" \
-			DistCDFS "Criar somente o CDFS de um Live CD/DVD - ideal, se você deseja adicionar arquivos ao CD" \
-			DistISO "Criar somente a ISO de um Live CD/DVD - o CDFS deve ter sido criado anteriormente" \
-			DistBoot "Selecionar imagem de fundo para o menu de inicialização do Live CD/DVD" \
-			DistGrub "Selecionar imagem de fundo para o carregador de inicialização GRUB" \
-			DistSkel "Tornar as configurações personalizadas do usuário atual em padrões do sistema do Live CD/DVD" \
-			Configurar "Modificar as configurações do ReFiSeFuQui" \
-			Limpar "Limpar a pasta de trabalho do ReFiSeFuQui" \
-			LimparSkel "Limpar as configurações de /etc/skel para remover todas as personalizações" \
-			Log "Visualizar o arquivo de log do ReFiSeFuQui" \
-			Sobre "Sobre o Criador de ReFiSeFuQui")
-		escolha $OUT
-	fi
-}
+CHOICES=`$DIALOGMENU $TITLE"$TITLETEXT" --button=Ok:0 --button=Sair:1 $MENU $TEXT"Escolha o que deseja fazer:" \
+Backup "Backup completo do sistema incluindo arquivos do usuário" \
+Dist "Criar 'distribuição' em Live CD/DVD - serão criados CDFS (sistema de arquivos de CD) e ISO (imagem gravável de CD)" \
+Distcdfs "Criar somente o CDFS de um Live CD/DVD - ideal, se você deseja adicionar arquivos ao CD" \
+Distiso "Criar somente a ISO de um Live CD/DVD - o CDFS deve ter sido criado anteriormente" \
+DistBoot "Selecionar imagem de fundo para o menu de inicialização do Live CD/DVD" \
+DistGrub "Selecionar imagem de fundo para o carregador de inicialização GRUB" \
+DistSkel "Tornar as configurações personalizadas do usuário atual em configurações padrões do sistema do Live CD/DVD" \
+Configurar "Modificar as configurações do ReFiSeFuQui" \
+Limpar "Limpar a pasta de trabalho do ReFiSeFuQui" \
+LimparSkel "Limpar as configurações de /etc/skel para remover todas as personalizações" \
+Log "Visualizar o arquivo de log do ReFiSeFuQui" \
+Sobre "Sobre o Criador de ReFiSeFuQui"`
 
-escolha () {
+if [ "$?" = "0" ]; then
+CHOICE=`echo $CHOICES | cut -d "|" -f 1`
+else
+exit 0
+fi
 
-	arg1=$1
+if [ "$CHOICE" = "Backup" ]; then
+backupmenu
+elif [ "$CHOICE" = "Dist" ]; then
+distmenu
+elif [ "$CHOICE" = "Distcdfs" ]; then
+distcdfsmenu
+elif [ "$CHOICE" = "Distiso" ]; then
+distisomenu
+elif [ "$CHOICE" = "DistBoot" ]; then
+distbootmenu
+elif [ "$CHOICE" = "DistGrub" ]; then
+distgrubmenu
+elif [ "$CHOICE" = "DistSkel" ]; then
+distskelmenu
+elif [ "$CHOICE" = "Configurar" ]; then
+modifymenu
+elif [ "$CHOICE" = "Limpar" ]; then
+cleanmenu
+elif [ "$CHOICE" = "LimparSkel" ]; then
+find /etc/skel/ -type f -exec rm -f '{}' \;
+$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Os arquivos de configuração em /etc/skel/ foram apagados."
+mainmenu
+elif [ "$CHOICE" = "Log" ]; then
+. /etc/refisefuqui.conf
+if [ -f "$WORKDIR/refisefuqui/refisefuqui.log" ]; then
+$DIALOG $TITLE"$TITLETEXT" --width=750 --height=400 --text-info --filename="$WORKDIR/refisefuqui/refisefuqui.log"
+else
+$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"O arquivo refisefuqui.log não existe. "
+fi
+mainmenu
+elif [ "$CHOICE" = "Sobre" ]; then
+. /etc/refisefuqui/refisefuqui.version
+$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"
 
-	if [ "$arg1" = "" ]; then
-		zenity --info \
-			--text="Nenhuma opção selecionada.\n\nSaindo do ReFiSeFuQui..."
-	elif [ "$arg1" = Backup ]; then
-		backupmenu
-	elif [ "$arg1" = Dist ]; then
-		distmenu
-	elif [ "$arg1" = DistCDFS ]; then
-		distcdfsmenu
-	elif [ "$arg1" = DistISO ]; then
-		distisomenu
-	elif [ "$arg1" = DistBoot ]; then
-		distbootmenu
-	elif [ "$arg1" = DistGrub ]; then
-		distgrubmenu
-	elif [ "$arg1" = DistSkel ]; then
-		distskelmenu
-	elif [ "$arg1" = Configurar ]; then
-		modifymenu
-	elif [ "$arg1" = Limpar ]; then
-		cleanmenu
-	elif [ "$arg1" = LimparSkel ]; then
-		find /etc/skel/ -type f -exec rm -f '{}' \;
-		zenity --info \
-			--text="Os arquivos de configuração em /etc/skel/ foram apagados."
-		mainmenu
-	elif [ "$arg1" = Log ]; then
-		. /etc/refisefuqui.conf
-		if [ -f "$WORKDIR/refisefuqui/refisefuqui.log" ]; then
-			zenity --text-info --width=750 --height=400 \
-				--title="Arquivo de Log" \
-				--filename="$WORKDIR/refisefuqui/refisefuqui.log"
-		else
-			zenity --info \
-				--title="Log não encontrado" \
-				--text="O arquivo refisefuqui.log não existe."
-		fi
-		mainmenu
-	elif [ "$arg1" = Sobre ]; then
-		. /etc/refisefuqui/refisefuqui.version
-		zenity --info --title="Sobre o ReFiSeFuQui" \
-			--text="O Criador de ReFiSeFuQui é uma interface visual para o
-refisefuqui: uma ferramenta em linha de comando que
-transforma um sistema Debian instalado (ou derivado) em
-uma distribuição em Live CD ou DVD. Podendo ser usado
-também como uma ferramenta de backup completo (incluindo
-a pasta /home e todos os dados de usuários).
-
-Esta é a versão $REFISEFUQUIVERSION.
-
-Criador de ReFiSeFuQui por Daniel 'Nerun' Rodrigues.
-
-Fork do Remastersys, de Tony Brijeski (descontinuado).
-
-Visite http://linuxernoob.blogspot.com.br/ para obter
-mais informações."
-		mainmenu
-	else
-		exit 0
-	fi
+O Criador de ReFiSeFuQui é uma interface visual para o \n\
+refisefuqui, que é uma ferramenta em linha de comando que \n\
+transforma um sistema Debian instalado (ou derivado) em \n\
+uma distribuição em Live CD ou DVD. Podendo ser usado \n\
+também como uma ferramenta de backup completo, incluindo \n\
+a pasta /home e todos os dados de usuários.\n\n\
+Esta é a versão $REFISEFUQUIVERSION.\n\n\
+Criador de ReFiSeFuQui por Daniel 'Nerun' Rodrigues. \n\n\
+Fork do Remastersys, de Tony Brijeski (descontinuado). \n\n\
+Visite http://linuxernoob.blogspot.com.br/ para obter \n\
+mais informações ou ajuda em nosso fórum."
+mainmenu
+else
+exit 0
+fi
 
 }
 
 backupmenu () {
+$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Você escolheu o Modo de Backup.\n\nNão interrompa este processo.\n\nClique em OK para iniciar o processo de criação do LiveCD/DVD de Backup. "
+xterm -fn 9x15 -e "refisefuqui backup"
 
-	zenity --info --title="Modo Backup" \
-		--text="Você escolheu o Modo de Backup.
+. /etc/refisefuqui.conf
 
-Não interrompa este processo.
-
-Clique em OK para iniciar o processo de criação do LiveCD/DVD de Backup."
-
-	xterm -fn 9x15 -e "refisefuqui backup"
-
-	. /etc/refisefuqui.conf
-
-	SQUASHFSSIZE=`ls -s $WORKDIR/refisefuqui/ISOTMP/live/filesystem.squashfs | awk -F " " '{print $1}'`
-
-	if [ "$SQUASHFSSIZE" -gt "3999999" ]; then
-		zenity --info --title="Falha" \
-			--text="O sistema de arquivos comprimido é maior do
-que permite a especificação iso9660 para um
-único arquivo.
-
-Você deve tentar reduzir a quantidade de
-arquivos e tentar novamente."
-		exit 1
-	fi
-
-	zenity --info --title="Backup finalizado" \
-		--text="Seus arquivos $CUSTOMISO e $CUSTOMISO.md5 estão prontos
-em $WORKDIR/refisefuqui.
-
-É recomendável testá-los em uma máquina virtual ou em um
-CD/DVD regravável para se certificar que ele funciona
-conforme desejado.
-
-Clique em OK para retornar ao menu principal."
-
-	mainmenu
+SQUASHFSSIZE=`ls -s $WORKDIR/refisefuqui/ISOTMP/live/filesystem.squashfs | awk -F " " '{print $1}'`
+if [ "$SQUASHFSSIZE" -gt "3999999" ]; then
+$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"O sistema de arquivos comprimido é maior do \nque permite a especificação iso9660 para um único arquivo.\n\nVocê deve tentar reduzir a quantidade \nde arquivos que você está tentando fazer backup \ne tentar novamente."
+exit 1
+fi
+$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Seus arquivos $CUSTOMISO e $CUSTOMISO.md5 estão prontos\nem $WORKDIR/refisefuqui.\n\nÉ recomendável testá-los em uma máquina virtual ou em um CD/DVD\nregravável para se certificar que ele funciona conforme desejado.\n\nClique em OK para retornar ao menu principal."
+mainmenu
 
 }
 
 distmenu () {
+$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Você escolheu o Modo Dist.\n\nClique em OK para iniciar o processo de criação da Distribuição LiveCD/DVD."
+xterm -fn 9x15 -e "refisefuqui dist"
 
-	zenity --info --title="Modo Dist" \
-		--text="Você escolheu o Modo Dist.
+. /etc/refisefuqui.conf
 
-Clique em OK para iniciar o processo de
-criação da Distribuição Live CD/DVD."
-
-	xterm -fn 9x15 -e "refisefuqui dist"
-
-	. /etc/refisefuqui.conf
-
-	SQUASHFSSIZE=`ls -s $WORKDIR/refisefuqui/ISOTMP/live/filesystem.squashfs | awk -F " " '{print $1}'`
-
-	if [ "$SQUASHFSSIZE" -gt "3999999" ]; then
-		zenity --info --title="Falha" \
-			--text="O sistema de arquivos comprimido é maior do
-que permite a especificação iso9660 para um
-único arquivo.
-
-Você deve tentar reduzir a quantidade de
-arquivos e tentar novamente."
-		exit 1
-	fi
-
-	zenity --info --title="Dist finalizado" \
-		--text="Seus arquivos $CUSTOMISO e $CUSTOMISO.md5 estão prontos
-em $WORKDIR/refisefuqui.
-
-É recomendável testá-los em uma máquina virtual ou em um
-CD/DVD regravável para se certificar que ele funciona
-conforme desejado.
-
-Clique em OK para retornar ao menu principal."
-
-	mainmenu
+SQUASHFSSIZE=`ls -s $WORKDIR/refisefuqui/ISOTMP/live/filesystem.squashfs | awk -F " " '{print $1}'`
+if [ "$SQUASHFSSIZE" -gt "3999999" ]; then
+$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"O sistema de arquivos comprimido é maior do \nque permite a especificação iso9660 para um único arquivo.\n\nVocê deve tentar reduzir a quantidade \nde arquivos que você está tentando fazer backup \ne tentar novamente."
+exit 1
+fi
+$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Seus arquivos $CUSTOMISO e $CUSTOMISO.md5 estão prontos\nem $WORKDIR/refisefuqui.\n\nÉ recomendável testá-los em uma máquina virtual ou em um CD/DVD\nregravável para se certificar que ele funciona conforme desejado.\n\nClique em OK para retornar ao menu principal."
+mainmenu
 
 }
 
 distcdfsmenu () {
+$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Você escolheu o Modo Dist CDFS.  Clique em OK para iniciar o processo de criação do sistema de arquivos da Distribuição LiveCD/DVD."
+xterm -fn 9x15 -e "refisefuqui dist cdfs"
 
-	zenity --info --title="Modo Dist CDFS" \
-		--text="Você escolheu o Modo Dist CDFS.
+. /etc/refisefuqui.conf
 
-Clique em OK para iniciar o processo de
-criação do sistema de arquivos da
-Distribuição LiveCD/DVD."
+SQUASHFSSIZE=`ls -s $WORKDIR/refisefuqui/ISOTMP/live/filesystem.squashfs | awk -F " " '{print $1}'`
+if [ "$SQUASHFSSIZE" -gt "3999999" ]; then
+$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"O sistema de arquivos comprimido é maior do \nque permite a especificação iso9660 para um único arquivo.\n\nVocê deve tentar reduzir a quantidade \nde arquivos que você está tentando fazer backup \ne tentar novamente."
+exit 1
+fi
 
-	xterm -fn 9x15 -e "refisefuqui dist cdfs"
-
-	. /etc/refisefuqui.conf
-
-	SQUASHFSSIZE=`ls -s $WORKDIR/refisefuqui/ISOTMP/live/filesystem.squashfs | awk -F " " '{print $1}'`
-
-	if [ "$SQUASHFSSIZE" -gt "3999999" ]; then
-		zenity --info --title="Falha" \
-			--text="O sistema de arquivos comprimido é maior do
-que permite a especificação iso9660 para um
-único arquivo.
-
-Você deve tentar reduzir a quantidade de
-arquivos e tentar novamente."
-		exit 1
-	fi
-
-	zenity --info --title="DistCDFS finalizado" \
-		--text="Seu sistema de arquivos do Live CD/DVD está pronto em
-$WORKDIR/refisefuqui.
-
-Você pode agora adicionar arquivos ao CD e então
-executar a opção DistISO quando você estiver pronto.
-
-Clique em OK para retornar ao menu principal."
-
-	mainmenu
+$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Seu sistema de arquivos do Live CD/DVD está pronto em $WORKDIR/refisefuqui.\nVocê pode agora adicionar arquivos ao CD \ne então executar a opção Dist ISO quando você estiver pronto.\n\nClique em OK para retornar ao menu principal."
+mainmenu
 
 }
 
 distisomenu () {
+. /etc/refisefuqui.conf
+if [ -f "$WORKDIR/refisefuqui/ISOTMP/live/filesystem.squashfs" ]; then
+$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Você escolheu o Modo Dist ISO.\n\nClique em OK para criar o arquivo ISO."
+xterm -fn 9x15 -e "refisefuqui dist iso"
 
-	. /etc/refisefuqui.conf
+. /etc/refisefuqui.conf
 
-	if [ -f "$WORKDIR/refisefuqui/ISOTMP/live/filesystem.squashfs" ]; then
-		zenity --info --title="Modo DistISO" \
-			--text="Você escolheu o Modo DistISO.
+SQUASHFSSIZE=`ls -s $WORKDIR/refisefuqui/ISOTMP/live/filesystem.squashfs | awk -F " " '{print $1}'`
+if [ "$SQUASHFSSIZE" -gt "3999999" ]; then
+$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"O sistema de arquivos comprimido é maior do \nque permite a especificação iso9660 para um único arquivo.\n\nVocê deve tentar reduzir a quantidade \nde arquivos que você está tentando fazer backup \ne tentar novamente."
+exit 1
+fi
+$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Seus arquivos $CUSTOMISO e $CUSTOMISO.md5 estão prontos\nem $WORKDIR/refisefuqui.\n\nÉ recomendável testá-los em uma máquina virtual ou em um CD/DVD\nregravável para se certificar que ele funciona conforme desejado.\n\nClique em OK para retornar ao menu principal."
+mainmenu
 
-Clique em OK para criar o arquivo ISO."
-
-		xterm -fn 9x15 -e "refisefuqui dist iso"
-
-		. /etc/refisefuqui.conf
-
-		SQUASHFSSIZE=`ls -s $WORKDIR/refisefuqui/ISOTMP/live/filesystem.squashfs | awk -F " " '{print $1}'`
-
-		if [ "$SQUASHFSSIZE" -gt "3999999" ]; then
-			zenity --info --title="Falha" \
-				--text="O sistema de arquivos comprimido é maior do
-que permite a especificação iso9660 para um
-único arquivo.
-
-Você deve tentar reduzir a quantidade de
-arquivos e tentar novamente."
-			exit 1
-		fi
-
-		zenity --info --title="DistISO finalizado" \
-			--text="Seus arquivos $CUSTOMISO e $CUSTOMISO.md5 estão prontos
-em $WORKDIR/refisefuqui.
-
-É recomendável testá-los em uma máquina virtual ou em um
-CD/DVD regravável para se certificar que ele funciona
-conforme desejado.
-
-Clique em OK para retornar ao menu principal."
-
-		mainmenu
-
-	else
-
-		zenity --info --title="Falha" \
-			--text="O sistema de arquivos do Live CD/DVD não existe.
-
-Clique OK para voltar ao menu principal e
-tentar o Modo Dist ou o Modo DistCDFS novamente."
-
-		mainmenu
-
-	fi
-
+else
+$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"O sistema de arquivos do Live CD/DVD não existe.\n\nClique OK para voltar ao menu principal e\ntentar o Modo Dist ou o Modo Dist CDFS novamente."
+mainmenu
+exit0
+fi
 }
 
+
 distbootmenu () {
-
-	zenity --info --title="Modo DistBoot" \
-		--text="
-Isto lhe permitirá escolher sua própria figura para ser
-a imagem de fundo do menu do Live CD/DVD.
-
-A imagem DEVE ter 640x480 pixels e estar em formato PNG.
-Você deve criar esta imagem ou redimensioná-la com um
-editor gráfico apropriado, uma vez que esta ferramenta
-não possui a habilidade de fazê-lo.
-
+$DIALOG $TITLE"Criador de ReFiSeFuQui" $MSGBOX $TEXT"Isto lhe permitirá escolher \
+sua própria figura para ser \na iamgem de fundo do menu do Live CD/DVD. \n\
+A imagem DEVE ter 640x480 pixels e estar em formato PNG.  \nVocê deve criar \
+esta imagem ou redimensioná-la com um editor \ngráfico apropriado uma vez que \
+esta ferramenta não possui a habilidade de fazê-lo. \
+\n\
+\n\
 Clique em OK para continuar."
 
-# --------------- PAREI A CONVERSÃO PARA ZENIT BEM AQUI -----------------------------------------------------------------
+BOOTPIC=`$DIALOG $TITLE"Criador de ReFiSeFuQui" --width=750 --height=400 $FILESELECTION`
+if [ "$BOOTPIC" != "" ]; then
+mv /etc/refisefuqui/isolinux/splash.png \
+/etc/refisefuqui/isolinux/splash.png.`date +%F%T | sed -e "s/-//g" | sed -e "s/://g"`
 
-	BOOTPIC=`$DIALOG $TITLE"Criador de ReFiSeFuQui" --width=750 --height=400 $FILESELECTION`
+cp $BOOTPIC /etc/refisefuqui/isolinux/splash.png
 
-	if [ "$BOOTPIC" != "" ]; then
-		mv /etc/refisefuqui/isolinux/splash.png \
-		/etc/refisefuqui/isolinux/splash.png.`date +%F%T | sed -e "s/-//g" | sed -e "s/://g"`
 
-		cp $BOOTPIC /etc/refisefuqui/isolinux/splash.png
-
-		$DIALOG $TITLE"Criador de ReFiSeFuQui" $MSGBOX $TEXT"$BOOTPIC foi copiado \
+$DIALOG $TITLE"Criador de ReFiSeFuQui" $MSGBOX $TEXT"$BOOTPIC foi copiado \
 para \n/etc/refisefuqui/isolinux/splash.png se tornando \na imagem de fundo padrão \
 para o menu do Live CD/DVD. \nClique em OK para continuar."
 
-	else
-		$DIALOG $TITLE"Criador de ReFiSeFuQui" $MSGBOX $TEXT"Você não selecionou qualquer arquivo. \n\nClique em OK para continuar."
-	fi
+else
 
-	mainmenu
+$DIALOG $TITLE"Criador de ReFiSeFuQui" $MSGBOX $TEXT"Você não selecionou qualquer arquivo. \n\nClique em OK para continuar."
+fi
 
+
+mainmenu
 }
 
 distgrubmenu () {
@@ -569,5 +464,6 @@ $DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Completado. Clique em OK para retornar 
 mainmenu
 
 }
+
 
 mainmenu

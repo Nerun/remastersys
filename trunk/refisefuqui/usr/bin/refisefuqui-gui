@@ -46,8 +46,8 @@ mainmenu () {
 CHOICES=`$DIALOGMENU $TITLE"$TITLETEXT" --button=Ok:0 --button=Sair:1 $MENU $TEXT"Escolha o que deseja fazer:" \
 Backup "Backup completo do sistema incluindo arquivos do usuário" \
 Dist "Criar 'distribuição' em Live CD/DVD - serão criados CDFS (sistema de arquivos de CD) e ISO (imagem gravável de CD)" \
-Distcdfs "Criar somente o CDFS de um Live CD/DVD - ideal, se você deseja adicionar arquivos ao CD" \
-Distiso "Criar somente a ISO de um Live CD/DVD - o CDFS deve ter sido criado anteriormente" \
+DistCDFS "Criar somente o CDFS de um Live CD/DVD - ideal, se você deseja adicionar arquivos ao CD" \
+DistISO "Criar somente a ISO de um Live CD/DVD - o CDFS deve ter sido criado anteriormente" \
 DistBoot "Selecionar imagem de fundo para o menu de inicialização do Live CD/DVD" \
 DistGrub "Selecionar imagem de fundo para o carregador de inicialização GRUB" \
 DistSkel "Tornar as configurações personalizadas do usuário atual em configurações padrões do sistema do Live CD/DVD" \
@@ -67,9 +67,9 @@ if [ "$CHOICE" = "Backup" ]; then
 backupmenu
 elif [ "$CHOICE" = "Dist" ]; then
 distmenu
-elif [ "$CHOICE" = "Distcdfs" ]; then
+elif [ "$CHOICE" = "DistCDFS" ]; then
 distcdfsmenu
-elif [ "$CHOICE" = "Distiso" ]; then
+elif [ "$CHOICE" = "DistISO" ]; then
 distisomenu
 elif [ "$CHOICE" = "DistBoot" ]; then
 distbootmenu

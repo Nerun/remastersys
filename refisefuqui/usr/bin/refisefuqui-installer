@@ -459,12 +459,12 @@ fi
 
 
 if [ "$testmode" = "" ]; then
-$DIALOG $TITLE"$TITLETEXT" $YESNO $TEXT"Confirme se esta informação está correta.\n\nO novo usuário $TARGETUSER será criado na partição $TARGETPART; o sistema de arquivos é $FSTYPE; $HOMETEXT; e, o grub será instalado em $GRUBLOCTEXT.\n\nDeseja continuar?" $HEIGHT $WIDTH
+$DIALOG $TITLE"$TITLETEXT" $YESNO $TEXT"Confirme se esta informação está correta.\n\nO novo usuário $TARGETUSER será criado na partição $TARGETPART; o sistema de arquivos é $FSTYPE; e, o grub será instalado em $GRUBLOCTEXT.\n\nDeseja continuar?" $HEIGHT $WIDTH
 if [ $? != 0 ]; then
 exit 0
 fi
 else
-$DIALOG $TITLE"$TITLETEXT" $YESNO $TEXT"Confirme se esta informação está correta.\nSeu sistema de backup será instalado na partição $TARGETPART; o sistema de arquivos é $FSTYPE; $HOMETEXT; e, o grub será instalado em $GRUBLOCTEXT.\n\nDeseja continuar?" $HEIGHT $WIDTH
+$DIALOG $TITLE"$TITLETEXT" $YESNO $TEXT"Confirme se esta informação está correta.\nSeu sistema de backup será instalado na partição $TARGETPART; o sistema de arquivos é $FSTYPE; e, o grub será instalado em $GRUBLOCTEXT.\n\nDeseja continuar?" $HEIGHT $WIDTH
 if [ $? != 0 ]; then
 exit 0
 fi
@@ -808,14 +808,14 @@ HOMETEXT="$HOMEPART não será formatado, mas será usado como /home"
 fi
 
 if [ "$testmode" = "" ]; then
-$DIALOG $TITLE"$TITLETEXT" $YESNO $TEXT"Confirme se esta informação está correta.\n\nO novo usuário $TARGETUSER será criado na partição $TARGETPART; o sistema de arquivos é $FSTYPE; $HOMETEXT; e, o grub será instalado em $GRUBLOCTEXT.\n\nDeseja continuar?"
+$DIALOG $TITLE"$TITLETEXT" $YESNO $TEXT"Confirme se esta informação está correta.\n\nO novo usuário $TARGETUSER será criado na partição $TARGETPART; o sistema de arquivos é $FSTYPE; e, o grub será instalado em $GRUBLOCTEXT.\n\nDeseja continuar?"
 if [ $? != 0 ]; then
   $DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Saindo do Instalador agora."
   exit 1
 
 fi
 else
-$DIALOG $TITLE"$TITLETEXT" $YESNO $TEXT"Confirme se esta informação está correta.\nSeu sistema de backup será instalado na partição $TARGETPART; o sistema de arquivos é $FSTYPE; $HOMETEXT; e, o grub será instalado em $GRUBLOCTEXT.\n\nDeseja continuar?"
+$DIALOG $TITLE"$TITLETEXT" $YESNO $TEXT"Confirme se esta informação está correta.\nSeu sistema de backup será instalado na partição $TARGETPART; o sistema de arquivos é $FSTYPE; e, o grub será instalado em $GRUBLOCTEXT.\n\nDeseja continuar?"
 if [ $? != 0 ]; then
   $DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Saindo do Instalador agora."
   exit 1

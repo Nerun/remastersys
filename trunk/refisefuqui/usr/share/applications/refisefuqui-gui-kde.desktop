@@ -1,0 +1,15 @@
+[Desktop Entry]
+Version=1.0
+Encoding=UTF-8
+Name=ReFiSeFuQui Criador de Live CD
+GenericName=Backup de Sistema
+Comment=Cria backup do sistema em um LiveCD/DVD
+Exec=kdesu /usr/bin/refisefuqui-gui
+Icon=/usr/share/icons/refisefuqui.png
+Terminal=false
+MultipleArgs=false
+Type=Application
+Categories=System
+OnlyShowIn=KDE
+X-KDE-SubstituteUID=true
+GenericName[en_US]=System Backup

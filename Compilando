@@ -12,10 +12,13 @@
 4º) Clicar no script gerador de md5sumaker
 
 5º) Editar o arquivo de md5sums excluindo a linha do próprio md5sumaker em:
-/refisefuqui/DEBIAN/control
+/refisefuqui/DEBIAN/md5sums
 
 6º) Editar o /refisefuqui/DEBIAN/control para atualizar o md5sum do /refisefuqui/etc/refisefuqui/refisefuqui.version, usando "md5sum refisefuqui.version" para calcular o novo md5sum
 
 7º) Renomear pastas com a versão "_1.0.x-1_all"
 
 8º) Compactar com "dpkg -b"
+
+9º) Testar, instalar e verificar tamanho do arquivo instalado e alterar
+/refisefuqui/DEBIAN/control novamente (tamanho instalado).

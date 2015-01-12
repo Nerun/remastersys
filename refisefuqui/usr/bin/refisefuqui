@@ -627,14 +627,14 @@ sleep 1
 
 if [ "$ISOBOOT" = "GRUB" ]; then
 
-echo "Creating $CUSTOMISO in $WORKDIR using grub-mkrescue"
-echo "Creating $CUSTOMISO in $WORKDIR using grub-mkrescue" >>$WORKDIR/refisefuqui.log
+echo "Criando $CUSTOMISO em $WORKDIR usando grub-mkrescue"
+echo "Criando $CUSTOMISO em $WORKDIR usando grub-mkrescue" >>$WORKDIR/refisefuqui.log
 grub-mkrescue -o $WORKDIR/$CUSTOMISO $WORKDIR/ISOTMP/ 2>>$WORKDIR/refisefuqui.log 1>>$WORKDIR/refisefuqui.log
 
 
 else
-echo "Creating $CUSTOMISO in $WORKDIR using $CREATEISO"
-echo "Creating $CUSTOMISO in $WORKDIR using $CREATEISO" >>$WORKDIR/refisefuqui.log
+echo "Criando $CUSTOMISO em $WORKDIR usando $CREATEISO"
+echo "Criando $CUSTOMISO em $WORKDIR usando $CREATEISO" >>$WORKDIR/refisefuqui.log
 $CREATEISO    \
  -quiet \
  -r    \
@@ -658,8 +658,8 @@ fi
 # create the md5 sum file so the user doesn't have to - this is good so the iso file can later be tested to ensure it hasn't become corrupted
 
 
-echo "Creating $CUSTOMISO.md5 in $WORKDIR"
-echo "Creating $CUSTOMISO.md5 in $WORKDIR" >>$WORKDIR/refisefuqui.log
+echo "Criando $CUSTOMISO.md5 em $WORKDIR"
+echo "Criando $CUSTOMISO.md5 em $WORKDIR" >>$WORKDIR/refisefuqui.log
 
 cd $WORKDIR
 md5sum $CUSTOMISO > $CUSTOMISO.md5

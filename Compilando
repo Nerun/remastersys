@@ -1,24 +1,44 @@
 1º) Exportar source para fora da SVN
+---------------------------------------------------------------------------
+2º) Edite os arquivos:
 
-2º) Veja as modificações no Google Code
-
-3º) Edite os arquivos:
-
-/refisefuqui/DEBIAN/control (versão, tamanho e md5sums)
+/refisefuqui/DEBIAN/control (version)
 /refisefuqui/etc/refisefuqui/refisefuqui.version
+---------------------------------------------------------------------------
+3º) Veja as modificações no Google Code:
+
+Descompacte um desses arquivos (são iguais):
+
 /refisefuqui/usr/share/doc/refisefuqui/changelog.Debian.gz
 /refisefuqui/usr/share/doc/refisefuqui/changelog.gz
 
-4º) Clicar no script gerador de md5sumaker
+Apague-os.
 
+Edite o arquivo de texto changelog.Debian.
+
+Comprima-o em dois formatos:
+ changelog.Debian.gz
+ changelog.gz
+---------------------------------------------------------------------------
+4º) Clicar no script gerador de md5sums, o md5sumaker
+---------------------------------------------------------------------------
 5º) Editar o arquivo de md5sums excluindo a linha do próprio md5sumaker em:
 /refisefuqui/DEBIAN/md5sums
-
-6º) Editar o /refisefuqui/DEBIAN/control para atualizar o md5sum do /refisefuqui/etc/refisefuqui/refisefuqui.version, usando "md5sum refisefuqui.version" para calcular o novo md5sum
-
-7º) Renomear pastas com a versão "_1.0.x-1_all"
-
+---------------------------------------------------------------------------
+6º) Editar o /refisefuqui/DEBIAN/control para atualizar o md5sum do
+/refisefuqui/etc/refisefuqui/refisefuqui.version, usando
+"md5sum refisefuqui.version" para calcular o novo md5sum. Faça isso com
+outros arquivos daquela lista que você tiver alterado.
+---------------------------------------------------------------------------
+7º) Renomear a pasta com a versão "_1.0.x_all"
+---------------------------------------------------------------------------
 8º) Compactar com "dpkg -b"
-
+---------------------------------------------------------------------------
 9º) Testar, instalar e verificar tamanho do arquivo instalado e alterar
-/refisefuqui/DEBIAN/control novamente (tamanho instalado).
+/refisefuqui/DEBIAN/control novamente (tamanho instalado). Recriar o
+pacote conforme passo 8º.
+---------------------------------------------------------------------------
+10º) copiar o conteúdo da pasta com os arquivos de instalção e colar
+sobre a SVN.
+---------------------------------------------------------------------------
+11º) Atualizar a SVN com o número da versão.

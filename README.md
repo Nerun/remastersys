@@ -2,7 +2,7 @@ REFISEFUQUI
 
 É acrônimo para "Criador de Remasterizações de Fim de Semana e Fundo de Quintal".
 
-ReFiSeFuQui é um fork do famoso Remastersys versão 3.0.0-1 de Tony "Fragadelic" Brijeski. O Remastersys fazia a mesma coisa, mas foi descontinuado no começo de 2013, por razões que só cabem ao próprio Tony.
+ReFiSeFuQui é um fork do famoso Remastersys versão 3.0.0-1 de Tony "Fragadelic" Brijeski. O Remastersys fazia a mesma coisa, mas foi descontinuado no começo de 2013.
 
 ReFiSeFuQui é um programa feito para Debian GNU/Linux, provavelmente funcionando em seus derivados.
 

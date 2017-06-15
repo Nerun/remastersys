@@ -21,7 +21,7 @@ apt-get -y -q install yad
 fi
 
 if [ "$testyad" != "" ]; then
-DIALOGMENU="`which yad` --window-icon=/usr/share/icons/refisefuqui.png --width=750 --height=400 --center"
+DIALOGMENU="`which yad` --window-icon=/usr/share/icons/refisefuqui.png --width=750 --height=330 --center"
 DIALOG="`which yad` --window-icon=/usr/share/icons/refisefuqui.png --center"
 TITLE="--always-print-result --dialog-sep --image=/usr/share/icons/refisefuqui.png --title="
 TEXT="--text="

@@ -662,7 +662,7 @@ TARGETUSER=`echo $CHOICES | cut -d "|" -f 4`
 TARGETPASS=`echo $CHOICES | cut -d "|" -f 5`
 TARGETPASS2=`echo $CHOICES | cut -d "|" -f 6`
 TARGETHOSTNAME=`echo $CHOICES | cut -d "|" -f 7`
-else 
+else
   $DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Saindo do Instalador agora."
   exit 1
 fi
@@ -881,7 +881,7 @@ echo "Montando a partição TARGET agora."
 mount /dev/$TARGETPART /TARGET -o rw
 sleep 2
 echo "Usando tune2fs para prevenir as verificações forçadas na inicialização."
-tune2fs -c 0 -i 0 /dev/$TARGETPART 
+tune2fs -c 0 -i 0 /dev/$TARGETPART
 rm -rf "/TARGET/lost+found"
 if [ "$GUI" != "" ]; then
 killall -KILL tail
@@ -978,7 +978,7 @@ echo "==============================================================" >> /var/lo
 
 
 if [ "$GUI" != "" ]; then
-progressbar "Copiando os arquivos para o Sistema TARGET... Por favor aguarde. \n" &
+progressbar "Copiando os arquivos para o sistema... Por favor aguarde. \n" &
 fi
 
 
@@ -987,7 +987,7 @@ echo "Copiando o sistema do Live CD para o disco rígido."
 echo "Isto pode demorar um pouco então por favor seja paciente."
 
 
-            
+
 if [ "$HFSTYPE" = "noformat" ]; then
 rsync -a / /TARGET --ignore-existing --exclude=/{TARGET,home,live,cdrom,mnt,proc,run,sys,media}
 else

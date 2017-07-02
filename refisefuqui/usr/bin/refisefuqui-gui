@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# refisefuqui-gui script to make an installable livecd/dvd from a Debian installed 
+# refisefuqui-gui script to make an installable livecd/dvd from a Debian installed
 # and customized system
 #
 #  ReFiSeFuQui created by "Nerun"
@@ -22,7 +22,7 @@ fi
 
 if [ "$testyad" != "" ]; then
 DIALOGMENU="`which yad` --window-icon=/usr/share/icons/refisefuqui.png --width=750 --height=330 --center"
-DIALOG="`which yad` --window-icon=/usr/share/icons/refisefuqui.png --center"
+DIALOG="`which yad` --window-icon=/usr/share/icons/refisefuqui.png --center --fixed"
 TITLE="--always-print-result --dialog-sep --image=/usr/share/icons/refisefuqui.png --title="
 TEXT="--text="
 ENTRY="--entry "
@@ -95,18 +95,20 @@ fi
 mainmenu
 elif [ "$CHOICE" = "Sobre" ]; then
 . /etc/refisefuqui/refisefuqui.version
-$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"
+$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"O Criador de ReFiSeFuQui é uma interface visual para o
+refisefuqui, que é uma ferramenta em linha de comando que
+transforma um sistema Debian instalado (ou derivado) em
+uma distribuição em Live CD ou DVD. Podendo ser usado
+também como uma ferramenta de backup completo, incluindo
+a pasta /home e todos os dados de usuários.
 
-O Criador de ReFiSeFuQui é uma interface visual para o \n\
-refisefuqui, que é uma ferramenta em linha de comando que \n\
-transforma um sistema Debian instalado (ou derivado) em \n\
-uma distribuição em Live CD ou DVD. Podendo ser usado \n\
-também como uma ferramenta de backup completo, incluindo \n\
-a pasta /home e todos os dados de usuários.\n\n\
-Esta é a versão $REFISEFUQUIVERSION.\n\n\
-Criador de ReFiSeFuQui por Daniel 'Nerun' Rodrigues. \n\n\
-Fork do Remastersys, de Tony Brijeski (descontinuado). \n\n\
-Visite http://linuxernoob.blogspot.com.br/ para obter \n\
+Esta é a versão $REFISEFUQUIVERSION.
+
+Criador de ReFiSeFuQui por Daniel 'Nerun' Rodrigues.
+
+Fork do Remastersys, de Tony Brijeski (descontinuado).
+
+Visite http://linuxernoob.blogspot.com.br/ para obter
 mais informações ou ajuda em nosso fórum."
 mainmenu
 else
@@ -278,7 +280,7 @@ for i in $(seq 1000 1 1010); do
 
 if [ "`cat /etc/passwd | awk -F ":" '{print $3}' | grep $i`" != "" ]; then
   userchoice[$j]="`grep $i /etc/passwd | awk -F ":" '{print $1}'`"
-  
+
   j=`expr $j + 1`
 fi
 
@@ -370,7 +372,7 @@ WORKDIR=`echo $CHOICES | cut -d "|" -f 5`
 SQUASHFSOPTS=`echo $CHOICES | cut -d "|" -f 6`
 SHOWICON=`echo $CHOICES | cut -d "|" -f 7`
 EXCLUDES=`echo $CHOICES | cut -d "|" -f 8`
-else 
+else
 mainmenu
 fi
 

@@ -7,11 +7,7 @@ Acrescentar mudanças da nova versão e, no final, atualizar data e hora.
 3º) Rodar script Compilar:
 ./Compilar
 
-4º) Renomear a pasta "refisefuqui" com a versão "_1.0.x_all"
-
-5º) Compactar com "dpkg -b"
-
-6º) copiar o conteúdo da pasta com os arquivos de instalação e colar
+4º) copiar o conteúdo da pasta com os arquivos de instalação e colar
 sobre a SVN.
 
-7º) Atualizar a SVN com o número da versão.
+5º) Atualizar a SVN com o número da versão.

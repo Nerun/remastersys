@@ -70,3 +70,14 @@ Description: Remasteriza e cria backups do sistema Debian
  O ReFiSeFuQui permite criar uma Distribuição em Live CD ou um backup do
  sistema instalado em sua máquina.
  Possui uma interface visual que depende do YAD." > control
+
+cd ..
+cd ..
+
+# Renomar pasta refisefuqui para empacotamento
+nome="refisefuqui_"$version"_all"
+
+mv refisefuqui $nome
+
+# Empacotando
+dpkg -b $nome

@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# Exclui pasta
+ad="-type d -name "
+# Exclui arquivo
+af="-type f -name "
+# Final obrigatório
+b=" -prune -o"
+
+cd refisefuqui
+
+find . $ad"DEBIAN"$b -type f -printf '%P ' | xargs md5sum > ./DEBIAN/md5sums

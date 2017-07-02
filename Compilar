@@ -1,0 +1,72 @@
+#!/bin/bash
+
+printf "\n Número da nova versão: "
+read version
+
+# Version
+cd refisefuqui/etc/refisefuqui
+echo "REFISEFUQUIVERSION=\"$version\"" > refisefuqui.version
+
+cd ..
+cd ..
+
+# Changelog
+cd usr/share/doc/refisefuqui
+gzip -k changelog.Debian
+cp changelog.Debian.gz changelog.gz
+rm changelog.Debian
+
+cd ..
+cd ..
+cd ..
+cd ..
+
+# md5sum
+find . -type d -name "DEBIAN" -prune -o -type f -printf '%P ' | xargs md5sum > ./DEBIAN/md5sums
+
+# Control
+
+md5faz(){
+	md5sum $1 | cut -f 1 -d " "
+}
+
+a=$(md5faz ./etc/refisefuqui/refisefuqui.version)
+b=$(md5faz ./etc/refisefuqui/preseed/custom.seed)
+c=$(md5faz ./etc/refisefuqui/isolinux/vesamenu.c32)
+d=$(md5faz ./etc/refisefuqui/isolinux/stdmenu.cfg)
+e=$(md5faz ./etc/refisefuqui/isolinux/isolinux.cfg)
+f=$(md5faz ./etc/refisefuqui/isolinux/menu.cfg)
+g=$(md5faz ./etc/refisefuqui/isolinux/isolinux.bin)
+h=$(md5faz ./etc/refisefuqui/isolinux/live.cfg)
+i=$(md5faz ./etc/refisefuqui/isolinux/memtest.bin)
+j=$(md5faz ./etc/refisefuqui/isolinux/splash.png)
+k=$(md5faz ./etc/refisefuqui/refisefuqui-installer.conf)
+l=$(md5faz ./etc/refisefuqui.conf)
+
+cd DEBIAN
+
+echo "Package: refisefuqui
+Priority: optional
+Section: system
+Installed-Size: 1663
+Maintainer: Nerun <nerunblogs@gmail.com>
+Architecture: all
+Version: $version
+Depends: coreutils, dialog, memtest86+, mkisofs | genisoimage, findutils, grub-pc, syslinux | xorriso, os-prober, bash, passwd, sed, squashfs-tools, live-boot, live-config, live-config-sysvinit | live-config-systemd, live-boot-initramfs-tools, rsync, mount, laptop-detect, util-linux, hwdata, gparted, xterm, yad, read-edid, xresprobe
+Conffiles:
+ /etc/refisefuqui/refisefuqui.version $a
+ /etc/refisefuqui/preseed/custom.seed $b
+ /etc/refisefuqui/isolinux/vesamenu.c32 $c
+ /etc/refisefuqui/isolinux/stdmenu.cfg $d
+ /etc/refisefuqui/isolinux/isolinux.cfg $e
+ /etc/refisefuqui/isolinux/menu.cfg $f
+ /etc/refisefuqui/isolinux/isolinux.bin $g
+ /etc/refisefuqui/isolinux/live.cfg $h
+ /etc/refisefuqui/isolinux/memtest.bin $i
+ /etc/refisefuqui/isolinux/splash.png $j
+ /etc/refisefuqui/refisefuqui-installer.conf $k
+ /etc/refisefuqui.conf $l
+Description: Remasteriza e cria backups do sistema Debian
+ O ReFiSeFuQui permite criar uma Distribuição em Live CD ou um backup do
+ sistema instalado em sua máquina.
+ Possui uma interface visual que depende do YAD." > control

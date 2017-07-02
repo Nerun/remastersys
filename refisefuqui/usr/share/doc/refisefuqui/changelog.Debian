@@ -1,0 +1,47 @@
+refisefuqui (1.0.9) unstable; urgency=low
+
+	* 1.0.9
+	* Pequenas correções em textos
+	* Correção no tamanho das janelas de diálogo
+
+	* 1.0.8
+	* Mudança de dependências para funcionar com systemd
+
+	* 1.0.7
+	* Mudança da pasta de trabalho ("workdir")
+	* Tradução de algumas coisas que havia esquecido
+	* Pequena correção no tipo (DistCDFS/ISO em vez de Distcdfs/iso)
+
+	* 1.0.6
+	* Removido suporte ao Plymouth
+	* Fusão dos pacotes refisefuqui e refisefuqui-gui
+	* Pequena correção de texto na GUI.
+
+	* 1.0.5
+	* Tradução dos botões Save/Back para Salvar/Voltar
+
+	* 1.0.4
+	* Tradução dos botões Yes/No para Sim/Não
+	* Remoção da pasta /etc/live após instalação
+
+	* 1.0.3
+	* Correção de bug na criação de usuário em Dist Mode
+
+	* 1.0.2
+	* Ajustes nos diálogos da interface (quebra de parágrafo etc)
+	* Adicionado site do programa ao diálogo "Sobre"
+
+	* 1.0.1
+	* Removida pasta /lib/live após instalação do Live CD
+
+	* 1.0.0
+	* <<Primeira versão>>
+	* <<Fork do Remastersys 3.0.0-1>>
+	* Adoção do nome "Criador de ReFiSeFuQui"
+	* Tradução de toda interface para português do Brasil
+	* Adicionados novos ícone e tela de início
+	* Adição do grupo sudo aos grupos padrões de usuário
+	* Língua pt_BR definida como padrão do Live CD
+	* Timezone America/Sao_Paulo definida como padrão do Live CD
+
+-- mantainer Nerun <nerunblogs@gmail.com>  Mon, 16 Feb 2015 15:10:00 -0300

@@ -12,6 +12,39 @@ cd ..
 
 # Changelog
 cd usr/share/doc/refisefuqui
+
+gzip -d changelog.Debian.gz
+rm changelog.gz
+
+tail -n +2 changelog.Debian > tmp
+head -n -1 tmp > tmp2
+
+rm tmp
+
+changelogRead(){
+	read changes
+	if [ "$changes" != "f" ]; then
+		echo "	* "$changes >> changelog.Debian
+		echo ""
+		cat changelog.Debian
+		changelogAsk
+	fi
+}
+
+changelogAsk(){
+	echo ""
+	echo " Escreva as Alterações. Digite \"f\" e dê \"enter\" se tiver acabado."
+	changelogRead
+}
+
+echo "refisefuqui ("$version") stable; urgency=low" > changelog.Debian
+echo "" >> changelog.Debian
+echo "	* "$version >> changelog.Debian
+changelogAsk
+cat tmp2 >> changelog.Debian
+echo "-- mantainer Nerun <nerunblogs@gmail.com>  "$(date -R) >> changelog.Debian
+rm tmp2
+
 gzip -k changelog.Debian
 cp changelog.Debian.gz changelog.gz
 rm changelog.Debian
@@ -81,3 +114,6 @@ mv refisefuqui $nome
 
 # Empacotando
 dpkg -b $nome
+
+# Desnomear pasta após empacotamento
+mv $nome refisefuqui

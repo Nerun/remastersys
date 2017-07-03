@@ -3,6 +3,9 @@
 printf "\n Número da nova versão: "
 read version
 
+# Tamanho da pasta refisefuqui
+size=$(du -s refisefuqui | cut -f 1)
+
 # Version
 cd refisefuqui/etc/refisefuqui
 echo "REFISEFUQUIVERSION=\"$version\"" > refisefuqui.version
@@ -81,7 +84,7 @@ cd DEBIAN
 echo "Package: refisefuqui
 Priority: optional
 Section: system
-Installed-Size: 1663
+Installed-Size: $size
 Maintainer: Nerun <nerunblogs@gmail.com>
 Architecture: all
 Version: $version

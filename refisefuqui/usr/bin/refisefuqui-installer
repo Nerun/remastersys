@@ -30,7 +30,7 @@ fi
 # set options depending on mode - text or gui
 
 testdialog=`which dialog`
-DIALOG="`which dialog`"
+DIALOG="`which dialog` --fixed"
 HEIGHT="17"
 WIDTH="50"
 MENUHEIGHT="12"

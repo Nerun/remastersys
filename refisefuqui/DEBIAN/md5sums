@@ -9,8 +9,8 @@ a305a0a729bb95d8a08f886278a6422f  usr/share/applications/refisefuqui-usb-key-cop
 349591b5f7c7660c82fe9e9c1e3c9a05  usr/share/applications/refisefuqui-installer-kde.desktop
 4f4128148c5ebbe79ecd3d716d6d71d5  usr/share/applications/refisefuqui-gui-kde.desktop
 f511cd676a1b9fba965b7256565711ff  usr/share/pixmaps/refisefuqui-installer.png
-7e7304eccf97ea32f0b9303643570fc7  usr/share/doc/refisefuqui/changelog.gz
-7e7304eccf97ea32f0b9303643570fc7  usr/share/doc/refisefuqui/changelog.Debian.gz
+392c69280826858e2a76686a2becd160  usr/share/doc/refisefuqui/changelog.gz
+392c69280826858e2a76686a2becd160  usr/share/doc/refisefuqui/changelog.Debian.gz
 3dac33bdf11ea8b09b38844736621442  usr/share/doc/refisefuqui/README
 a487287259604cc43391253991978378  usr/share/doc/refisefuqui/copyright
 34e40d8e2ce374262b39787ffd9a2ce7  usr/share/doc/refisefuqui/README.refisefuqui-installer
@@ -22,7 +22,7 @@ a6d6b64c4accab34edc1731d9ddc46ca  usr/bin/refisefuqui
 bbebe75b0b19bfcfcd3eb68f5b3291d7  usr/bin/refisefuqui-skelcopy
 18e5ecd381d9cde3ddcde75688c48954  usr/bin/remsu
 fc4d61e2f43d0259f426c22321193633  usr/bin/refisefuqui-grubconfig
-be07f85394815eee90fc4ac238e3aa81  usr/bin/refisefuqui-installer
+2a1c8ac9cd61acca68228e691305e279  usr/bin/refisefuqui-installer
 e3264d04e0846f0245e6de4a804bc234  etc/refisefuqui.conf
 7e3aa6d1958baf72d369392fdb175486  etc/refisefuqui/preseed/custom.seed
 9050ee938760305a2548eb88e5981442  etc/refisefuqui/grub/grub.cfg
@@ -35,5 +35,5 @@ a90d8e3f458bad634de29af77bae19f6  etc/refisefuqui/isolinux/stdmenu.cfg
 95f689bd6c9842be2e1d9991b991abfe  etc/refisefuqui/isolinux/memtest.bin
 98b398d3e541337b2478f5fd7d2bbadf  etc/refisefuqui/isolinux/live.cfg
 1c846e8adf9a4ba87a056938819c3ba2  etc/refisefuqui/isolinux/menu.cfg
-b0a4f054e6c8cea3e479a3960c088d3d  etc/refisefuqui/refisefuqui.version
+10dfc8acf8735cdfe5cf86b4a79a9b46  etc/refisefuqui/refisefuqui.version
 aed46b75ec5f2b2923f2dac2d5d1962f  etc/refisefuqui/grub.png

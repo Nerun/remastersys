@@ -110,7 +110,7 @@ Criador de ReFiSeFuQui por Daniel 'Nerun' Rodrigues.
 Fork do Remastersys, de Tony Brijeski (descontinuado).
 
 Visite http://linuxernoob.blogspot.com.br/ para obter
-mais informações ou ajuda em nosso fórum."
+mais informações."
 mainmenu
 else
 exit 0

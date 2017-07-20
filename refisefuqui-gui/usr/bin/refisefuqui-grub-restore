@@ -1,18 +1,18 @@
 #!/bin/bash
-#
-#
-#  refisefuqui-grub-restore is a utility to restore grub on a PC
-#
-#
-#  ReFiSeFuQui created by "Nerun"
-#  Copyright 2013 Under the GNU GPL2 License
-#
-#  Fork of Remastersys, created by Tony "Fragadelic" Brijeski
-#
-#  Remastersys:
-#  Copyright 2008,2009,2010 Under the GNU GPL2 License
-#  Originally Created September 12th,2008
-#
+
+######################################################
+#                                                    #
+#  ReFiSeFuQui                                       #
+#    Copyright 2013 Under the GNU GPL2 License       #
+#    Fork of Remastersys                             #
+#    by Daniel "Nerun" Rodrigues                     #
+#                                                    #
+#  Remastersys                                       #
+#    Copyright 2007-2012 Under the GNU GPL2 License  #
+#    Originally Created February 12th, 2007          #
+#    by Tony "Fragadelic" Brijeski                   #
+#                                                    #
+######################################################
 
 #  This script requires either yad or dialog to run
 #

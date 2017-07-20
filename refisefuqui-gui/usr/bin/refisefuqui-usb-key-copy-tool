@@ -1,14 +1,18 @@
 #!/bin/bash
 
-# Copy to USB Key Tool
-#
-#  ReFiSeFuQui created by "Nerun"
-#  Copyright 2013 Under the GNU GPL2 License
-#
-#  Fork of Remastersys, created by Tony "Fragadelic" Brijeski
-#
-#  Remastersys:
-#  Copyright 2009,2011 by Tony Brijeski under the GPL V2
+######################################################
+#                                                    #
+#  ReFiSeFuQui                                       #
+#    Copyright 2013 Under the GNU GPL2 License       #
+#    Fork of Remastersys                             #
+#    by Daniel "Nerun" Rodrigues                     #
+#                                                    #
+#  Remastersys                                       #
+#    Copyright 2007-2012 Under the GNU GPL2 License  #
+#    Originally Created February 12th, 2007          #
+#    by Tony "Fragadelic" Brijeski                   #
+#                                                    #
+######################################################
 
 # Using yad for gui calls
 

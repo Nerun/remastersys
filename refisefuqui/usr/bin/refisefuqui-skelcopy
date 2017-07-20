@@ -1,19 +1,19 @@
 #!/bin/bash
 
-# refisefuqui-skelcopy script to copy user data to /etc/skel 
-# 
-#  ReFiSeFuQui-skelcopy translated by "Nerun"
-#
-#  Copyright 2013 Under the GNU GPL2 License
-#
-#  Translation of Remastersys-skelcopy, created by Tony "Fragadelic" Brijeski
-#
-#  Remastersys-skelcopy:
-#
-#  Copyright 2011,2012 Under the GNU GPL2 License
-#
-#  Created November 23, 2011
-#
+######################################################
+#                                                    #
+#  ReFiSeFuQui                                       #
+#    Copyright 2013 Under the GNU GPL2 License       #
+#    Fork of Remastersys                             #
+#    by Daniel "Nerun" Rodrigues                     #
+#                                                    #
+#  Remastersys                                       #
+#    Copyright 2007-2012 Under the GNU GPL2 License  #
+#    Originally Created February 12th, 2007          #
+#    by Tony "Fragadelic" Brijeski                   #
+#                                                    #
+######################################################
+
 testroot="`whoami`"
 
 if [ "$testroot" != "root" ]; then

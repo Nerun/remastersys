@@ -1,24 +1,20 @@
 #!/bin/bash
-#
-#  refisefuqui-installer is an alternative installer for remastered livecd/dvd's
-#
-#  ReFiSeFuQui-installer by "Nerun"
-#
-#  Copyright 2013 Under the GNU GPL2 License
-#
-#  Translation of Remastersys-installer, created by Tony "Fragadelic" Brijeski
-#
-#  Remastersys-installer:
-#
-#  Copyright 2008-2012 Under the GNU GPL2 License
-#
-#  Originally Created September 12th,2008
-#  Updated to replace zenity with yad July 2012
-#
-#  This script requires either yad or dialog to run
-#
 
-# checking to make sure script is running with root privileges
+######################################################
+#                                                    #
+#  ReFiSeFuQui                                       #
+#    Copyright 2013 Under the GNU GPL2 License       #
+#    Fork of Remastersys                             #
+#    by Daniel "Nerun" Rodrigues                     #
+#                                                    #
+#  Remastersys                                       #
+#    Copyright 2007-2012 Under the GNU GPL2 License  #
+#    Originally Created February 12th, 2007          #
+#    by Tony "Fragadelic" Brijeski                   #
+#                                                    #
+######################################################
+
+# checando pra ter certeza de que o script está rodando com privilégios de root
 
 testroot="`whoami`"
 

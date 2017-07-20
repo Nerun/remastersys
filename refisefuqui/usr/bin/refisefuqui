@@ -1,23 +1,20 @@
 #!/bin/bash
 
-# refisefuqui script to make an installable livecd/dvd from a Debian installed 
-# and customized system
-#
-# -----------------------------------------------------------
-#
-#  ReFiSeFuQui
-#    Copyright 2013 Under the GNU GPL2 License
-#    Fork of Remastersys
-#    by Daniel "Nerun" Rodrigues
-#
-#  Remastersys
-#    Copyright 2007-2012 Under the GNU GPL2 License
-#    Originally Created February 12th, 2007
-#    by Tony "Fragadelic" Brijeski
-#
-# -----------------------------------------------------------
+######################################################
+#                                                    #
+#  ReFiSeFuQui                                       #
+#    Copyright 2013 Under the GNU GPL2 License       #
+#    Fork of Remastersys                             #
+#    by Daniel "Nerun" Rodrigues                     #
+#                                                    #
+#  Remastersys                                       #
+#    Copyright 2007-2012 Under the GNU GPL2 License  #
+#    Originally Created February 12th, 2007          #
+#    by Tony "Fragadelic" Brijeski                   #
+#                                                    #
+######################################################
 
-# checking to make sure script is running with root privileges
+# checando pra ter certeza de que o script está rodando com privilégios de root
 
 # load refisefuqui version file
 . /etc/refisefuqui/refisefuqui.version

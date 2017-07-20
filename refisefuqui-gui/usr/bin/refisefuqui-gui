@@ -1,17 +1,18 @@
 #!/bin/bash
 
-# refisefuqui-gui script to make an installable livecd/dvd from a Debian installed
-# and customized system
-#
-#  ReFiSeFuQui created by "Nerun"
-#  Copyright 2013-2015 Under the GNU GPL2 License
-#
-#  Fork of Remastersys, created by Tony "Fragadelic" Brijeski
-#
-#  Remastersys:
-#  Copyright 2007-2012 Under the GNU GPL2 License
-#  Created October 28th, 2007,2008
-#  Updated July 2012
+######################################################
+#                                                    #
+#  ReFiSeFuQui                                       #
+#    Copyright 2013 Under the GNU GPL2 License       #
+#    Fork of Remastersys                             #
+#    by Daniel "Nerun" Rodrigues                     #
+#                                                    #
+#  Remastersys                                       #
+#    Copyright 2007-2012 Under the GNU GPL2 License  #
+#    Originally Created February 12th, 2007          #
+#    by Tony "Fragadelic" Brijeski                   #
+#                                                    #
+######################################################
 
 #  This script requires yad to run
 testyad=`which yad`

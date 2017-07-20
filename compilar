@@ -3,34 +3,39 @@
 printf "\n Número da nova versão: "
 read version
 
-# Tamanho da pasta refisefuqui
+# Tamanho das pastas
 size=$(du -s refisefuqui | cut -f 1)
+sizegui=$(du -s refisefuqui-gui | cut -f 1)
 
 # Version
 cd refisefuqui/etc/refisefuqui
 echo "REFISEFUQUIVERSION=\"$version\"" > refisefuqui.version
 
+# subindo para /refisefuqui
 cd ..
 cd ..
 
 # Changelog
 cd usr/share/doc/refisefuqui
 
+# Dezipa changelog
 gzip -d changelog.Debian.gz
 rm changelog.gz
 
-tail -n +2 changelog.Debian > tmp
-head -n -1 tmp > tmp2
-
-rm tmp
+# Renomeia changelog
+mv changelog.Debian tmp
 
 changelogRead(){
 	read changes
 	if [ "$changes" != "f" ]; then
-		echo "	* "$changes >> changelog.Debian
+		echo "	* "$changes >> tmp2
 		echo ""
-		cat changelog.Debian
+		cat tmp2
 		changelogAsk
+	else
+		echo "" >> tmp2
+		echo " -- Nerun <nerunblogs@gmail.com>  "$(date -R) >> tmp2
+		echo "" >> tmp2
 	fi
 }
 
@@ -40,18 +45,19 @@ changelogAsk(){
 	changelogRead
 }
 
-echo "refisefuqui ("$version") stable; urgency=low" > changelog.Debian
-echo "" >> changelog.Debian
-echo "	* "$version >> changelog.Debian
+echo "refisefuqui (teste) stable; urgency=low" > tmp2
+echo "" >> tmp2
 changelogAsk
-cat tmp2 >> changelog.Debian
-echo "-- mantainer Nerun <nerunblogs@gmail.com>  "$(date -R) >> changelog.Debian
+cat tmp2 > changelog.Debian
+cat tmp >> changelog.Debian
 rm tmp2
+rm tmp
 
 gzip -k changelog.Debian
 cp changelog.Debian.gz changelog.gz
 rm changelog.Debian
 
+# subindo para /refisefuqui
 cd ..
 cd ..
 cd ..
@@ -60,7 +66,7 @@ cd ..
 # md5sum
 find . -type d -name "DEBIAN" -prune -o -type f -printf '%P ' | xargs md5sum > ./DEBIAN/md5sums
 
-# Control
+# DEBIAN/CONTROL
 
 md5faz(){
 	md5sum $1 | cut -f 1 -d " "
@@ -88,7 +94,7 @@ Installed-Size: $size
 Maintainer: Nerun <nerunblogs@gmail.com>
 Architecture: all
 Version: $version
-Depends: coreutils, dialog, memtest86+, mkisofs | genisoimage, findutils, grub-pc, syslinux | xorriso, os-prober, bash, passwd, sed, squashfs-tools, live-boot, live-config, live-config-sysvinit | live-config-systemd, live-boot-initramfs-tools, rsync, mount, laptop-detect, util-linux, hwdata, gparted, xterm, yad, read-edid, gksu
+Depends: coreutils, dialog, memtest86+, mkisofs | genisoimage, findutils, grub-pc, syslinux | xorriso, os-prober, bash, passwd, sed, squashfs-tools, live-boot, live-config, live-config-sysvinit | live-config-systemd, live-boot-initramfs-tools, rsync, mount, laptop-detect, util-linux, hwdata
 Conffiles:
  /etc/refisefuqui/refisefuqui.version $a
  /etc/refisefuqui/preseed/custom.seed $b
@@ -103,20 +109,54 @@ Conffiles:
  /etc/refisefuqui/refisefuqui-installer.conf $k
  /etc/refisefuqui.conf $l
 Description: Remasteriza e cria backups do sistema Debian
- O ReFiSeFuQui permite criar uma Distribuição em Live CD ou um backup do
- sistema instalado em sua máquina.
- Possui uma interface visual que depende do YAD." > control
+ O ReFiSeFuQui permite criar uma Distribuição em Live CD ou fazer um backup do sistema instalado em sua máquina.
+ Para mais informações visite http://linuxernoob.blogspot.com.br" > control
 
+# subindo pra /remastersys
+cd ..
+cd ..
+
+# REFISEFUQUI-GUI
+
+# descendo para GUI
+cd refisefuqui-gui
+
+# MD5SUM
+find . -type d -name "DEBIAN" -prune -o -type f -printf '%P ' | xargs md5sum > ./DEBIAN/md5sums
+
+cd DEBIAN
+
+# DEBIAN/CONTROL
+
+echo "Package: refisefuqui
+Priority: optional
+Section: system
+Installed-Size: $size
+Maintainer: Nerun <nerunblogs@gmail.com>
+Architecture: all
+Version: $version
+Depends: gparted, xterm, yad, read-edid, gksu, refisefuqui (>= $version)
+Description: Remasteriza e cria backups do sistema Debian
+ Esta é a interface visual do Refisefuqui.
+ Para mais informações visite http://linuxernoob.blogspot.com.br" > control
+
+# EMPACOTAMENTO
+
+# subindo pra /remastersys
 cd ..
 cd ..
 
 # Renomar pasta refisefuqui para empacotamento
 nome="refisefuqui_"$version"_all"
+nomegui="refisefuqui-gui_"$version"_all"
 
 mv refisefuqui $nome
+mv refisefuqui $nomegui
 
 # Empacotando
 dpkg -b $nome
+dpkg -b $nomegui
 
 # Desnomear pasta após empacotamento
 mv $nome refisefuqui
+mv $nomegui refisefuqui-gui

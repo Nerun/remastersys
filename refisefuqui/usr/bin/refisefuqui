@@ -60,11 +60,11 @@ fi
 # carrega arquivo refisefuqui.conf
 . /etc/refisefuqui.conf
 
-# se refisefuqui.conf estiver incorreto ou faltando, configure padrão
+# se refisefuqui.conf estiver incorreto ou faltando, defina padrões
 
 if [ "$LIVEUSER" = "" ]; then
 	# Alguém deve ter removido o nome de usuário do arquivo de configuração
-	LIVEUSER="custom"
+	LIVEUSER="live"
 fi
 
 # live user em caixa baixa
@@ -90,7 +90,7 @@ else
 fi
 
 if [ "$LIVECDLABEL" = "" ]; then
-	LIVECDLABEL="Live CD Personalizado"
+	LIVECDLABEL="Debian Remaster"
 fi
 
 if [ "$ISOBOOT" != "GRUB" ]; then
@@ -115,54 +115,54 @@ if [ "$CUSTOMISO" = "" ]; then
 	CUSTOMISO="custom$1.iso"
 fi
 
-case $1  in
+case $1 in
 
-  backup)
-     echo "Selecionado Modo de Backup de Sistema"
-     ;;
+	backup)
+		echo "Selecionado Modo de Backup de Sistema"
+	;;
 
-  clean)
-     echo "Removendo o diretório de trabalho agora..."
-     rm -rf $WORKDIR
-     echo "Feito... Saindo"
-     exit 0
-     ;;
+	clean)
+		echo "Removendo o diretório de trabalho agora..."
+		rm -rf $WORKDIR
+		echo "Feito... Saindo"
+		exit 0
+	;;
 
-  dist)
-     echo "Selecionado Modo de Distribuição"
-     ;;
+	dist)
+		echo "Selecionado Modo de Distribuição"
+	;;
 
 
-  *)
-     echo "Uso do ReFiSeFuQui $REFISEFUQUIVERSION:"
-     echo " "
-     echo "   sudo refisefuqui backup|clean|dist [cdfs|iso] [nome_do_arquivo.iso]"
-     echo " "
-     echo " "
-     echo "Exemplos:"
-     echo " "
-     echo "   sudo refisefuqui backup   (cria um Live CD/DVD contendo um backup do seu sistema)"
-     echo " "
-     echo "   sudo refisefuqui backup custom.iso"
-     echo "                             (cria um Live CD/DVD backup, e nomeia a ISO para custom.iso)" 
-     echo " "
-     echo "   sudo refisefuqui clean    (apaga os arquivos temporários do refisefuqui)"
-     echo " "
-     echo "   sudo refisefuqui dist     (cria uma distribuição em Live CD/DVD do seu sistema)"
-     echo " "
-     echo "   sudo refisefuqui dist cdfs"
-     echo "                             (cria apenas o sistema de arquivos da distribuição Live CD/DVD)"
-     echo " "
-     echo "   sudo refisefuqui dist iso custom.iso"
-     echo "                             (cria uma ISO da distribuição com o nome custom.iso, mas apenas"
-     echo "                              se o sistema de arquivos já tiver sido criado)"
-     echo " "
-     echo "   As opções cdfs e iso só deverãos er usadas se você quiser modificar alguma coisa no"
-     echo "   CD antes de criar a ISO.  Um exemplo seria para modificar a porção isolinux do"
-     echo "   Live CD/DVD."
-     echo " "
-     exit 1
-     ;;
+	*)
+	echo "Uso do ReFiSeFuQui $REFISEFUQUIVERSION:"
+	echo " "
+	echo "   sudo refisefuqui backup|clean|dist [cdfs|iso] [nome_do_arquivo.iso]"
+	echo " "
+	echo " "
+	echo "Exemplos:"
+	echo " "
+	echo "   sudo refisefuqui backup   (cria um Live CD/DVD contendo um backup do seu sistema)"
+	echo " "
+	echo "   sudo refisefuqui backup custom.iso"
+	echo "                             (cria um Live CD/DVD backup, e nomeia a ISO para custom.iso)" 
+	echo " "
+	echo "   sudo refisefuqui clean    (apaga os arquivos temporários do refisefuqui)"
+	echo " "
+	echo "   sudo refisefuqui dist     (cria uma distribuição em Live CD/DVD do seu sistema)"
+	echo " "
+	echo "   sudo refisefuqui dist cdfs"
+	echo "                             (cria apenas o sistema de arquivos da distribuição Live CD/DVD)"
+	echo " "
+	echo "   sudo refisefuqui dist iso custom.iso"
+	echo "                             (cria uma ISO da distribuição com o nome custom.iso, mas apenas"
+	echo "                              se o sistema de arquivos já tiver sido criado)"
+	echo " "
+	echo "   As opções cdfs e iso só deverãos er usadas se você quiser modificar alguma coisa no"
+	echo "   CD antes de criar a ISO.  Um exemplo seria para modificar a porção isolinux do"
+	echo "   Live CD/DVD."
+	echo " "
+	exit 1
+	;;
 
 esac
 

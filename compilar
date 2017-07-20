@@ -45,7 +45,7 @@ changelogAsk(){
 	changelogRead
 }
 
-echo "refisefuqui (teste) stable; urgency=low" > tmp2
+echo "refisefuqui ($version) stable; urgency=low" > tmp2
 echo "" >> tmp2
 changelogAsk
 cat tmp2 > changelog.Debian
@@ -151,7 +151,7 @@ nome="refisefuqui_"$version"_all"
 nomegui="refisefuqui-gui_"$version"_all"
 
 mv refisefuqui $nome
-mv refisefuqui $nomegui
+mv refisefuqui-gui $nomegui
 
 # Empacotando
 dpkg -b $nome

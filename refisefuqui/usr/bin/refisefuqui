@@ -16,107 +16,103 @@
 
 # checando pra ter certeza de que o script está rodando com privilégios de root
 
-# load refisefuqui version file
+# carrega arquivo de versão
 . /etc/refisefuqui/refisefuqui.version
 
 testroot="`whoami`"
 
 if [ "$testroot" != "root" ]; then
-	 echo " "
-     echo "Uso do ReFiSeFuQui $REFISEFUQUIVERSION:"
-     echo " "
-     echo "   sudo refisefuqui backup|clean|dist [cdfs|iso] [nome_do_arquivo.iso]"
-     echo " "
-     echo " "
-     echo "Exemplos:"
-     echo " "
-     echo "   sudo refisefuqui backup"
-	 echo "               (cria um Live CD/DVD contendo um backup do seu sistema)"
-     echo " "
-     echo "   sudo refisefuqui backup custom.iso"
-     echo "               (cria um Live CD/DVD backup, e nomeia a ISO para custom.iso)" 
-     echo " "
-     echo "   sudo refisefuqui clean"
-	 echo "               (apaga os arquivos temporários do refisefuqui)"
-     echo " "
-     echo "   sudo refisefuqui dist"
-	 echo "               (cria uma distribuição em Live CD/DVD do seu sistema)"
-     echo " "
-     echo "   sudo refisefuqui dist cdfs"
-     echo "               (cria apenas o sistema de arquivos da distribuição Live CD/DVD)"
-     echo " "
-     echo "   sudo refisefuqui dist iso custom.iso"
-     echo "               (cria uma ISO da distribuição com o nome custom.iso, mas"
-     echo "                apenas se o sistema de arquivos já tiver sido criado)"
-     echo " "
-     echo "   As opções cdfs e iso só deverão ser usadas se você quiser modificar alguma"
-     echo "   coisa no CD antes de criar a ISO.  Um exemplo seria para modificar a porção"
-     echo "   isolinux do Live CD/DVD."
-     echo " "
+	echo " "
+	echo "Uso do ReFiSeFuQui $REFISEFUQUIVERSION:"
+	echo " "
+	echo "   sudo refisefuqui backup|clean|dist [cdfs|iso] [nome_do_arquivo.iso]"
+	echo " "
+	echo " "
+	echo "Exemplos:"
+	echo " "
+	echo "   sudo refisefuqui backup"
+	echo "               (cria um Live CD/DVD contendo um backup do seu sistema)"
+	echo " "
+	echo "   sudo refisefuqui backup custom.iso"
+	echo "               (cria um Live CD/DVD backup, e nomeia a ISO para custom.iso)" 
+	echo " "
+	echo "   sudo refisefuqui clean"
+	echo "               (apaga os arquivos temporários do refisefuqui)"
+	echo " "
+	echo "   sudo refisefuqui dist"
+	echo "               (cria uma distribuição em Live CD/DVD do seu sistema)"
+	echo " "
+	echo "   sudo refisefuqui dist cdfs"
+	echo "               (cria apenas o sistema de arquivos da distribuição Live CD/DVD)"
+	echo " "
+	echo "   sudo refisefuqui dist iso custom.iso"
+	echo "               (cria uma ISO da distribuição com o nome custom.iso, mas"
+	echo "                apenas se o sistema de arquivos já tiver sido criado)"
+	echo " "
+	echo "   As opções cdfs e iso só deverão ser usadas se você quiser modificar alguma"
+	echo "   coisa no CD antes de criar a ISO.  Um exemplo seria para modificar a porção"
+	echo "   isolinux do Live CD/DVD."
+	echo " "
 
-     exit 1
+	exit 1
 fi
 
-# load the refisefuqui.conf file 
+# carrega arquivo refisefuqui.conf
 . /etc/refisefuqui.conf
 
-# if the refisefuqui.conf file is incorrect or missing, make sure to set defaults
+# se refisefuqui.conf estiver incorreto ou faltando, configure padrão
 
 if [ "$LIVEUSER" = "" ]; then
-# Somebody must have removed the username from the configuration file
-# echo 
-# this is a custom live user
-LIVEUSER="custom"
+	# Alguém deve ter removido o nome de usuário do arquivo de configuração
+	LIVEUSER="custom"
 fi
 
-#make sure live user is all lowercase
+# live user em caixa baixa
 LIVEUSER="`echo $LIVEUSER | awk '{print tolower ($0)}'`"
-
 SHOWICON="`echo $SHOWICON | awk '{print tolower ($0)}'`"
 
 if [ "$SHOWICON" = "1" ]; then
-SHOWICON="1"
+	SHOWICON="1"
 elif [ "$SHOWICON" = "yes" ]; then
-SHOWICON="1"
+	SHOWICON="1"
 elif [ "$SHOWICON" = "true" ]; then
-SHOWICON="1"
+	SHOWICON="1"
 else
-SHOWICON="0"
+	SHOWICON="0"
 fi
 
-
 if [ "$WORKDIR" = "" ]; then
-WORKDIR="/home/refisefuqui"
-BASEWORKDIR="/home"
+	WORKDIR="/home/refisefuqui"
+	BASEWORKDIR="/home"
 else
-BASEWORKDIR="$WORKDIR"
-WORKDIR="$WORKDIR/refisefuqui"
+	BASEWORKDIR="$WORKDIR"
+	WORKDIR="$WORKDIR/refisefuqui"
 fi
 
 if [ "$LIVECDLABEL" = "" ]; then
-LIVECDLABEL="Live CD Personalizado"
+	LIVECDLABEL="Live CD Personalizado"
 fi
 
 if [ "$ISOBOOT" != "GRUB" ]; then
-ISOBOOT="ISOLINUX"
+	ISOBOOT="ISOLINUX"
 fi
 
 if [ "$2" = "cdfs" ]; then
-echo "Criando o sistema de arquivos apenas"
+	echo "Criando o sistema de arquivos apenas"
 elif [ "$2" = "iso" ]; then
-echo "Criando o arquivo ISO apenas"
+	echo "Criando o arquivo ISO apenas"
 elif [ "$2" = "" ]; then
-echo " "
+	echo " "
 else
-CUSTOMISO="$2"
+	CUSTOMISO="$2"
 fi
 
 if [ "$3" != "" ]; then
-CUSTOMISO="$3"
+	CUSTOMISO="$3"
 fi
 
 if [ "$CUSTOMISO" = "" ]; then
-CUSTOMISO="custom$1.iso"
+	CUSTOMISO="custom$1.iso"
 fi
 
 case $1  in

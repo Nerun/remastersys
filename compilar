@@ -128,7 +128,7 @@ cd DEBIAN
 
 # DEBIAN/CONTROL
 
-echo "Package: refisefuqui
+echo "Package: refisefuqui-gui
 Priority: optional
 Section: system
 Installed-Size: $size

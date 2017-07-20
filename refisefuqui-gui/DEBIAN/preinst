@@ -1,0 +1,23 @@
+#!/bin/sh
+# preinst script for refisefuqui
+#
+# see: dh_installdeb(1)
+
+set -e
+
+if [ -d /refisefuqui ]
+then
+mv /refisefuqui /home
+fi
+
+if [ -f /etc/refisefuqui.conf ]
+then
+mv /etc/refisefuqui.conf /etc/refisefuqui.conf.old
+fi
+
+if [ -f /etc/refisefuqui/isolinux/splash.png ]
+then
+mv /etc/refisefuqui/isolinux/splash.png /etc/refisefuqui/isolinux/splash.png.saved
+fi
+
+exit 0

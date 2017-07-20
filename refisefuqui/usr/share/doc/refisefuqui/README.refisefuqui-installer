@@ -3,7 +3,7 @@ Informação do Instalador do ReFiSeFuQui
 
 Nenhuma garantia é dada com este instalador ou com o refisefuqui em geral.
 
-Este é um instalador em modo visual ou linha de comando que usa apenas 3 partições - 1 para root, 1 para /home (opcional), e 1 para swap.
+Este é um instalador em modo visual ou linha de comando que usa apenas 3 partições - uma para root, uma para /home (opcional), e uma para swap.
 
 A partição swap será formatada automaticamente e as partições root e /home serão formatadas em ext3 ou ext4 conforme selecionado.
 

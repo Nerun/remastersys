@@ -26,86 +26,92 @@ FILESELECTION="--file-selection "
 MENU="--list --column=Pick --column=Info"
 PASSWORD="--entry --hide-text "
 
-
 testroot="`whoami`"
 
 if [ "$testroot" != "root" ]; then
-remsu $0 &
-exit
+	remsu $0 &
+	exit
 fi
 
-copymenu () {
-if [ "$1" = "(null)" ]; then
-  $DIALOG $TITLE"$TITLETEXT" $TEXT"\n\nVocê deve escolher uma unidade USB para usar.  Clique em OK para retornar ao menu principal.\n"
-mainmenu
-fi
-if [ "$2" = "(null)" ]; then
-  $DIALOG $TITLE"$TITLETEXT" $TEXT"\n\nVocê deve escolher uma fonte para usar.  Clique em OK para retornar ao menu principal.\n"
-mainmenu
-fi
+copymenu() {
+	if [ "$1" = "(null)" ]; then
+		$DIALOG $TITLE"$TITLETEXT" $TEXT"\n\nVocê deve escolher uma unidade USB para usar.  Clique em OK para retornar ao menu principal.\n"
+		mainmenu
+	fi
 
-$DIALOG $TITLE"$TITLETEXT" $TEXT"\n\nO conteúdo da unidade USB será completamente apagado e\nsubstituído com o Sistema Live Bootável.\n\nVocê não será capaz de desfazer esta operação uma vez iniciada.\n\nDeseja continuar?\n"
+	if [ "$2" = "(null)" ]; then
+		$DIALOG $TITLE"$TITLETEXT" $TEXT"\n\nVocê deve escolher uma fonte para usar.  Clique em OK para retornar ao menu principal.\n"
+		mainmenu
+	fi
 
-if [ $? != 0 ]; then
-mainmenu
-fi
+	$DIALOG $TITLE"$TITLETEXT" $TEXT"\n\nO conteúdo da unidade USB será completamente apagado e\nsubstituído com o Sistema Live Bootável.\n\nVocê não será capaz de desfazer esta operação uma vez iniciada.\n\nDeseja continuar?\n"
 
-umount `mount | grep $1 | awk '{print $1}'`
+	if [ $? != 0 ]; then
+		mainmenu
+	fi
 
-#do the copy
-dd if=$2 of=/dev/$1 bs=1M 2>/tmp/remusbprog & pid=$!
+	umount `mount | grep $1 | awk '{print $1}'`
 
-PROGTOT=`ls -l $2 | cut -d " " -f 5`
-PROGPERCENT=""
+	#do the copy
+	dd if=$2 of=/dev/$1 bs=1M 2>/tmp/remusbprog & pid=$!
 
-while [ "$PROGPERCENT" != "100" ]; do
-sleep 1
-kill -USR1 $pid
-PROGCNT=`tail -n 1 /tmp/remusbprog | grep "(" | cut -d " " -f 1`
-if [ "$PROGCNT" = "" ]; then
-PROGPERCENT="1"
-else
-PROGPERCENT=$((100 * $PROGCNT / $PROGTOT))
-fi
-echo $PROGPERCENT
-echo "#$PROGPERCENT %"
-done | $DIALOG $TITLE"$TITLETEXT" $TEXT"Copiando para a unidade USB agora.\n\nPor favor aguarde.\n" --no-buttons --progress --auto-close --auto-kill
-rm -f /tmp/remusbprog
-sync
-#killall -KILL tail
+	PROGTOT=`ls -l $2 | cut -d " " -f 5`
+	PROGPERCENT=""
 
-$DIALOG $TITLE"$TITLETEXT" $TEXT"\n\nCópia para USB completada.\nClique em OK para retornar ao menu principal.\n"
-mainmenu
+	while [ "$PROGPERCENT" != "100" ]; do
+		sleep 1
+		kill -USR1 $pid
+		PROGCNT=`tail -n 1 /tmp/remusbprog | grep "(" | cut -d " " -f 1`
+
+		if [ "$PROGCNT" = "" ]; then
+			PROGPERCENT="1"
+		else
+			PROGPERCENT=$((100 * $PROGCNT / $PROGTOT))
+		fi
+
+		echo $PROGPERCENT
+		echo "#$PROGPERCENT %"
+
+	done | $DIALOG $TITLE"$TITLETEXT" $TEXT"Copiando para a unidade USB agora.\n\nPor favor aguarde.\n" --no-buttons --progress --auto-close --auto-kill
+
+	rm -f /tmp/remusbprog
+	sync
+
+	#killall -KILL tail
+
+	$DIALOG $TITLE"$TITLETEXT" $TEXT"\n\nCópia para USB completada.\nClique em OK para retornar ao menu principal.\n"
+	mainmenu
 }
 
+mainmenu() {
+	DEVS=""
+	DEVS=`ls -l /dev/disk/by-path/*usb* | grep -v "part" | awk '{print $NF}' | awk -F "/" '{print $NF}'`
 
-mainmenu () {
-DEVS=""
-DEVS=`ls -l /dev/disk/by-path/*usb* | grep -v "part" | awk '{print $NF}' | awk -F "/" '{print $NF}'`
-if [ "$DEVS" != "" ]; then
-for i in $DEVS; do
-USBDRIVESIZE=`grep -m 1 "$i" /proc/partitions | awk '{print $3}'`
-USBDRIVES="$USBDRIVES!$i-$USBDRIVESIZE"
-done
-else
-  $DIALOG $TITLE"$TITLETEXT" $TEXT"\n\nNenhuma unidade USB encontrada.\n\nInsira uma unidade USB e então\nclique em OK para retornar ao menu principal\nou em Cancelar para sair.\n"
-if [ "$?" = "0" ]; then
-mainmenu
-else
-exit
-fi
-fi
+	if [ "$DEVS" != "" ]; then
+		for i in $DEVS; do
+			USBDRIVESIZE=`grep -m 1 "$i" /proc/partitions | awk '{print $3}'`
+			USBDRIVES="$USBDRIVES!$i-$USBDRIVESIZE"
+		done
+	else
+		$DIALOG $TITLE"$TITLETEXT" $TEXT"\n\nNenhuma unidade USB encontrada.\n\nInsira uma unidade USB e então\nclique em OK para retornar ao menu principal\nou em Cancelar para sair.\n"
 
-CHOICES=`$DIALOG $TITLE"$TITLETEXT" --form --field="Escolha uma unidade USB:CB" $USBDRIVES --field="Escolha uma Imagem Fonte:FL" --button="Sair:2" --button="Copiar para unidade USB:1"`
-retval="$?"
+		if [ "$?" = "0" ]; then
+			mainmenu
+		else
+			exit
+		fi
+	fi
 
-if [ "$retval" = "1" ]; then
-USBDRIVE=`echo $CHOICES | cut -d "|" -f 1 | cut -d "-" -f 1`
-PICKSOURCE=`echo $CHOICES | cut -d "|" -f 2`
-copymenu $USBDRIVE $PICKSOURCE
-else
-exit
-fi
+	CHOICES=`$DIALOG $TITLE"$TITLETEXT" --form --field="Escolha uma unidade USB:CB" $USBDRIVES --field="Escolha uma Imagem Fonte:FL" --button="Sair:2" --button="Copiar para unidade USB:1"`
+	retval="$?"
+
+	if [ "$retval" = "1" ]; then
+		USBDRIVE=`echo $CHOICES | cut -d "|" -f 1 | cut -d "-" -f 1`
+		PICKSOURCE=`echo $CHOICES | cut -d "|" -f 2`
+		copymenu $USBDRIVE $PICKSOURCE
+	else
+		exit
+	fi
 }
 
 mainmenu

@@ -18,85 +18,87 @@
 testyad=`which yad`
 
 if [ "$testyad" = "" ]; then
-apt-get -y -q install yad
+	apt-get -y -q install yad
 fi
 
 if [ "$testyad" != "" ]; then
-DIALOGMENU="`which yad` --window-icon=/usr/share/icons/refisefuqui.png --width=750 --height=330 --center"
-DIALOG="`which yad` --window-icon=/usr/share/icons/refisefuqui.png --center --fixed"
-TITLE="--always-print-result --dialog-sep --image=/usr/share/icons/refisefuqui.png --title="
-TEXT="--text="
-ENTRY="--entry "
-ENTRYTEXT="--entry-text "
-FILESELECTION="--file "
-MENU="--list --column=Opções --column=Explicações"
-YESNO=" --button=Sim:0 --button=Não:1 "
-MSGBOX=" --button=Ok:0 "
-TITLETEXT="Criador de ReFiSeFuQui"
+	DIALOGMENU="`which yad` --window-icon=/usr/share/icons/refisefuqui.png --width=750 --height=330 --center"
+	DIALOG="`which yad` --window-icon=/usr/share/icons/refisefuqui.png --center --fixed"
+	TITLE="--always-print-result --dialog-sep --image=/usr/share/icons/refisefuqui.png --title="
+	TEXT="--text="
+	ENTRY="--entry "
+	ENTRYTEXT="--entry-text "
+	FILESELECTION="--file "
+	MENU="--list --column=Opções --column=Explicações"
+	YESNO=" --button=Sim:0 --button=Não:1 "
+	MSGBOX=" --button=Ok:0 "
+	TITLETEXT="Criador de ReFiSeFuQui"
 fi
 
 testroot="`whoami`"
 
 if [ "$testroot" != "root" ]; then
-$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Deve ser executado com privilégios de superusuário."
-exit 1
+	$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Deve ser executado com privilégios de superusuário."
+	exit 1
 fi
 
-mainmenu () {
+mainmenu() {
+	CHOICES=`$DIALOGMENU $TITLE"$TITLETEXT" --button=Ok:0 --button=Sair:1 $MENU $TEXT"Escolha o que deseja fazer:" \
+	Backup "Backup completo do sistema incluindo arquivos do usuário" \
+	Dist "Criar 'distribuição' em Live CD/DVD - serão criados CDFS (sistema de arquivos) e ISO (imagem gravável)" \
+	DistCDFS "Criar somente o CDFS de um Live CD/DVD - ideal, se você deseja adicionar arquivos ao CD" \
+	DistISO "Criar somente a ISO de um Live CD/DVD - o CDFS deve ter sido criado anteriormente" \
+	DistBoot "Selecionar imagem de fundo para o menu de inicialização do Live CD/DVD" \
+	DistGrub "Selecionar imagem de fundo para o carregador de inicialização GRUB" \
+	DistSkel "Tornar as configurações personalizadas do usuário atual em configurações padrões do sistema do Live CD/DVD" \
+	Configurar "Modificar as configurações do ReFiSeFuQui" \
+	Limpar "Limpar a pasta de trabalho do ReFiSeFuQui" \
+	LimparSkel "Limpar as configurações de /etc/skel para remover todas as personalizações" \
+	Log "Visualizar o arquivo de log do ReFiSeFuQui" \
+	Sobre "Sobre o Criador de ReFiSeFuQui"`
 
-CHOICES=`$DIALOGMENU $TITLE"$TITLETEXT" --button=Ok:0 --button=Sair:1 $MENU $TEXT"Escolha o que deseja fazer:" \
-Backup "Backup completo do sistema incluindo arquivos do usuário" \
-Dist "Criar 'distribuição' em Live CD/DVD - serão criados CDFS (sistema de arquivos) e ISO (imagem gravável)" \
-DistCDFS "Criar somente o CDFS de um Live CD/DVD - ideal, se você deseja adicionar arquivos ao CD" \
-DistISO "Criar somente a ISO de um Live CD/DVD - o CDFS deve ter sido criado anteriormente" \
-DistBoot "Selecionar imagem de fundo para o menu de inicialização do Live CD/DVD" \
-DistGrub "Selecionar imagem de fundo para o carregador de inicialização GRUB" \
-DistSkel "Tornar as configurações personalizadas do usuário atual em configurações padrões do sistema do Live CD/DVD" \
-Configurar "Modificar as configurações do ReFiSeFuQui" \
-Limpar "Limpar a pasta de trabalho do ReFiSeFuQui" \
-LimparSkel "Limpar as configurações de /etc/skel para remover todas as personalizações" \
-Log "Visualizar o arquivo de log do ReFiSeFuQui" \
-Sobre "Sobre o Criador de ReFiSeFuQui"`
+	if [ "$?" = "0" ]; then
+		CHOICE=`echo $CHOICES | cut -d "|" -f 1`
+	else
+		exit 0
+	fi
 
-if [ "$?" = "0" ]; then
-CHOICE=`echo $CHOICES | cut -d "|" -f 1`
-else
-exit 0
-fi
+	if [ "$CHOICE" = "Backup" ]; then
+		backupmenu
+	elif [ "$CHOICE" = "Dist" ]; then
+		distmenu
+	elif [ "$CHOICE" = "DistCDFS" ]; then
+		distcdfsmenu
+	elif [ "$CHOICE" = "DistISO" ]; then
+		distisomenu
+	elif [ "$CHOICE" = "DistBoot" ]; then
+		distbootmenu
+	elif [ "$CHOICE" = "DistGrub" ]; then
+		distgrubmenu
+	elif [ "$CHOICE" = "DistSkel" ]; then
+		distskelmenu
+	elif [ "$CHOICE" = "Configurar" ]; then
+		modifymenu
+	elif [ "$CHOICE" = "Limpar" ]; then
+		cleanmenu
+	elif [ "$CHOICE" = "LimparSkel" ]; then
+		find /etc/skel/ -type f -exec rm -f '{}' \;
+		$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Os arquivos de configuração em /etc/skel/ foram apagados."
+		mainmenu
+	elif [ "$CHOICE" = "Log" ]; then
+		. /etc/refisefuqui.conf
 
-if [ "$CHOICE" = "Backup" ]; then
-backupmenu
-elif [ "$CHOICE" = "Dist" ]; then
-distmenu
-elif [ "$CHOICE" = "DistCDFS" ]; then
-distcdfsmenu
-elif [ "$CHOICE" = "DistISO" ]; then
-distisomenu
-elif [ "$CHOICE" = "DistBoot" ]; then
-distbootmenu
-elif [ "$CHOICE" = "DistGrub" ]; then
-distgrubmenu
-elif [ "$CHOICE" = "DistSkel" ]; then
-distskelmenu
-elif [ "$CHOICE" = "Configurar" ]; then
-modifymenu
-elif [ "$CHOICE" = "Limpar" ]; then
-cleanmenu
-elif [ "$CHOICE" = "LimparSkel" ]; then
-find /etc/skel/ -type f -exec rm -f '{}' \;
-$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Os arquivos de configuração em /etc/skel/ foram apagados."
-mainmenu
-elif [ "$CHOICE" = "Log" ]; then
-. /etc/refisefuqui.conf
-if [ -f "$WORKDIR/refisefuqui/refisefuqui.log" ]; then
-$DIALOG $TITLE"$TITLETEXT" --width=750 --height=400 --text-info --filename="$WORKDIR/refisefuqui/refisefuqui.log"
-else
-$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"O arquivo refisefuqui.log não existe. "
-fi
-mainmenu
-elif [ "$CHOICE" = "Sobre" ]; then
-. /etc/refisefuqui/refisefuqui.version
-$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"O Criador de ReFiSeFuQui é uma interface visual para o
+		if [ -f "$WORKDIR/refisefuqui/refisefuqui.log" ]; then
+			$DIALOG $TITLE"$TITLETEXT" --width=750 --height=400 --text-info --filename="$WORKDIR/refisefuqui/refisefuqui.log"
+		else
+			$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"O arquivo refisefuqui.log não existe. "
+		fi
+
+		mainmenu
+
+	elif [ "$CHOICE" = "Sobre" ]; then
+		. /etc/refisefuqui/refisefuqui.version
+		$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"O Criador de ReFiSeFuQui é uma interface visual para o
 refisefuqui, que é uma ferramenta em linha de comando que
 transforma um sistema Debian instalado (ou derivado) em
 uma distribuição em Live CD ou DVD. Podendo ser usado
@@ -111,88 +113,89 @@ Fork do Remastersys, de Tony Brijeski (descontinuado).
 
 Visite http://linuxernoob.blogspot.com.br/ para obter
 mais informações."
-mainmenu
-else
-exit 0
-fi
-
+		mainmenu
+	else
+		exit 0
+	fi
 }
 
-backupmenu () {
-$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Você escolheu o Modo de Backup.\n\nNão interrompa este processo.\n\nClique em OK para iniciar o processo de criação do LiveCD/DVD de Backup. "
-xterm -fn 9x15 -e "refisefuqui backup"
+backupmenu() {
+	$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Você escolheu o Modo de Backup.\n\nNão interrompa este processo.\n\nClique em OK para iniciar o processo de criação do LiveCD/DVD de Backup. "
+	xterm -fn 9x15 -e "refisefuqui backup"
 
-. /etc/refisefuqui.conf
+	. /etc/refisefuqui.conf
 
-SQUASHFSSIZE=`ls -s $WORKDIR/refisefuqui/ISOTMP/live/filesystem.squashfs | awk -F " " '{print $1}'`
-if [ "$SQUASHFSSIZE" -gt "3999999" ]; then
-$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"O sistema de arquivos comprimido é maior do \nque permite a especificação iso9660 para um único arquivo.\n\nVocê deve tentar reduzir a quantidade \nde arquivos que você está tentando fazer backup \ne tentar novamente."
-exit 1
-fi
-$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Seus arquivos $CUSTOMISO e $CUSTOMISO.md5 estão prontos\nem $WORKDIR/refisefuqui.\n\nÉ recomendável testá-los em uma máquina virtual ou em um CD/DVD\nregravável para se certificar que ele funciona conforme desejado.\n\nClique em OK para retornar ao menu principal."
-mainmenu
+	SQUASHFSSIZE=`ls -s $WORKDIR/refisefuqui/ISOTMP/live/filesystem.squashfs | awk -F " " '{print $1}'`
 
+	if [ "$SQUASHFSSIZE" -gt "3999999" ]; then
+		$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"O sistema de arquivos comprimido é maior do \nque permite a especificação iso9660 para um único arquivo.\n\nVocê deve tentar reduzir a quantidade \nde arquivos que você está tentando fazer backup \ne tentar novamente."
+		exit 1
+	fi
+
+	$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Seus arquivos $CUSTOMISO e $CUSTOMISO.md5 estão prontos\nem $WORKDIR/refisefuqui.\n\nÉ recomendável testá-los em uma máquina virtual ou em um CD/DVD\nregravável para se certificar que ele funciona conforme desejado.\n\nClique em OK para retornar ao menu principal."
+	mainmenu
 }
 
-distmenu () {
-$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Você escolheu o Modo Dist.\n\nClique em OK para iniciar o processo de criação da Distribuição LiveCD/DVD."
-xterm -fn 9x15 -e "refisefuqui dist"
+distmenu() {
+	$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Você escolheu o Modo Dist.\n\nClique em OK para iniciar o processo de criação da Distribuição LiveCD/DVD."
+	xterm -fn 9x15 -e "refisefuqui dist"
 
-. /etc/refisefuqui.conf
+	. /etc/refisefuqui.conf
 
-SQUASHFSSIZE=`ls -s $WORKDIR/refisefuqui/ISOTMP/live/filesystem.squashfs | awk -F " " '{print $1}'`
-if [ "$SQUASHFSSIZE" -gt "3999999" ]; then
-$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"O sistema de arquivos comprimido é maior do \nque permite a especificação iso9660 para um único arquivo.\n\nVocê deve tentar reduzir a quantidade \nde arquivos que você está tentando fazer backup \ne tentar novamente."
-exit 1
-fi
-$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Seus arquivos $CUSTOMISO e $CUSTOMISO.md5 estão prontos\nem $WORKDIR/refisefuqui.\n\nÉ recomendável testá-los em uma máquina virtual ou em um CD/DVD\nregravável para se certificar que ele funciona conforme desejado.\n\nClique em OK para retornar ao menu principal."
-mainmenu
+	SQUASHFSSIZE=`ls -s $WORKDIR/refisefuqui/ISOTMP/live/filesystem.squashfs | awk -F " " '{print $1}'`
 
+	if [ "$SQUASHFSSIZE" -gt "3999999" ]; then
+		$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"O sistema de arquivos comprimido é maior do \nque permite a especificação iso9660 para um único arquivo.\n\nVocê deve tentar reduzir a quantidade \nde arquivos que você está tentando fazer backup \ne tentar novamente."
+		exit 1
+	fi
+
+	$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Seus arquivos $CUSTOMISO e $CUSTOMISO.md5 estão prontos\nem $WORKDIR/refisefuqui.\n\nÉ recomendável testá-los em uma máquina virtual ou em um CD/DVD\nregravável para se certificar que ele funciona conforme desejado.\n\nClique em OK para retornar ao menu principal."
+	mainmenu
 }
 
-distcdfsmenu () {
-$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Você escolheu o Modo Dist CDFS.  Clique em OK para iniciar o processo de criação do sistema de arquivos da Distribuição LiveCD/DVD."
-xterm -fn 9x15 -e "refisefuqui dist cdfs"
+distcdfsmenu() {
+	$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Você escolheu o Modo Dist CDFS.  Clique em OK para iniciar o processo de criação do sistema de arquivos da Distribuição LiveCD/DVD."
+	xterm -fn 9x15 -e "refisefuqui dist cdfs"
 
-. /etc/refisefuqui.conf
+	. /etc/refisefuqui.conf
 
-SQUASHFSSIZE=`ls -s $WORKDIR/refisefuqui/ISOTMP/live/filesystem.squashfs | awk -F " " '{print $1}'`
-if [ "$SQUASHFSSIZE" -gt "3999999" ]; then
-$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"O sistema de arquivos comprimido é maior do \nque permite a especificação iso9660 para um único arquivo.\n\nVocê deve tentar reduzir a quantidade \nde arquivos que você está tentando fazer backup \ne tentar novamente."
-exit 1
-fi
+	SQUASHFSSIZE=`ls -s $WORKDIR/refisefuqui/ISOTMP/live/filesystem.squashfs | awk -F " " '{print $1}'`
 
-$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Seu sistema de arquivos do Live CD/DVD está pronto em $WORKDIR/refisefuqui.\nVocê pode agora adicionar arquivos ao CD \ne então executar a opção Dist ISO quando você estiver pronto.\n\nClique em OK para retornar ao menu principal."
-mainmenu
+	if [ "$SQUASHFSSIZE" -gt "3999999" ]; then
+		$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"O sistema de arquivos comprimido é maior do \nque permite a especificação iso9660 para um único arquivo.\n\nVocê deve tentar reduzir a quantidade \nde arquivos que você está tentando fazer backup \ne tentar novamente."
+		exit 1
+	fi
 
+	$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Seu sistema de arquivos do Live CD/DVD está pronto em $WORKDIR/refisefuqui.\nVocê pode agora adicionar arquivos ao CD \ne então executar a opção Dist ISO quando você estiver pronto.\n\nClique em OK para retornar ao menu principal."
+
+	mainmenu
 }
 
-distisomenu () {
-. /etc/refisefuqui.conf
-if [ -f "$WORKDIR/refisefuqui/ISOTMP/live/filesystem.squashfs" ]; then
-$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Você escolheu o Modo Dist ISO.\n\nClique em OK para criar o arquivo ISO."
-xterm -fn 9x15 -e "refisefuqui dist iso"
+distisomenu() {
+	. /etc/refisefuqui.conf
 
-. /etc/refisefuqui.conf
+	if [ -f "$WORKDIR/refisefuqui/ISOTMP/live/filesystem.squashfs" ]; then
+		$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Você escolheu o Modo Dist ISO.\n\nClique em OK para criar o arquivo ISO."
+		xterm -fn 9x15 -e "refisefuqui dist iso"
+		. /etc/refisefuqui.conf
+		SQUASHFSSIZE=`ls -s $WORKDIR/refisefuqui/ISOTMP/live/filesystem.squashfs | awk -F " " '{print $1}'`
 
-SQUASHFSSIZE=`ls -s $WORKDIR/refisefuqui/ISOTMP/live/filesystem.squashfs | awk -F " " '{print $1}'`
-if [ "$SQUASHFSSIZE" -gt "3999999" ]; then
-$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"O sistema de arquivos comprimido é maior do \nque permite a especificação iso9660 para um único arquivo.\n\nVocê deve tentar reduzir a quantidade \nde arquivos que você está tentando fazer backup \ne tentar novamente."
-exit 1
-fi
-$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Seus arquivos $CUSTOMISO e $CUSTOMISO.md5 estão prontos\nem $WORKDIR/refisefuqui.\n\nÉ recomendável testá-los em uma máquina virtual ou em um CD/DVD\nregravável para se certificar que ele funciona conforme desejado.\n\nClique em OK para retornar ao menu principal."
-mainmenu
+		if [ "$SQUASHFSSIZE" -gt "3999999" ]; then
+			$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"O sistema de arquivos comprimido é maior do \nque permite a especificação iso9660 para um único arquivo.\n\nVocê deve tentar reduzir a quantidade \nde arquivos que você está tentando fazer backup \ne tentar novamente."
+		exit 1
+		fi
 
-else
-$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"O sistema de arquivos do Live CD/DVD não existe.\n\nClique OK para voltar ao menu principal e\ntentar o Modo Dist ou o Modo Dist CDFS novamente."
-mainmenu
-exit0
-fi
+		$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Seus arquivos $CUSTOMISO e $CUSTOMISO.md5 estão prontos\nem $WORKDIR/refisefuqui.\n\nÉ recomendável testá-los em uma máquina virtual ou em um CD/DVD\nregravável para se certificar que ele funciona conforme desejado.\n\nClique em OK para retornar ao menu principal."
+		mainmenu
+	else
+		$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"O sistema de arquivos do Live CD/DVD não existe.\n\nClique OK para voltar ao menu principal e\ntentar o Modo Dist ou o Modo Dist CDFS novamente."
+		mainmenu
+		exit0
+	fi
 }
 
-
-distbootmenu () {
-$DIALOG $TITLE"Criador de ReFiSeFuQui" $MSGBOX $TEXT"Isto lhe permitirá escolher \
+distbootmenu() {
+	$DIALOG $TITLE"Criador de ReFiSeFuQui" $MSGBOX $TEXT"Isto lhe permitirá escolher \
 sua própria figura para ser \na iamgem de fundo do menu do Live CD/DVD. \n\
 A imagem DEVE ter 640x480 pixels e estar em formato PNG.  \nVocê deve criar \
 esta imagem ou redimensioná-la com um editor \ngráfico apropriado uma vez que \
@@ -201,71 +204,64 @@ esta ferramenta não possui a habilidade de fazê-lo. \
 \n\
 Clique em OK para continuar."
 
-BOOTPIC=`$DIALOG $TITLE"Criador de ReFiSeFuQui" --width=750 --height=400 $FILESELECTION`
-if [ "$BOOTPIC" != "" ]; then
-mv /etc/refisefuqui/isolinux/splash.png \
+	BOOTPIC=`$DIALOG $TITLE"Criador de ReFiSeFuQui" --width=750 --height=400 $FILESELECTION`
+
+	if [ "$BOOTPIC" != "" ]; then
+		mv /etc/refisefuqui/isolinux/splash.png \
 /etc/refisefuqui/isolinux/splash.png.`date +%F%T | sed -e "s/-//g" | sed -e "s/://g"`
 
-cp $BOOTPIC /etc/refisefuqui/isolinux/splash.png
+		cp $BOOTPIC /etc/refisefuqui/isolinux/splash.png
 
-
-$DIALOG $TITLE"Criador de ReFiSeFuQui" $MSGBOX $TEXT"$BOOTPIC foi copiado \
+		$DIALOG $TITLE"Criador de ReFiSeFuQui" $MSGBOX $TEXT"$BOOTPIC foi copiado \
 para \n/etc/refisefuqui/isolinux/splash.png se tornando \na imagem de fundo padrão \
 para o menu do Live CD/DVD. \nClique em OK para continuar."
+	else
+		$DIALOG $TITLE"Criador de ReFiSeFuQui" $MSGBOX $TEXT"Você não selecionou qualquer arquivo. \n\nClique em OK para continuar."
+	fi
 
-else
-
-$DIALOG $TITLE"Criador de ReFiSeFuQui" $MSGBOX $TEXT"Você não selecionou qualquer arquivo. \n\nClique em OK para continuar."
-fi
-
-
-mainmenu
+	mainmenu
 }
 
-distgrubmenu () {
-$DIALOG $TITLE"Criador de ReFiSeFuQui" $MSGBOX $TEXT"Isto lhe permitirá escolher \
+distgrubmenu() {
+	$DIALOG $TITLE"Criador de ReFiSeFuQui" $MSGBOX $TEXT"Isto lhe permitirá escolher \
 sua própria imagem PNG \ncomo imagem de fundo para o gerenciador de boot GRUB. \
 Clique em OK para continuar."
 
-GRUBPIC=`$DIALOG $TITLE"Criador de ReFiSeFuQui" --width=750 --height=400 $FILESELECTION`
-if [ "$GRUBPIC" != "" ]; then
+	GRUBPIC=`$DIALOG $TITLE"Criador de ReFiSeFuQui" --width=750 --height=400 $FILESELECTION`
 
-
-$DIALOG $TITLE"Criador de ReFiSeFuQui" $MSGBOX $TEXT"$GRUBPIC foi copiado \
+	if [ "$GRUBPIC" != "" ]; then
+		$DIALOG $TITLE"Criador de ReFiSeFuQui" $MSGBOX $TEXT"$GRUBPIC foi copiado \
 para /etc/refisefuqui/grub.png \ne é a imagem de fundo padrão para o GRUB. \nClique \
 OK para atualizar o GRUB com as novas configurações \npara poder ver a imagem na próxima inicialização."
-if [ "$?" = "0" ]; then
 
-$DIALOG $TITLE"Criador de ReFiSeFuQui" --no-buttons --progress --pulsate $TEXT"Atualizando GRUB agora. \n\
+		if [ "$?" = "0" ]; then
+			$DIALOG $TITLE"Criador de ReFiSeFuQui" --no-buttons --progress --pulsate $TEXT"Atualizando GRUB agora. \n\
 Por favor aguarde." &
-PICFILE=`echo $GRUBPIC | awk -F"/" '{print $NF}'`
-cp $GRUBPIC /etc/refisefuqui/grub.png
-NEWGRUBPIC="/etc/refisefuqui/grub.png"
+			PICFILE=`echo $GRUBPIC | awk -F"/" '{print $NF}'`
+			cp $GRUBPIC /etc/refisefuqui/grub.png
+			NEWGRUBPIC="/etc/refisefuqui/grub.png"
 
-sed -i -e "/GRUB_BACKGROUND/d" /etc/default/grub
+			sed -i -e "/GRUB_BACKGROUND/d" /etc/default/grub
 
-cat >> /etc/default/grub <<FOO
+			cat >> /etc/default/grub <<FOO
 #Grub Background
 GRUB_BACKGROUND="$NEWGRUBPIC"
+			FOO
 
-FOO
+			update-grub
+			killall -KILL yad
 
+			$DIALOG $TITLE"Criador de ReFiSeFuQui" $MSGBOX $TEXT"GRUB foi atualizado. Clique em OK para continuar."
+		fi
+	else
+		$DIALOG $TITLE"Criador de ReFiSeFuQui" $MSGBOX $TEXT"Você não selecionou qualquer arquivo. \n\nClique em OK para continuar."
+	fi
 
-update-grub
-killall -KILL yad
-
-$DIALOG $TITLE"Criador de ReFiSeFuQui" $MSGBOX $TEXT"GRUB foi atualizado. Clique em OK para continuar."
-fi
-else
-
-$DIALOG $TITLE"Criador de ReFiSeFuQui" $MSGBOX $TEXT"Você não selecionou qualquer arquivo. \n\nClique em OK para continuar."
-fi
-mainmenu
+	mainmenu
 }
 
-distskelmenu () {
-
-$DIALOG $TITLE"Criador de ReFiSeFuQui" $MSGBOX $TEXT"Isto colocará a área de trabalho de seu usuário e as configurações de aplicativos \n\
+distskelmenu() {
+	$DIALOG $TITLE"Criador de ReFiSeFuQui" $MSGBOX $TEXT"Isto colocará a área de trabalho de seu usuário e as configurações de aplicativos \n\
 em /etc/skel tornando-os o padrão para o sistema do Live CD/DVD. \n\n\
 Incluem-se papel de parede e outras configurações de aplicativos que não estão \n\
 definidas na pasta home do usuário. \n\
@@ -273,87 +269,74 @@ definidas na pasta home do usuário. \n\
 concluir, então seja paciente. \n\n\
 Clique em OK para preparar a lista."
 
+	j="0"
+	i="1000"
 
-j="0"
-i="1000"
-while [ "`cat /etc/passwd | awk -F ":" '{print $3}' | grep $i`" != "" ]; do
-for i in $(seq 1000 1 1010); do
+	while [ "`cat /etc/passwd | awk -F ":" '{print $3}' | grep $i`" != "" ]; do
+		for i in $(seq 1000 1 1010); do
+			if [ "`cat /etc/passwd | awk -F ":" '{print $3}' | grep $i`" != "" ]; then
+				userchoice[$j]="`grep $i /etc/passwd | awk -F ":" '{print $1}'`"
+				j=`expr $j + 1`
+			fi
+		done
+	done
 
-if [ "`cat /etc/passwd | awk -F ":" '{print $3}' | grep $i`" != "" ]; then
-  userchoice[$j]="`grep $i /etc/passwd | awk -F ":" '{print $1}'`"
+	SKELUSER=`$DIALOG $TITLE"$TITLETEXT" $MENU $TEXT"\nSelecione um usuário cujas configurações \nvocê deseja tornar padrões." \
+	${userchoice[0]} ${userchoice[0]} \
+	${userchoice[1]} ${userchoice[1]} \
+	${userchoice[2]} ${userchoice[2]} \
+	${userchoice[3]} ${userchoice[3]} \
+	${userchoice[4]} ${userchoice[4]} \
+	${userchoice[5]} ${userchoice[5]} \
+	${userchoice[6]} ${userchoice[6]} \
+	${userchoice[7]} ${userchoice[7]} \
+	${userchoice[8]} ${userchoice[8]} \
+	${userchoice[9]} ${userchoice[9]}`
 
-  j=`expr $j + 1`
-fi
+	SKELUSER=`echo $SKELUSER | cut -d "|" -f 1`
 
-done
-done
+	if [ "$SKELUSER" != "" ]; then
+		cd `grep "^$SKELUSER:" /etc/passwd | awk -F ":" '{print $6}'`
+		PWD=`pwd`
+		TESTUSER=`grep "$PWD" /etc/passwd | awk -F ":" '{print $1}'`
 
+		if [ "$TESTUSER" != "$SKELUSER" ]; then
+			$DIALOG $TITLE"Criador de ReFiSeFuQui" $MSGBOX $TEXT"O usuário escolhido não possui um diretório home. \nClique em OK para retornar ao menu principal."
+			echo "É preciso estar no diretório de usuário... Saindo."
+			mainmenu
+		fi
 
-SKELUSER=`$DIALOG $TITLE"$TITLETEXT" $MENU $TEXT"\nSelecione um usuário cujas configurações \nvocê deseja tornar padrões." \
-${userchoice[0]} ${userchoice[0]} \
-${userchoice[1]} ${userchoice[1]} \
-${userchoice[2]} ${userchoice[2]} \
-${userchoice[3]} ${userchoice[3]} \
-${userchoice[4]} ${userchoice[4]} \
-${userchoice[5]} ${userchoice[5]} \
-${userchoice[6]} ${userchoice[6]} \
-${userchoice[7]} ${userchoice[7]} \
-${userchoice[8]} ${userchoice[8]} \
-${userchoice[9]} ${userchoice[9]}`
-
-
-
-SKELUSER=`echo $SKELUSER | cut -d "|" -f 1`
-
-if [ "$SKELUSER" != "" ]; then
-
-cd `grep "^$SKELUSER:" /etc/passwd | awk -F ":" '{print $6}'`
-
-PWD=`pwd`
-
-TESTUSER=`grep "$PWD" /etc/passwd | awk -F ":" '{print $1}'`
-
-if [ "$TESTUSER" != "$SKELUSER" ]; then
-$DIALOG $TITLE"Criador de ReFiSeFuQui" $MSGBOX $TEXT"O usuário escolhido não possui um diretório home. \nClique em OK para retornar ao menu principal."
-echo "É preciso estar no diretório de usuário... Saindo."
-mainmenu
-fi
-
-
-$DIALOG $TITLE"Criador de ReFiSeFuQui" --no-buttons --progress --pulsate $TEXT"Copiando as configurações de $SKELUSER para /etc/skel agora. \n\
+		$DIALOG $TITLE"Criador de ReFiSeFuQui" --no-buttons --progress --pulsate $TEXT"Copiando as configurações de $SKELUSER para /etc/skel agora. \n\
 Por favor aguarde." &
 
-refisefuqui-skelcopy $SKELUSER
+		refisefuqui-skelcopy $SKELUSER
 
-killall -KILL yad
+		killall -KILL yad
 
-$DIALOG $TITLE"Criador de ReFiSeFuQui" $MSGBOX $TEXT"
+		$DIALOG $TITLE"Criador de ReFiSeFuQui" $MSGBOX $TEXT"
 As configurações de $SKELUSER foram copiadas para /etc/skel. Para\n\
 testá-las você precisa criar um novo usuário e ver se suas \n\
 configurações foram aplicadas. \n\n\
 Clique em OK para retornar ao menu principal."
 
-else
+	else
+		$DIALOG $TITLE"Criador de ReFiSeFuQui" $MSGBOX $TEXT"Você não selecionou qualquer usuário. \n\nClique em OK para continuar."
+	fi
 
-$DIALOG $TITLE"Criador de ReFiSeFuQui" $MSGBOX $TEXT"Você não selecionou qualquer usuário. \n\nClique em OK para continuar."
-
-fi
-mainmenu
-
+	mainmenu
 }
 
-modifymenu () {
+modifymenu() {
 
-if [ -f /etc/refisefuqui.conf ]; then
-. /etc/refisefuqui.conf
-fi
+	if [ -f /etc/refisefuqui.conf ]; then
+		. /etc/refisefuqui.conf
+	fi
 
-if [ "$SQUASHFSOPTS" = "" ]; then
-SQUASHFSOPTS="-no-recovery -always-use-fragments -b 1M"
-fi
+	if [ "$SQUASHFSOPTS" = "" ]; then
+		SQUASHFSOPTS="-no-recovery -always-use-fragments -b 1M"
+	fi
 
-
-CHOICES=`$DIALOGMENU $TITLE"$TITLETEXT" --button=Salvar:0 --button=Voltar:1 --form \
+	CHOICES=`$DIALOGMENU $TITLE"$TITLETEXT" --button=Salvar:0 --button=Voltar:1 --form \
 --field="Nome de usuário do Live CD/DVD" "$LIVEUSER" \
 --field="Nome do Sistema do Live CD/DVD" "$LIVECDLABEL" \
 --field="Nome da ISO do Live CD/DVD" "$CUSTOMISO" \
@@ -363,63 +346,61 @@ CHOICES=`$DIALOGMENU $TITLE"$TITLETEXT" --button=Salvar:0 --button=Voltar:1 --fo
 --field="Exibir ícone de instalação na área de trabalho" "$SHOWICON" \
 --field="Arquivos e pastas não inclusos" " $EXCLUDES"`
 
+	if [ "$?" = "0" ]; then
+		LIVEUSER=`echo $CHOICES | cut -d "|" -f 1`
+		LIVECDLABEL=`echo $CHOICES | cut -d "|" -f 2`
+		CUSTOMISO=`echo $CHOICES | cut -d "|" -f 3`
+		ISOBOOT=`echo $CHOICES | cut -d "|" -f 4`
+		WORKDIR=`echo $CHOICES | cut -d "|" -f 5`
+		SQUASHFSOPTS=`echo $CHOICES | cut -d "|" -f 6`
+		SHOWICON=`echo $CHOICES | cut -d "|" -f 7`
+		EXCLUDES=`echo $CHOICES | cut -d "|" -f 8`
+	else
+		mainmenu
+	fi
 
-if [ "$?" = "0" ]; then
-LIVEUSER=`echo $CHOICES | cut -d "|" -f 1`
-LIVECDLABEL=`echo $CHOICES | cut -d "|" -f 2`
-CUSTOMISO=`echo $CHOICES | cut -d "|" -f 3`
-ISOBOOT=`echo $CHOICES | cut -d "|" -f 4`
-WORKDIR=`echo $CHOICES | cut -d "|" -f 5`
-SQUASHFSOPTS=`echo $CHOICES | cut -d "|" -f 6`
-SHOWICON=`echo $CHOICES | cut -d "|" -f 7`
-EXCLUDES=`echo $CHOICES | cut -d "|" -f 8`
-else
-mainmenu
-fi
+	if [ "$LIVEUSER" = "" ]; then
+		LIVEUSER="live"
+	fi
 
-if [ "$LIVEUSER" = "" ]; then
-LIVEUSER="live"
-fi
-#make sure live user is all lowercase
-LIVEUSER="`echo $LIVEUSER | awk '{print tolower ($0)}'`"
+	#make sure live user is all lowercase
+	LIVEUSER="`echo $LIVEUSER | awk '{print tolower ($0)}'`"
 
-if [ "$LIVECDLABEL" = "" ]; then
-LIVECDLABEL="Custom Live CD"
-fi
+	if [ "$LIVECDLABEL" = "" ]; then
+		LIVECDLABEL="Custom Live CD"
+	fi
 
-if [ "$CUSTOMISO" = "" ]; then
-CUSTOMISO="custom-live.iso"
-fi
+	if [ "$CUSTOMISO" = "" ]; then
+		CUSTOMISO="custom-live.iso"
+	fi
 
-if [ "$ISOBOOT" = "grub" -o "$ISOBOOT" = "GRUB" ]; then
-ISOBOOT="GRUB"
-else
-ISOBOOT="ISOLINUX"
-fi
+	if [ "$ISOBOOT" = "grub" -o "$ISOBOOT" = "GRUB" ]; then
+		ISOBOOT="GRUB"
+	else
+		ISOBOOT="ISOLINUX"
+	fi
 
+	if [ "$WORKDIR" = "" ]; then
+		WORKDIR="/home/refisefuqui"
+	fi
 
-if [ "$WORKDIR" = "" ]; then
-WORKDIR="/home/refisefuqui"
-fi
+	if [ "$SQUASHFSOPTS" = "" ]; then
+		SQUASHFSOPTS="-no-recovery -always-use-fragments -b 1M"
+	fi
 
-if [ "$SQUASHFSOPTS" = "" ]; then
-SQUASHFSOPTS="-no-recovery -always-use-fragments -b 1M"
-fi
+	SHOWICON="`echo $SHOWICON | awk '{print tolower ($0)}'`"
 
-SHOWICON="`echo $SHOWICON | awk '{print tolower ($0)}'`"
+	if [ "$SHOWICON" = "1" ]; then
+		SHOWICON="1"
+	elif [ "$SHOWICON" = "yes" ]; then
+		SHOWICON="1"
+	elif [ "$SHOWICON" = "true" ]; then
+		SHOWICON="1"
+	else
+		SHOWICON="0"
+	fi
 
-if [ "$SHOWICON" = "1" ]; then
-SHOWICON="1"
-elif [ "$SHOWICON" = "yes" ]; then
-SHOWICON="1"
-elif [ "$SHOWICON" = "true" ]; then
-SHOWICON="1"
-else
-SHOWICON="0"
-fi
-
-
-cat > /etc/refisefuqui.conf <<FOO
+	cat > /etc/refisefuqui.conf <<FOO
 #Remastersys Global Configuration File
 
 # This is the temporary working directory and won't be included on the cd/dvd
@@ -447,26 +428,21 @@ SQUASHFSOPTS="$SQUASHFSOPTS"
 
 #Option to show install icon on live desktop in dist mode 1=yes or true, 0=no or false
 SHOWICON="$SHOWICON"
-
-
 FOO
 
-if [ "$?" = "0" ]; then
-$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Configuração salva. Clique em OK para retornar ao menu de modificação."
-else
-$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Erro ao salvar Configuração. Clique em OK para retornar ao menu de modificação."
-fi
-modifymenu
-
+	if [ "$?" = "0" ]; then
+		$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Configuração salva. Clique em OK para retornar ao menu de modificação."
+	else
+		$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Erro ao salvar Configuração. Clique em OK para retornar ao menu de modificação."
+	fi
+		modifymenu
 }
 
-cleanmenu () {
-$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Todos os arquivos da pasta temporária serão apagados.\n\nClique em OK para continuar."
-xterm -fn 9x15 -e "refisefuqui clean"
-$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Completado. Clique em OK para retornar ao menu principal."
-mainmenu
-
+cleanmenu() {
+	$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Todos os arquivos da pasta temporária serão apagados.\n\nClique em OK para continuar."
+	xterm -fn 9x15 -e "refisefuqui clean"
+	$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Completado. Clique em OK para retornar ao menu principal."
+	mainmenu
 }
-
 
 mainmenu

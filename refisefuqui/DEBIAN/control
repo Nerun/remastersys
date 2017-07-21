@@ -1,13 +1,13 @@
 Package: refisefuqui
 Priority: optional
 Section: system
-Installed-Size: 1344
+Installed-Size: 1244
 Maintainer: Nerun <nerunblogs@gmail.com>
 Architecture: all
-Version: 1.13
+Version: 1.14
 Depends: coreutils, dialog, memtest86+, mkisofs | genisoimage, findutils, grub-pc, syslinux | xorriso, os-prober, bash, passwd, sed, squashfs-tools, live-boot, live-config, live-config-sysvinit | live-config-systemd, live-boot-initramfs-tools, rsync, mount, laptop-detect, util-linux, hwdata
 Conffiles:
- /etc/refisefuqui/refisefuqui.version c5962038e7bfd40fd97547e2b0756254
+ /etc/refisefuqui/refisefuqui.version c12c26a858e0b0c285f94f1d3bc88d96
  /etc/refisefuqui/preseed/custom.seed 7e3aa6d1958baf72d369392fdb175486
  /etc/refisefuqui/isolinux/vesamenu.c32 5a25bff3b63f5fa50b31c1f21c9981f8
  /etc/refisefuqui/isolinux/stdmenu.cfg a90d8e3f458bad634de29af77bae19f6
@@ -16,9 +16,9 @@ Conffiles:
  /etc/refisefuqui/isolinux/isolinux.bin d8076c2646464d9a6e6210a0d8e1508e
  /etc/refisefuqui/isolinux/live.cfg 98b398d3e541337b2478f5fd7d2bbadf
  /etc/refisefuqui/isolinux/memtest.bin 95f689bd6c9842be2e1d9991b991abfe
- /etc/refisefuqui/isolinux/splash.png 8ddd90fd2fcc1f002d7aff2a070a1900
+ /etc/refisefuqui/isolinux/splash.png 1e2f702302c98833c275133c8ace5ab2
  /etc/refisefuqui/refisefuqui-installer.conf 44a12462ccadfc52a1fc44524bce52d8
- /etc/refisefuqui.conf 812e1e48e9173cb69ab0c4df8d2deed7
+ /etc/refisefuqui.conf c65dd49abae1f5ff702ca5bd271eb640
 Description: Remasteriza e cria backups do sistema Debian
  O ReFiSeFuQui permite criar uma Distribuição em Live CD ou fazer um backup do sistema instalado em sua máquina.
  Para mais informações visite http://linuxernoob.blogspot.com.br

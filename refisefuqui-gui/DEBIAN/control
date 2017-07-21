@@ -1,11 +1,11 @@
 Package: refisefuqui-gui
 Priority: optional
 Section: system
-Installed-Size: 1344
+Installed-Size: 148
 Maintainer: Nerun <nerunblogs@gmail.com>
 Architecture: all
-Version: 1.13
-Depends: gparted, xterm, yad, read-edid, gksu, refisefuqui (>= 1.13)
+Version: 1.14
+Depends: gparted, xterm, yad, read-edid, gksu, refisefuqui (>= 1.14)
 Description: Remasteriza e cria backups do sistema Debian
  Esta é a interface visual do Refisefuqui.
  Para mais informações visite http://linuxernoob.blogspot.com.br

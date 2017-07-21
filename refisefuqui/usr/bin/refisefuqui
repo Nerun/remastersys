@@ -286,8 +286,6 @@ rm -f $WORKDIR/dummysys/etc/wicd/wireless-settings.conf
 rm -rf $WORKDIR/dummysys/etc/NetworkManager/system-connections/*
 rm -f $WORKDIR/dummysys/etc/printcap
 rm -f $WORKDIR/dummysys/etc/cups/printers.conf
-touch $WORKDIR/dummysys/etc/printcap
-touch $WORKDIR/dummysys/etc/cups/printers.conf
 rm -rf $WORKDIR/dummysys/var/cache/gdm/*
 rm -rf $WORKDIR/dummysys/var/lib/sudo/*
 rm -rf $WORKDIR/dummysys/var/run/console/*

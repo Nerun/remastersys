@@ -131,7 +131,7 @@ cd DEBIAN
 echo "Package: refisefuqui-gui
 Priority: optional
 Section: system
-Installed-Size: $size
+Installed-Size: $sizegui
 Maintainer: Nerun <nerunblogs@gmail.com>
 Architecture: all
 Version: $version

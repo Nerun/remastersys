@@ -15,75 +15,76 @@
 ######################################################
 
 if [ "$1" = "" ]; then
-echo
-echo "Uso: refisefuqui-grubconfig /localdemontagem [root|rootmbr]"
-echo
-echo "/localdemontagem       Você deve especificar o caminho completo"
-echo "root                   Instala o grub na partição raiz"
-echo "                       A MBR será usada se nenhuma opção for dada"
-echo
-echo "Ex.: instalar na partição raiz da instalação atual"
-echo
-echo "    refisefuqui-grubconfig / root"
-echo
-echo
-echo "Ex.: instalar na MBR em um drive montado - se estiver rodando do Live CD"
-echo
-echo "    refisefuqui-grubconfig /mnt/sda1"
-echo
-exit 1
+	echo
+	echo "Uso: refisefuqui-grubconfig /localdemontagem [root|rootmbr]"
+	echo
+	echo "/localdemontagem       Você deve especificar o caminho completo"
+	echo "root                   Instala o grub na partição raiz"
+	echo "                       A MBR será usada se nenhuma opção for dada"
+	echo
+	echo "Ex.: instalar na partição raiz da instalação atual"
+	echo
+	echo "    refisefuqui-grubconfig / root"
+	echo
+	echo
+	echo "Ex.: instalar na MBR em um drive montado - se estiver rodando do Live CD"
+	echo
+	echo "    refisefuqui-grubconfig /mnt/sda1"
+	echo
+	exit 1
 fi
 
 testroot="`whoami`"
 
 if [ "$testroot" != "root" ]; then
-echo "refisefuqui-grubconfig deve ser usado com privilégios de superusuário."
-exit 1
+	echo "refisefuqui-grubconfig deve ser usado com privilégios de superusuário."
+	exit 1
 fi
 
 ROOTMOUNT="$1"
+
 if [ "$ROOTMOUNT" = "" ]; then
-ROOTMOUNT="/"
+	ROOTMOUNT="/"
 fi
 
 ROOTPART=`mount | grep " $ROOTMOUNT " | awk '{print $1}'`
 ROOTMBR=`echo $ROOTPART | sed -e 's/[1-9]//g'`
 GRUBLOCTEST="$2"
+
 if [ "$GRUBLOCTEST" = "root" ]; then
-GRUBLOC="$ROOTPART"
-echo $GRUBLOC
+	GRUBLOC="$ROOTPART"
+	echo $GRUBLOC
 elif [ "$GRUBLOCTEST" = "rootmbr" ]; then
-GRUBLOC="$ROOTMBR"
-echo $GRUBLOC
+	GRUBLOC="$ROOTMBR"
+	echo $GRUBLOC
 else
-GRUBLOC="/dev/sda"
-echo $GRUBLOC
+	GRUBLOC="/dev/sda"
+	echo $GRUBLOC
 fi
-
-
 
 if [ "$ROOTMOUNT" != "/" ]; then
+	if [ ! -e $ROOTMOUNT/proc/cpuinfo ]; then
+		STANDALONE="yes"
+		mount -o bind /proc $ROOTMOUNT/proc
+		mount -o bind /dev $ROOTMOUNT/dev
+		mount -o bind /sys $ROOTMOUNT/sys
+	fi
 
-if [ ! -e $ROOTMOUNT/proc/cpuinfo ]; then
-STANDALONE="yes"
-mount -o bind /proc $ROOTMOUNT/proc
-mount -o bind /dev $ROOTMOUNT/dev
-mount -o bind /sys $ROOTMOUNT/sys
-fi
-chroot $ROOTMOUNT grub-install --no-floppy $GRUBLOC
-chroot $ROOTMOUNT update-grub
-sync
-if [ "$STANDALONE" = "yes" ]; then
-sleep 1
-umount $ROOTMOUNT/proc
-sleep 1
-umount $ROOTMOUNT/dev
-sleep 1
-umount $ROOTMOUNT/sys
-sleep 1
-fi
+	chroot $ROOTMOUNT grub-install --no-floppy $GRUBLOC
+	chroot $ROOTMOUNT update-grub
+	sync
+
+	if [ "$STANDALONE" = "yes" ]; then
+		sleep 1
+		umount $ROOTMOUNT/proc
+		sleep 1
+		umount $ROOTMOUNT/dev
+		sleep 1
+		umount $ROOTMOUNT/sys
+		sleep 1
+	fi
 else
-grub-install --no-floppy $GRUBLOC
-update-grub
-sync
+	grub-install --no-floppy $GRUBLOC
+	update-grub
+	sync
 fi

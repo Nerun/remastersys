@@ -9,7 +9,7 @@ a305a0a729bb95d8a08f886278a6422f  usr/share/applications/refisefuqui-usb-key-cop
 4f4128148c5ebbe79ecd3d716d6d71d5  usr/share/applications/refisefuqui-gui-kde.desktop
 f511cd676a1b9fba965b7256565711ff  usr/share/pixmaps/refisefuqui-installer.png
 26294b98cc051f6716e5e183e1502e76  usr/share/menu/refisefuqui
-256169ae3bafcee761bc6454592e7687  usr/bin/refisefuqui-gui
+cb6087c7a38ae099a5a5429645b0a37e  usr/bin/refisefuqui-gui
 5ae7b095114041e69b04003266de19a4  usr/bin/refisefuqui-usb-key-copy-tool
 772c426387d9b6886787fbe1642f2938  usr/bin/refisefuqui-grub-restore
 bb2360810f9f0ad8825db34483a97584  usr/bin/remsu

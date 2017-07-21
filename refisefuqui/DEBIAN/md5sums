@@ -1,6 +1,6 @@
 c4c805b6ab57e0d33f8a917e31c087f3  usr/share/man/man1/refisefuqui.1.gz
-add52293466824e62c13f04a979f4922  usr/share/doc/refisefuqui/changelog.gz
-add52293466824e62c13f04a979f4922  usr/share/doc/refisefuqui/changelog.Debian.gz
+c453cb3e90968b4f26449fdba657c686  usr/share/doc/refisefuqui/changelog.gz
+c453cb3e90968b4f26449fdba657c686  usr/share/doc/refisefuqui/changelog.Debian.gz
 fc514fe09b7fcb60d4f24b718792b42d  usr/share/doc/refisefuqui/README
 c3b64db4821ae93419ba9e2249f25bcf  usr/share/doc/refisefuqui/copyright
 99502e80746e19c600164aa9095c740f  usr/share/doc/refisefuqui/README.refisefuqui-installer
@@ -20,5 +20,5 @@ a90d8e3f458bad634de29af77bae19f6  etc/refisefuqui/isolinux/stdmenu.cfg
 95f689bd6c9842be2e1d9991b991abfe  etc/refisefuqui/isolinux/memtest.bin
 98b398d3e541337b2478f5fd7d2bbadf  etc/refisefuqui/isolinux/live.cfg
 1c846e8adf9a4ba87a056938819c3ba2  etc/refisefuqui/isolinux/menu.cfg
-c12c26a858e0b0c285f94f1d3bc88d96  etc/refisefuqui/refisefuqui.version
+158138e572624a26aaf6807e573dbe35  etc/refisefuqui/refisefuqui.version
 1e2f702302c98833c275133c8ace5ab2  etc/refisefuqui/grub.png

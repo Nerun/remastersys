@@ -452,11 +452,6 @@ cp /etc/live/config.conf $WORKDIR/dummysys/etc/live/
 
 sleep 1
 
-#fix for policy kit in live
-sed -i -e 's/ResultAny=no/ResultAny=yes/g' /lib/live/config/1100-policykit
-sed -i -e 's/ResultInactive=no/ResultInactive=yes/g' /lib/live/config/1100-policykit
-
-
 
 echo "Configurando opções de Live CD para modo $1"
 

@@ -246,7 +246,7 @@ Por favor aguarde." &
 			cat >> /etc/default/grub <<FOO
 #Grub Background
 GRUB_BACKGROUND="$NEWGRUBPIC"
-			FOO
+FOO
 
 			update-grub
 			killall -KILL yad
@@ -435,7 +435,8 @@ FOO
 	else
 		$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Erro ao salvar Configuração. Clique em OK para retornar ao menu de modificação."
 	fi
-		modifymenu
+
+	modifymenu
 }
 
 cleanmenu() {

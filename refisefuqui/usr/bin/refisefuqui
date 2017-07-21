@@ -14,14 +14,9 @@
 #                                                    #
 ######################################################
 
-# checando pra ter certeza de que o script está rodando com privilégios de root
+# FUNÇÕES E VARIÁVEIS ## BEGIN ##############################
 
-# carrega arquivo de versão
-. /etc/refisefuqui/refisefuqui.version
-
-testroot="`whoami`"
-
-if [ "$testroot" != "root" ]; then
+usoinfo(){
 	echo " "
 	echo "Uso do ReFiSeFuQui $REFISEFUQUIVERSION:"
 	echo " "
@@ -31,29 +26,45 @@ if [ "$testroot" != "root" ]; then
 	echo "Exemplos:"
 	echo " "
 	echo "   sudo refisefuqui backup"
-	echo "               (cria um Live CD/DVD contendo um backup do seu sistema)"
+	echo "      (cria um Live CD/DVD contendo um backup do seu sistema)"
 	echo " "
 	echo "   sudo refisefuqui backup custom.iso"
-	echo "               (cria um Live CD/DVD backup, e nomeia a ISO para custom.iso)" 
+	echo "      (cria um Live CD/DVD backup, e nomeia a ISO para custom.iso)" 
 	echo " "
 	echo "   sudo refisefuqui clean"
-	echo "               (apaga os arquivos temporários do refisefuqui)"
+	echo "      (apaga os arquivos temporários do refisefuqui)"
 	echo " "
 	echo "   sudo refisefuqui dist"
-	echo "               (cria uma distribuição em Live CD/DVD do seu sistema)"
+	echo "      (cria uma distribuição em Live CD/DVD do seu sistema)"
 	echo " "
 	echo "   sudo refisefuqui dist cdfs"
-	echo "               (cria apenas o sistema de arquivos da distribuição Live CD/DVD)"
+	echo "      (cria apenas o sistema de arquivos da distribuição Live CD/DVD)"
 	echo " "
 	echo "   sudo refisefuqui dist iso custom.iso"
-	echo "               (cria uma ISO da distribuição com o nome custom.iso, mas"
-	echo "                apenas se o sistema de arquivos já tiver sido criado)"
+	echo "      (cria uma ISO da distribuição com o nome custom.iso, mas"
+	echo "       apenas se o sistema de arquivos já tiver sido criado)"
 	echo " "
 	echo "   As opções cdfs e iso só deverão ser usadas se você quiser modificar alguma"
-	echo "   coisa no CD antes de criar a ISO.  Um exemplo seria para modificar a porção"
+	echo "   coisa no CD antes de criar a ISO. Um exemplo seria para modificar a porção"
 	echo "   isolinux do Live CD/DVD."
 	echo " "
+}
 
+SpecIso9660=" O sistema de arquivos comprimido é maior do que permite a especificação iso9660 para um único arquivo. Você deve tentar reduzir a quantidade de arquivos que você está tentando fazer backup e tentar novamente."
+
+MissingFiles="Está faltando o sistema de arquivos do CD. Ou houve um problema na criação do arquivo de sistema comprimido, ou você está tentando rodar o comando \"sudo refisefuqui dist iso\" antes de \"sudo refisefuqui dist cdfs\"."
+
+# FUNÇÕES E VARIÁVEIS ## END ################################
+
+# checando pra ter certeza de que o script está rodando com privilégios de root
+
+# carrega arquivo de versão
+. /etc/refisefuqui/refisefuqui.version
+
+testroot="`whoami`"
+
+if [ "$testroot" != "root" ]; then
+	usoinfo # vide função
 	exit 1
 fi
 
@@ -134,548 +145,459 @@ case $1 in
 
 
 	*)
-	echo "Uso do ReFiSeFuQui $REFISEFUQUIVERSION:"
-	echo " "
-	echo "   sudo refisefuqui backup|clean|dist [cdfs|iso] [nome_do_arquivo.iso]"
-	echo " "
-	echo " "
-	echo "Exemplos:"
-	echo " "
-	echo "   sudo refisefuqui backup   (cria um Live CD/DVD contendo um backup do seu sistema)"
-	echo " "
-	echo "   sudo refisefuqui backup custom.iso"
-	echo "                             (cria um Live CD/DVD backup, e nomeia a ISO para custom.iso)" 
-	echo " "
-	echo "   sudo refisefuqui clean    (apaga os arquivos temporários do refisefuqui)"
-	echo " "
-	echo "   sudo refisefuqui dist     (cria uma distribuição em Live CD/DVD do seu sistema)"
-	echo " "
-	echo "   sudo refisefuqui dist cdfs"
-	echo "                             (cria apenas o sistema de arquivos da distribuição Live CD/DVD)"
-	echo " "
-	echo "   sudo refisefuqui dist iso custom.iso"
-	echo "                             (cria uma ISO da distribuição com o nome custom.iso, mas apenas"
-	echo "                              se o sistema de arquivos já tiver sido criado)"
-	echo " "
-	echo "   As opções cdfs e iso só deverãos er usadas se você quiser modificar alguma coisa no"
-	echo "   CD antes de criar a ISO.  Um exemplo seria para modificar a porção isolinux do"
-	echo "   Live CD/DVD."
-	echo " "
+	usoinfo # vide função
 	exit 1
 	;;
 
 esac
 
-
-cdfs (){
-
-# Step 3 - Create the CD tree in $WORKDIR/ISOTMP
-echo "Verificando se a pasta $WORKDIR já foi criada"
-if [ -d "$WORKDIR" ]; then
-rm -rf $WORKDIR/dummysys/var/*
-rm -rf $WORKDIR/dummysys/etc/*
-else
-mkdir -p $WORKDIR/ISOTMP/live
-mkdir -p $WORKDIR/ISOTMP/install
-mkdir -p $WORKDIR/ISOTMP/preseed
-mkdir -p $WORKDIR/dummysys/dev
-mkdir -p $WORKDIR/dummysys/etc/live
-mkdir -p $WORKDIR/dummysys/proc
-mkdir -p $WORKDIR/dummysys/tmp
-mkdir -p $WORKDIR/dummysys/sys
-mkdir -p $WORKDIR/dummysys/mnt
-#mkdir -p $WORKDIR/dummysys/media/cdrom
-mkdir -p $WORKDIR/dummysys/media
-mkdir -p $WORKDIR/dummysys/run
-mkdir -p $WORKDIR/dummysys/var
-chmod ug+rwx,o+rwt $WORKDIR/dummysys/tmp
-
-fi
-
-
-
-
-echo "Copiando /var e /etc para área temporária e excluindo arquivos extras"
-
-if [ "$EXCLUDES" != "" ]; then
-for addvar in $EXCLUDES ; do
-VAREXCLUDES="$VAREXCLUDES --exclude='$addvar' "
-done
-fi
-
-# if this is kde, copy the adept_notifier_auto.desktop to /etc/refisefuqui so the installer can put it back as live-initramfs removes it altogether
-if [ -f /usr/share/autostart/adept_notifier_auto.desktop ]; then
-cp /usr/share/autostart/adept_notifier_auto.desktop /etc/refisefuqui/
-fi
-
-# copy trackerd stuff as live-initramfs disables it
-if [ -f /etc/xdg/autostart/tracker-applet.desktop ]; then
-cp /etc/xdg/autostart/tracker-applet.desktop /etc/refisefuqui
-fi
-if [ -f /etc/xdg/autostart/trackerd.desktop ]; then
-cp /etc/xdg/autostart/trackerd.desktop.xdg /etc/refisefuqui
-fi
-if [ -f /usr/share/autostart/trackerd.desktop ]; then
-cp /usr/share/autostart/trackerd.desktop.share /etc/refisefuqui
-fi
-
-#cleanup leftover live script if it exists
-if [ -f /etc/profile.d/zz-live.sh ]; then
-rm -f /etc/profile.d/zz-live.sh
-fi
-
-rsync --exclude='*.log.*' --exclude='*.pid' --exclude='*.bak' --exclude='*.[0-9].gz' --exclude='*.deb' $VAREXCLUDES-a /var/. $WORKDIR/dummysys/var/.
-rsync $VAREXCLUDES-a /etc/. $WORKDIR/dummysys/etc/.
-
-if [ "$1" = "dist" ]; then
-rm -f $WORKDIR/dummysys/etc/X11/xorg.conf
-rm -f $WORKDIR/dummysys/etc/resolv.conf
-rm -f $WORKDIR/dummysys/etc/hosts
-rm -f $WORKDIR/dummysys/etc/hostname
-fi
-
-rm -f $WORKDIR/dummysys/etc/mtab
-rm -f $WORKDIR/dummysys/etc/fstab
-rm -f $WORKDIR/dummysys/etc/udev/rules.d/70-persistent*
-ls $WORKDIR/dummysys/var/lib/apt/lists | grep -v ".gpg" | grep -v "lock" | grep -v "partial" | xargs -i rm $WORKDIR/dummysys/var/lib/apt/lists/{} ; 
-
-if [ "$1" = "dist" ]; then
-#fix for buggy debian live setup of gdm and gdm3
-if [ -f $WORKDIR/dummysys/etc/gdm/gdm.conf ]; then
-sed -i -e '/AutomaticLoginEnable/d' $WORKDIR/dummysys/etc/gdm/gdm.conf
-fi
-if [ -f $WORKDIR/dummysys/etc/gdm3/daemon.conf ]; then
-sed -i -e '/AutomaticLoginEnable/d' $WORKDIR/dummysys/etc/gdm3/daemon.conf
-fi
-if [ -f $WORKDIR/dummysys/etc/gdm/gdm.conf-custom ]; then
-echo "  " > $WORKDIR/dummysys/etc/gdm/gdm.conf-custom
-fi
-
-if [ -f /etc/X11/default-display-manager ]; then
-
-if [ "$SHOWICON" = "1" ]; then
-echo "Copiando Ícone de Instalação para Área de trabalho do usuário do Live CD"
-
-if [ ! -d $WORKDIR/dummysys/etc/skel/Desktop ]; then
-mkdir -p $WORKDIR/dummysys/etc/skel/Desktop
-fi
-
-if [ "`grep kdm /etc/X11/default-display-manager`" = "" ]; then
-cp /usr/share/applications/refisefuqui-installer.desktop $WORKDIR/dummysys/etc/skel/Desktop/
-chmod +x $WORKDIR/dummysys/etc/skel/Desktop/refisefuqui-installer.desktop
-else
-cp /usr/share/applications/refisefuqui-installer-kde.desktop $WORKDIR/dummysys/etc/skel/Desktop/
-chmod +x $WORKDIR/dummysys/etc/skel/Desktop/refisefuqui-installer-kde.desktop
-fi
-
-fi
-
-fi
-
-
-rm -f $WORKDIR/dummysys/etc/group
-rm -f $WORKDIR/dummysys/etc/group-
-rm -f $WORKDIR/dummysys/etc/passwd
-rm -f $WORKDIR/dummysys/etc/passwd-
-rm -f $WORKDIR/dummysys/etc/shadow
-rm -f $WORKDIR/dummysys/etc/shadow-
-rm -f $WORKDIR/dummysys/etc/gshadow
-rm -f $WORKDIR/dummysys/etc/gshadow-
-rm -f $WORKDIR/dummysys/etc/wicd/wired-settings.conf
-rm -f $WORKDIR/dummysys/etc/wicd/wireless-settings.conf
-rm -rf $WORKDIR/dummysys/etc/NetworkManager/system-connections/*
-rm -f $WORKDIR/dummysys/etc/printcap
-rm -f $WORKDIR/dummysys/etc/cups/printers.conf
-rm -rf $WORKDIR/dummysys/var/cache/gdm/*
-rm -rf $WORKDIR/dummysys/var/lib/sudo/*
-rm -rf $WORKDIR/dummysys/var/run/console/*
-rm -f $WORKDIR/dummysys/var/lib/kdm/kdmsts
-rm -f $WORKDIR/dummysys/var/lib/AccountsService/users/*
-rm -f $WORKDIR/dummysys/etc/gdm/gdm.conf-custom
-rm -f $WORKDIR/dummysys/etc/gdm/custom.conf
-rm -f $WORKDIR/dummysys/etc/cups/ssl/server.crt
-rm -f $WORKDIR/dummysys/etc/cups/ssl/server.key
-rm -f $WORKDIR/dummysys/etc/ssh/ssh_host_rsa_key
-rm -f $WORKDIR/dummysys/etc/ssh/ssh_host_dsa_key.pub
-rm -f $WORKDIR/dummysys/etc/ssh/ssh_host_dsa_key
-rm -f $WORKDIR/dummysys/etc/ssh/ssh_host_rsa_key.pub
-
-
-find $WORKDIR/dummysys/var/run $WORKDIR/dummysys/var/log $WORKDIR/dummysys/var/mail $WORKDIR/dummysys/var/spool $WORKDIR/dummysys/var/lock $WORKDIR/dummysys/var/backups $WORKDIR/dummysys/var/tmp -type f -exec rm '{}' \;
-
-#further cleanup
-rm -rf $WORKDIR/dummysys/var/cache/gdm/*
-rm -rf $WORKDIR/dummysys/var/tmp/kdecache*
-rm -rf $WORKDIR/dummysys/var/spool/gfax/*
-rm -rf $WORKDIR/dummysys/var/run/gdm3/*
-rm -rf $WORKDIR/dummysys/var/lib/sudo/*
-rm -rf $WORKDIR/dummysys/var/lib/polkit-1/localauthority/10-vendor.d/10-live-cd.pkla
-
-
-#fix for live scripts setup Contributed by AnthLee of SalineOS
-rm -rf $WORKDIR/dummysys/var/lib/live/config/*
-
-for i in dpkg.log lastlog mail.log syslog auth.log daemon.log faillog lpr.log mail.warn user.log boot debug mail.err messages wtmp bootstrap.log dmesg kern.log mail.info
-do
-        touch $WORKDIR/dummysys/var/log/${i}
-done
-
-# remove the non system users on the passwd and group files and copy them to dummysys
-
-# see if any temp users left over from previous versions of refisefuqui as the process has now changed
-
-grep '^[^:]*:[^:]*:[5-9][0-9][0-9]:' /etc/passwd | awk -F ":" '{print "/usr/sbin/userdel -f",$1}'> $WORKDIR/cleantmpusers
-. $WORKDIR/cleantmpusers
-
-grep '^[^:]*:[^:]*:[0-9]:' /etc/passwd >> $WORKDIR/dummysys/etc/passwd
-grep '^[^:]*:[^:]*:[0-9][0-9]:' /etc/passwd >> $WORKDIR/dummysys/etc/passwd
-grep '^[^:]*:[^:]*:[0-9][0-9][0-9]:' /etc/passwd >> $WORKDIR/dummysys/etc/passwd
-grep '^[^:]*:[^:]*:[3-9][0-9][0-9][0-9][0-9]:' /etc/passwd >> $WORKDIR/dummysys/etc/passwd
-
-grep '^[^:]*:[^:]*:[0-9]:' /etc/group >> $WORKDIR/dummysys/etc/group
-grep '^[^:]*:[^:]*:[0-9][0-9]:' /etc/group >> $WORKDIR/dummysys/etc/group
-grep '^[^:]*:[^:]*:[0-9][0-9][0-9]:' /etc/group >> $WORKDIR/dummysys/etc/group
-grep '^[^:]*:[^:]*:[3-9][0-9][0-9][0-9][0-9]:' /etc/group >> $WORKDIR/dummysys/etc/group
-
-grep '^[^:]*:[^:]*:[5-9][0-9][0-9]:' /etc/passwd | awk -F ":" '{print $1}'> $WORKDIR/tmpusers1
-grep '^[^:]*:[^:]*:[1-9][0-9][0-9][0-9]:' /etc/passwd | awk -F ":" '{print $1}'> $WORKDIR/tmpusers2
-grep '^[^:]*:[^:]*:[1-2][0-9][0-9][0-9][0-9]:' /etc/passwd | awk -F ":" '{print $1}'> $WORKDIR/tmpusers3
-
-cat $WORKDIR/tmpusers1 $WORKDIR/tmpusers2 $WORKDIR/tmpusers3 > $WORKDIR/tmpusers
-
-cat $WORKDIR/tmpusers | while read LINE ;do
-
-echo $LINE | xargs -i sed -e 's/,{}//g' $WORKDIR/dummysys/etc/group > $WORKDIR/dummysys/etc/group.new1
-echo $LINE | xargs -i sed -e 's/{},//g' $WORKDIR/dummysys/etc/group.new1 > $WORKDIR/dummysys/etc/group.new2
-echo $LINE | xargs -i sed -e 's/{}//g' $WORKDIR/dummysys/etc/group.new2 > $WORKDIR/dummysys/etc/group
-
-rm -rf $WORKDIR/dummysys/etc/group.new1 $WORKDIR/dummysys/etc/group.new2
-
-done
-
-fi
-
-# copy over some of the necessary stuff for the livecd
-
-if [ -f /etc/refisefuqui/preseed/*.seed ]; then
-cp /etc/refisefuqui/preseed/* $WORKDIR/ISOTMP/preseed/
-fi
-
-#BOOT Type selected is GRUB
-if [ "$ISOBOOT" = "GRUB" ]; then
-
-cp /etc/refisefuqui/isolinux/memtest.bin $WORKDIR/ISOTMP/memtest.bin
-
-mkdir -p $WORKDIR/ISOTMP/boot/grub
-mkdir -p $WORKDIR/ISOTMP/usr/share/grub
-cp -a /boot/grub/* $WORKDIR/ISOTMP/boot/grub/
-cp -a /usr/share/grub/* $WORKDIR/ISOTMP/usr/share/grub/
-cp /etc/refisefuqui/grub/grub.cfg $WORKDIR/ISOTMP/boot/grub/grub.cfg
-cp /etc/refisefuqui/grub.png $WORKDIR/ISOTMP/boot/grub/grub.png
-
-sed -i -e 's/__LIVECDLABEL__/'"$LIVECDLABEL"'/g' $WORKDIR/ISOTMP/boot/grub/grub.cfg
-
-if [ ! -d /etc/plymouth ]; then
-
-sed -i -e 's/splash//g' $WORKDIR/ISOTMP/boot/grub/grub.cfg
-
-fi
-
-
-
-else
-#BOOT Type selected is ISOLINUX
-
-mkdir -p $WORKDIR/ISOTMP/isolinux
-
-if [ `ls /etc/refisefuqui/customisolinux` ]; then
-
-cp /etc/refisefuqui/customisolinux/* $WORKDIR/ISOTMP/isolinux/
-
-else
-
-cp /etc/refisefuqui/isolinux/* $WORKDIR/ISOTMP/isolinux/
-
-sed -i -e 's/__LIVECDLABEL__/'"$LIVECDLABEL"'/g' $WORKDIR/ISOTMP/isolinux/menu.cfg
-
-if [ ! -d /etc/plymouth ]; then
-
-sed -i -e 's/splash//g' $WORKDIR/ISOTMP/isolinux/live.cfg
-
-fi
-
-fi
-
-fi
-
-sleep 1
-
-
-# Step 4 - Prepare live.conf depending on whether this is a backup or dist
-
-if [ "$1" = "backup" ]; then
-LIVEUSER="`grep '^[^:]*:[^:]*:1000:' /etc/passwd | awk -F ":" '{ print $1 }'`"
-
-#fix Thunar volmanrc for live
-for i in `ls -d /home/*`; do
-
-if [ /$i/.config/Thunar/volmanrc ]; then
-  sed -i -e 's/TRUE/FALSE/g' /$i/.config/Thunar/volmanrc
-  cp -f /$i/.config/volmanrc /root/.config/Thunar/volmanrc
-fi
-
-done
-
-fi
-if [ ! -d /etc/live ]; then
-mkdir -p /etc/live
-fi
-
-echo "export LIVE_USERNAME=\"$LIVEUSER\"" > /etc/live/config.conf
-echo "export LIVE_USER_FULLNAME=\"Usuario do live cd\"" >> /etc/live/config.conf
-echo "export LIVE_HOSTNAME=\"$LIVEUSER\"" >> /etc/live/config.conf
-echo "export LIVE_USER_DEFAULT_GROUPS=\"audio,cdrom,dialout,floppy,video,plugdev,netdev,powerdev,adm,sudo\"" >> /etc/live/config.conf
-echo "export LIVE_LOCALES=\"pt_BR.UTF-8\"" >> /etc/live/config.conf
-echo "export LIVE_TIMEZONE=\"America/Sao_Paulo\"" >> /etc/live/config.conf
-if [ "$1" = "backup" ]; then
-echo "export LIVE_NOCONFIGS=\"user-setup,sudo,locales,locales-all,tzdata,gdm,gdm3,kdm,lightdm,lxdm,nodm,slim,xinit,keyboard-configuration,gnome-panel-data,gnome-power-manager,gnome-screensaver,kde-services,debian-installer-launcher,login\"" >> /etc/live/config.conf
-fi
-
-#fix for a bug in the debian live boot scripts that starts a second X server
-if [ "$1" = "dist" ] && [ -f /etc/X11/default-display-manager ]; then
-echo "export LIVE_NOCONFIGS=\"xinit\"" >> /etc/live/config.conf
-fi
-
-cp /etc/live/config.conf $WORKDIR/dummysys/etc/live/
-
-sleep 1
-
-
-echo "Configurando opções de Live CD para modo $1"
-
-# make a new initial ramdisk including the live scripts
-update-initramfs -t -c -k $(uname -r)
-
-echo "Copiando seu kernel e o initrd para o Live CD"
-cp /boot/vmlinuz-$(uname -r) $WORKDIR/ISOTMP/live/vmlinuz
-cp /boot/initrd.img-$(uname -r) $WORKDIR/ISOTMP/live/initrd.img
-
-# Step 5 - Make filesystem.squashfs
-
-if [ -f $WORKDIR/refisefuqui.log ]; then
-rm -f $WORKDIR/refisefuqui.log
-touch $WORKDIR/refisefuqui.log
-fi
-
-
-if [ -f $WORKDIR/ISOTMP/live/filesystem.squashfs ]; then
-rm -f $WORKDIR/ISOTMP/live/filesystem.squashfs
-fi
-
-echo "Criando filesystem.squashfs... Vai demorar um tempo, então seja paciente."
-
-if [ "$SQUASHFSOPTS" = "" ]; then
-SQUASHFSOPTS="-no-recovery -always-use-fragments -b 1M"
-fi
-
-REALFOLDERS=""
-
-for d in `ls -d $WORKDIR/dummysys/*`; do
-REALFOLDERS="$REALFOLDERS $d"
-done
-
-if [ "$1" = "backup" ]; then
-
-for d in `ls / | grep -v etc | grep -v run | grep -v tmp | grep -v sys | grep -v var \
+cdfs(){
+
+	# STEP 3 - Create the CD tree in $WORKDIR/ISOTMP
+
+	echo "Verificando se a pasta $WORKDIR já foi criada"
+	if [ -d "$WORKDIR" ]; then
+		rm -rf $WORKDIR/dummysys/var/*
+		rm -rf $WORKDIR/dummysys/etc/*
+	else
+		mkdir -p $WORKDIR/ISOTMP/live
+		mkdir -p $WORKDIR/ISOTMP/install
+		mkdir -p $WORKDIR/ISOTMP/preseed
+		mkdir -p $WORKDIR/dummysys/dev
+		mkdir -p $WORKDIR/dummysys/etc/live
+		mkdir -p $WORKDIR/dummysys/proc
+		mkdir -p $WORKDIR/dummysys/tmp
+		mkdir -p $WORKDIR/dummysys/sys
+		mkdir -p $WORKDIR/dummysys/mnt
+		mkdir -p $WORKDIR/dummysys/media
+		mkdir -p $WORKDIR/dummysys/run
+		mkdir -p $WORKDIR/dummysys/var
+		chmod ug+rwx,o+rwt $WORKDIR/dummysys/tmp
+	fi
+
+	echo "Copiando /var e /etc para área temporária e excluindo arquivos extras."
+
+	if [ "$EXCLUDES" != "" ]; then
+		for addvar in $EXCLUDES ; do
+			VAREXCLUDES="$VAREXCLUDES --exclude='$addvar' "
+		done
+	fi
+
+	# if KDE, copy the adept_notifier_auto.desktop to /etc/refisefuqui so
+    # the installer can put it back as live-initramfs removes it altogether
+	if [ -f /usr/share/autostart/adept_notifier_auto.desktop ]; then
+		cp /usr/share/autostart/adept_notifier_auto.desktop /etc/refisefuqui/
+	fi
+
+	# copy trackerd stuff as live-initramfs disables it
+	if [ -f /etc/xdg/autostart/tracker-applet.desktop ]; then
+		cp /etc/xdg/autostart/tracker-applet.desktop /etc/refisefuqui
+	fi
+
+	if [ -f /etc/xdg/autostart/trackerd.desktop ]; then
+		cp /etc/xdg/autostart/trackerd.desktop.xdg /etc/refisefuqui
+	fi
+
+	if [ -f /usr/share/autostart/trackerd.desktop ]; then
+		cp /usr/share/autostart/trackerd.desktop.share /etc/refisefuqui
+	fi
+
+	#cleanup leftover live script if it exists
+	if [ -f /etc/profile.d/zz-live.sh ]; then
+		rm -f /etc/profile.d/zz-live.sh
+	fi
+
+	rsync --exclude='*.log.*' --exclude='*.pid' --exclude='*.bak' --exclude='*.[0-9].gz' --exclude='*.deb' $VAREXCLUDES-a /var/. $WORKDIR/dummysys/var/.
+	rsync $VAREXCLUDES-a /etc/. $WORKDIR/dummysys/etc/.
+
+	if [ "$1" = "dist" ]; then
+		rm -f $WORKDIR/dummysys/etc/X11/xorg.conf
+		rm -f $WORKDIR/dummysys/etc/resolv.conf
+		rm -f $WORKDIR/dummysys/etc/hosts
+		rm -f $WORKDIR/dummysys/etc/hostname
+	fi
+
+	rm -f $WORKDIR/dummysys/etc/mtab
+	rm -f $WORKDIR/dummysys/etc/fstab
+	rm -f $WORKDIR/dummysys/etc/udev/rules.d/70-persistent*
+	ls $WORKDIR/dummysys/var/lib/apt/lists | grep -v ".gpg" | grep -v "lock" | grep -v "partial" | xargs -i rm $WORKDIR/dummysys/var/lib/apt/lists/{} ; 
+
+	if [ "$1" = "dist" ]; then
+		#fix for buggy debian live setup of gdm and gdm3
+		if [ -f $WORKDIR/dummysys/etc/gdm/gdm.conf ]; then
+			sed -i -e '/AutomaticLoginEnable/d' $WORKDIR/dummysys/etc/gdm/gdm.conf
+		fi
+
+		if [ -f $WORKDIR/dummysys/etc/gdm3/daemon.conf ]; then
+			sed -i -e '/AutomaticLoginEnable/d' $WORKDIR/dummysys/etc/gdm3/daemon.conf
+		fi
+
+		if [ -f $WORKDIR/dummysys/etc/gdm/gdm.conf-custom ]; then
+			echo "  " > $WORKDIR/dummysys/etc/gdm/gdm.conf-custom
+		fi
+
+		if [ -f /etc/X11/default-display-manager ]; then
+			if [ "$SHOWICON" = "1" ]; then
+				echo "Copiando Ícone de Instalação para Área de trabalho do usuário do Live CD"
+				if [ ! -d $WORKDIR/dummysys/etc/skel/Desktop ]; then
+					mkdir -p $WORKDIR/dummysys/etc/skel/Desktop
+				fi
+
+				if [ "`grep kdm /etc/X11/default-display-manager`" = "" ]; then
+					cp /usr/share/applications/refisefuqui-installer.desktop $WORKDIR/dummysys/etc/skel/Desktop/
+					chmod +x $WORKDIR/dummysys/etc/skel/Desktop/refisefuqui-installer.desktop
+				else
+					cp /usr/share/applications/refisefuqui-installer-kde.desktop $WORKDIR/dummysys/etc/skel/Desktop/
+					chmod +x $WORKDIR/dummysys/etc/skel/Desktop/refisefuqui-installer-kde.desktop
+				fi
+			fi
+		fi
+
+		rm -f $WORKDIR/dummysys/etc/group
+		rm -f $WORKDIR/dummysys/etc/group-
+		rm -f $WORKDIR/dummysys/etc/passwd
+		rm -f $WORKDIR/dummysys/etc/passwd-
+		rm -f $WORKDIR/dummysys/etc/shadow
+		rm -f $WORKDIR/dummysys/etc/shadow-
+		rm -f $WORKDIR/dummysys/etc/gshadow
+		rm -f $WORKDIR/dummysys/etc/gshadow-
+		rm -f $WORKDIR/dummysys/etc/wicd/wired-settings.conf
+		rm -f $WORKDIR/dummysys/etc/wicd/wireless-settings.conf
+		rm -rf $WORKDIR/dummysys/etc/NetworkManager/system-connections/*
+		rm -f $WORKDIR/dummysys/etc/printcap
+		rm -f $WORKDIR/dummysys/etc/cups/printers.conf
+		rm -rf $WORKDIR/dummysys/var/cache/gdm/*
+		rm -rf $WORKDIR/dummysys/var/lib/sudo/*
+		rm -rf $WORKDIR/dummysys/var/run/console/*
+		rm -f $WORKDIR/dummysys/var/lib/kdm/kdmsts
+		rm -f $WORKDIR/dummysys/var/lib/AccountsService/users/*
+		rm -f $WORKDIR/dummysys/etc/gdm/gdm.conf-custom
+		rm -f $WORKDIR/dummysys/etc/gdm/custom.conf
+		rm -f $WORKDIR/dummysys/etc/cups/ssl/server.crt
+		rm -f $WORKDIR/dummysys/etc/cups/ssl/server.key
+		rm -f $WORKDIR/dummysys/etc/ssh/ssh_host_rsa_key
+		rm -f $WORKDIR/dummysys/etc/ssh/ssh_host_dsa_key.pub
+		rm -f $WORKDIR/dummysys/etc/ssh/ssh_host_dsa_key
+		rm -f $WORKDIR/dummysys/etc/ssh/ssh_host_rsa_key.pub
+
+		find $WORKDIR/dummysys/var/run $WORKDIR/dummysys/var/log $WORKDIR/dummysys/var/mail $WORKDIR/dummysys/var/spool $WORKDIR/dummysys/var/lock $WORKDIR/dummysys/var/backups $WORKDIR/dummysys/var/tmp -type f -exec rm '{}' \;
+
+		#further cleanup
+		rm -rf $WORKDIR/dummysys/var/cache/gdm/*
+		rm -rf $WORKDIR/dummysys/var/tmp/kdecache*
+		rm -rf $WORKDIR/dummysys/var/spool/gfax/*
+		rm -rf $WORKDIR/dummysys/var/run/gdm3/*
+		rm -rf $WORKDIR/dummysys/var/lib/sudo/*
+		rm -rf $WORKDIR/dummysys/var/lib/polkit-1/localauthority/10-vendor.d/10-live-cd.pkla
+
+		#fix for live scripts setup Contributed by AnthLee of SalineOS
+		rm -rf $WORKDIR/dummysys/var/lib/live/config/*
+
+		for i in dpkg.log lastlog mail.log syslog auth.log daemon.log faillog lpr.log mail.warn user.log boot debug mail.err messages wtmp bootstrap.log dmesg kern.log mail.info
+		do
+			touch $WORKDIR/dummysys/var/log/${i}
+		done
+
+		# remove the non system users on the passwd and group files and copy them to dummysys
+		# see if any temp users left over from previous versions of refisefuqui as the process has now changed
+
+		grep '^[^:]*:[^:]*:[5-9][0-9][0-9]:' /etc/passwd | awk -F ":" '{print "/usr/sbin/userdel -f",$1}'> $WORKDIR/cleantmpusers
+		. $WORKDIR/cleantmpusers
+
+		grep '^[^:]*:[^:]*:[0-9]:' /etc/passwd >> $WORKDIR/dummysys/etc/passwd
+		grep '^[^:]*:[^:]*:[0-9][0-9]:' /etc/passwd >> $WORKDIR/dummysys/etc/passwd
+		grep '^[^:]*:[^:]*:[0-9][0-9][0-9]:' /etc/passwd >> $WORKDIR/dummysys/etc/passwd
+		grep '^[^:]*:[^:]*:[3-9][0-9][0-9][0-9][0-9]:' /etc/passwd >> $WORKDIR/dummysys/etc/passwd
+
+		grep '^[^:]*:[^:]*:[0-9]:' /etc/group >> $WORKDIR/dummysys/etc/group
+		grep '^[^:]*:[^:]*:[0-9][0-9]:' /etc/group >> $WORKDIR/dummysys/etc/group
+		grep '^[^:]*:[^:]*:[0-9][0-9][0-9]:' /etc/group >> $WORKDIR/dummysys/etc/group
+		grep '^[^:]*:[^:]*:[3-9][0-9][0-9][0-9][0-9]:' /etc/group >> $WORKDIR/dummysys/etc/group
+
+		grep '^[^:]*:[^:]*:[5-9][0-9][0-9]:' /etc/passwd | awk -F ":" '{print $1}'> $WORKDIR/tmpusers1
+		grep '^[^:]*:[^:]*:[1-9][0-9][0-9][0-9]:' /etc/passwd | awk -F ":" '{print $1}'> $WORKDIR/tmpusers2
+		grep '^[^:]*:[^:]*:[1-2][0-9][0-9][0-9][0-9]:' /etc/passwd | awk -F ":" '{print $1}'> $WORKDIR/tmpusers3
+
+		cat $WORKDIR/tmpusers1 $WORKDIR/tmpusers2 $WORKDIR/tmpusers3 > $WORKDIR/tmpusers
+
+		cat $WORKDIR/tmpusers | while read LINE ;do
+			echo $LINE | xargs -i sed -e 's/,{}//g' $WORKDIR/dummysys/etc/group > $WORKDIR/dummysys/etc/group.new1
+			echo $LINE | xargs -i sed -e 's/{},//g' $WORKDIR/dummysys/etc/group.new1 > $WORKDIR/dummysys/etc/group.new2
+			echo $LINE | xargs -i sed -e 's/{}//g' $WORKDIR/dummysys/etc/group.new2 > $WORKDIR/dummysys/etc/group
+			rm -rf $WORKDIR/dummysys/etc/group.new1 $WORKDIR/dummysys/etc/group.new2
+		done
+	fi
+
+	# copy over some of the necessary stuff for the livecd
+
+	if [ -f /etc/refisefuqui/preseed/*.seed ]; then
+		cp /etc/refisefuqui/preseed/* $WORKDIR/ISOTMP/preseed/
+	fi
+
+	#BOOT Type selected is GRUB
+	if [ "$ISOBOOT" = "GRUB" ]; then
+		cp /etc/refisefuqui/isolinux/memtest.bin $WORKDIR/ISOTMP/memtest.bin
+		mkdir -p $WORKDIR/ISOTMP/boot/grub
+		mkdir -p $WORKDIR/ISOTMP/usr/share/grub
+		cp -a /boot/grub/* $WORKDIR/ISOTMP/boot/grub/
+		cp -a /usr/share/grub/* $WORKDIR/ISOTMP/usr/share/grub/
+		cp /etc/refisefuqui/grub/grub.cfg $WORKDIR/ISOTMP/boot/grub/grub.cfg
+		cp /etc/refisefuqui/grub.png $WORKDIR/ISOTMP/boot/grub/grub.png
+		sed -i -e 's/__LIVECDLABEL__/'"$LIVECDLABEL"'/g' $WORKDIR/ISOTMP/boot/grub/grub.cfg
+
+		if [ ! -d /etc/plymouth ]; then
+			sed -i -e 's/splash//g' $WORKDIR/ISOTMP/boot/grub/grub.cfg
+		fi
+	else
+		#BOOT Type selected is ISOLINUX
+		mkdir -p $WORKDIR/ISOTMP/isolinux
+
+		if [ `ls /etc/refisefuqui/customisolinux` ]; then
+			cp /etc/refisefuqui/customisolinux/* $WORKDIR/ISOTMP/isolinux/
+		else
+			cp /etc/refisefuqui/isolinux/* $WORKDIR/ISOTMP/isolinux/
+			sed -i -e 's/__LIVECDLABEL__/'"$LIVECDLABEL"'/g' $WORKDIR/ISOTMP/isolinux/menu.cfg
+
+			if [ ! -d /etc/plymouth ]; then
+				sed -i -e 's/splash//g' $WORKDIR/ISOTMP/isolinux/live.cfg
+			fi
+		fi
+	fi
+
+	sleep 1
+
+	# STEP 4 - Prepare live.conf depending on whether this is a backup or dist
+
+	if [ "$1" = "backup" ]; then
+		LIVEUSER="`grep '^[^:]*:[^:]*:1000:' /etc/passwd | awk -F ":" '{ print $1 }'`"
+
+		#fix Thunar volmanrc for live
+		for i in `ls -d /home/*`; do
+			if [ /$i/.config/Thunar/volmanrc ]; then
+				sed -i -e 's/TRUE/FALSE/g' /$i/.config/Thunar/volmanrc
+				cp -f /$i/.config/volmanrc /root/.config/Thunar/volmanrc
+			fi
+		done
+	fi
+
+	if [ ! -d /etc/live ]; then
+		mkdir -p /etc/live
+	fi
+
+	echo "export LIVE_USERNAME=\"$LIVEUSER\"" > /etc/live/config.conf
+	echo "export LIVE_USER_FULLNAME=\"Usuario do live cd\"" >> /etc/live/config.conf
+	echo "export LIVE_HOSTNAME=\"$LIVEUSER\"" >> /etc/live/config.conf
+	echo "export LIVE_USER_DEFAULT_GROUPS=\"audio,cdrom,dialout,floppy,video,plugdev,netdev,powerdev,adm,sudo\"" >> /etc/live/config.conf
+	echo "export LIVE_LOCALES=\"pt_BR.UTF-8\"" >> /etc/live/config.conf
+	echo "export LIVE_TIMEZONE=\"America/Sao_Paulo\"" >> /etc/live/config.conf
+
+	if [ "$1" = "backup" ]; then
+		echo "export LIVE_NOCONFIGS=\"user-setup,sudo,locales,locales-all,tzdata,gdm,gdm3,kdm,lightdm,lxdm,nodm,slim,xinit,keyboard-configuration,gnome-panel-data,gnome-power-manager,gnome-screensaver,kde-services,debian-installer-launcher,login\"" >> /etc/live/config.conf
+	fi
+
+	#fix for a bug in the debian live boot scripts that starts a second X server
+	if [ "$1" = "dist" ] && [ -f /etc/X11/default-display-manager ]; then
+		echo "export LIVE_NOCONFIGS=\"xinit\"" >> /etc/live/config.conf
+	fi
+
+	cp /etc/live/config.conf $WORKDIR/dummysys/etc/live/
+
+	sleep 1
+
+	echo "Configurando opções de Live CD para modo $1"
+
+	# make a new initial ramdisk including the live scripts
+	update-initramfs -t -c -k $(uname -r)
+
+	echo "Copiando seu kernel e o initrd para o Live CD"
+	cp /boot/vmlinuz-$(uname -r) $WORKDIR/ISOTMP/live/vmlinuz
+	cp /boot/initrd.img-$(uname -r) $WORKDIR/ISOTMP/live/initrd.img
+
+	# STEP 5 - Make filesystem.squashfs
+
+	if [ -f $WORKDIR/refisefuqui.log ]; then
+		rm -f $WORKDIR/refisefuqui.log
+		touch $WORKDIR/refisefuqui.log
+	fi
+
+	if [ -f $WORKDIR/ISOTMP/live/filesystem.squashfs ]; then
+		rm -f $WORKDIR/ISOTMP/live/filesystem.squashfs
+	fi
+
+	echo "Criando filesystem.squashfs... Vai demorar um tempo, então seja paciente."
+
+	if [ "$SQUASHFSOPTS" = "" ]; then
+		SQUASHFSOPTS="-no-recovery -always-use-fragments -b 1M"
+	fi
+
+	REALFOLDERS=""
+
+	for d in `ls -d $WORKDIR/dummysys/*`; do
+		REALFOLDERS="$REALFOLDERS $d"
+	done
+
+	if [ "$1" = "backup" ]; then
+
+		for d in `ls / | grep -v etc | grep -v run | grep -v tmp | grep -v sys | grep -v var \
 | grep -v dev | grep -v media | grep -v mnt | grep -v lost+found | grep -v proc`; do
-REALFOLDERS="$REALFOLDERS /$d"
-done
+			REALFOLDERS="$REALFOLDERS /$d"
+		done
+	else
 
-else
-
-for d in `ls / | grep -v etc | grep -v run | grep -v tmp | grep -v sys | grep -v var \
+		for d in `ls / | grep -v etc | grep -v run | grep -v tmp | grep -v sys | grep -v var \
 | grep -v dev | grep -v media | grep -v mnt | grep -v lost+found | grep -v proc \
 | grep -v home`; do
-REALFOLDERS="$REALFOLDERS /$d"
-done
+			REALFOLDERS="$REALFOLDERS /$d"
+		done
+	fi
 
-fi
+	mksquashfs $REALFOLDERS $WORKDIR/ISOTMP/live/filesystem.squashfs -no-duplicates $SQUASHFSOPTS -e \
+	root/.thumbnails \
+	root/.cache \
+	root/.bash_history \
+	root/.lesshst \
+	root/.nano_history \
+	boot/grub \
+	$BASEWORKDIR $EXCLUDES 2>>$WORKDIR/refisefuqui.log
 
-mksquashfs $REALFOLDERS $WORKDIR/ISOTMP/live/filesystem.squashfs -no-duplicates $SQUASHFSOPTS -e \
-root/.thumbnails \
-root/.cache \
-root/.bash_history \
-root/.lesshst \
-root/.nano_history \
-boot/grub \
-$BASEWORKDIR $EXCLUDES 2>>$WORKDIR/refisefuqui.log
+	if [ "$1" = "backup" ]; then
+		#return Thunar volmanrc back to normal
+		for i in `ls -d /home/*`; do
+			if [ /$i/.config/Thunar/volmanrc ]; then
+				sed -i -e 's/FALSE/TRUE/g' /$i/.config/Thunar/volmanrc
+				cp -f /$i/.config/volmanrc /root/.config/Thunar/volmanrc
+			fi
+		done
+	fi
 
+	sleep 1
 
-if [ "$1" = "backup" ]; then
-#return Thunar volmanrc back to normal
-for i in `ls -d /home/*`; do
+	#add some stuff the log in case of problems so I can troubleshoot it easier
+	echo "------------------------------------------------------" >>$WORKDIR/refisefuqui.log
+	echo "Mount information" >>$WORKDIR/refisefuqui.log
+	mount >>$WORKDIR/refisefuqui.log
+	echo "------------------------------------------------------" >>$WORKDIR/refisefuqui.log
+	echo "df information" >>$WORKDIR/refisefuqui.log
+	df -h >>$WORKDIR/refisefuqui.log
+	echo "------------------------------------------------------" >>$WORKDIR/refisefuqui.log
+	echo "/etc/refisefuqui.conf info" >>$WORKDIR/refisefuqui.log
+	cat /etc/refisefuqui.conf >>$WORKDIR/refisefuqui.log
+	echo "------------------------------------------------------" >>$WORKDIR/refisefuqui.log
+	echo "/etc/live/config.conf info" >>$WORKDIR/refisefuqui.log
+	cat /etc/live/config.conf >>$WORKDIR/refisefuqui.log
+	echo "------------------------------------------------------" >>$WORKDIR/refisefuqui.log
+	echo "/etc/passwd info" >>$WORKDIR/refisefuqui.log
+	cat $WORKDIR/dummysys/etc/passwd >>$WORKDIR/refisefuqui.log
+	echo "------------------------------------------------------" >>$WORKDIR/refisefuqui.log
+	echo "/etc/group info" >>$WORKDIR/refisefuqui.log
+	cat $WORKDIR/dummysys/etc/group >>$WORKDIR/refisefuqui.log
+	echo "------------------------------------------------------" >>$WORKDIR/refisefuqui.log
+	echo "/etc/skel info" >>$WORKDIR/refisefuqui.log
+	find /etc/skel/ >>$WORKDIR/refisefuqui.log
+	echo "------------------------------------------------------" >>$WORKDIR/remastersys.log
+	echo "/etc/X11/default-display-manager info" >>$WORKDIR/refisefuqui.log
+	cat /etc/X11/default-display-manager >>$WORKDIR/refisefuqui.log
+	echo "------------------------------------------------------" >>$WORKDIR/refisefuqui.log
+	echo "ReFiSeFuQui Version info" >>$WORKDIR/refisefuqui.log
+	cat /etc/refisefuqui/refisefuqui.version >>$WORKDIR/refisefuqui.log
+	echo "-----------------------------------------------------" >>$WORKDIR/refisefuqui.log
+	echo "Command-line options = $@" >>$WORKDIR/refisefuqui.log
+	echo "------------------------------------------------------" >>$WORKDIR/refisefuqui.log
 
-if [ /$i/.config/Thunar/volmanrc ]; then
-  sed -i -e 's/FALSE/TRUE/g' /$i/.config/Thunar/volmanrc
-  cp -f /$i/.config/volmanrc /root/.config/Thunar/volmanrc
-fi
+	sleep 1
 
-done
-
-fi
-
-
-sleep 1
-
-
-
-#add some stuff the log in case of problems so I can troubleshoot it easier
-echo "------------------------------------------------------" >>$WORKDIR/refisefuqui.log
-echo "Mount information" >>$WORKDIR/refisefuqui.log
-mount >>$WORKDIR/refisefuqui.log
-echo "------------------------------------------------------" >>$WORKDIR/refisefuqui.log
-echo "df information" >>$WORKDIR/refisefuqui.log
-df -h >>$WORKDIR/refisefuqui.log
-echo "------------------------------------------------------" >>$WORKDIR/refisefuqui.log
-echo "/etc/refisefuqui.conf info" >>$WORKDIR/refisefuqui.log
-cat /etc/refisefuqui.conf >>$WORKDIR/refisefuqui.log
-echo "------------------------------------------------------" >>$WORKDIR/refisefuqui.log
-echo "/etc/live/config.conf info" >>$WORKDIR/refisefuqui.log
-cat /etc/live/config.conf >>$WORKDIR/refisefuqui.log
-echo "------------------------------------------------------" >>$WORKDIR/refisefuqui.log
-echo "/etc/passwd info" >>$WORKDIR/refisefuqui.log
-cat $WORKDIR/dummysys/etc/passwd >>$WORKDIR/refisefuqui.log
-echo "------------------------------------------------------" >>$WORKDIR/refisefuqui.log
-echo "/etc/group info" >>$WORKDIR/refisefuqui.log
-cat $WORKDIR/dummysys/etc/group >>$WORKDIR/refisefuqui.log
-echo "------------------------------------------------------" >>$WORKDIR/refisefuqui.log
-echo "/etc/skel info" >>$WORKDIR/refisefuqui.log
-find /etc/skel/ >>$WORKDIR/refisefuqui.log
-echo "------------------------------------------------------" >>$WORKDIR/remastersys.log
-echo "/etc/X11/default-display-manager info" >>$WORKDIR/refisefuqui.log
-cat /etc/X11/default-display-manager >>$WORKDIR/refisefuqui.log
-echo "------------------------------------------------------" >>$WORKDIR/refisefuqui.log
-echo "ReFiSeFuQui Version info" >>$WORKDIR/refisefuqui.log
-cat /etc/refisefuqui/refisefuqui.version >>$WORKDIR/refisefuqui.log
-echo "-----------------------------------------------------" >>$WORKDIR/refisefuqui.log
-echo "Command-line options = $@" >>$WORKDIR/refisefuqui.log
-echo "------------------------------------------------------" >>$WORKDIR/refisefuqui.log
-
-
-sleep 1
-
-#checking the size of the compressed filesystem to ensure it meets the iso9660 spec for a single file" 
-SQUASHFSSIZE=`ls -s $WORKDIR/ISOTMP/live/filesystem.squashfs | awk -F " " '{print $1}'`
-if [ "$SQUASHFSSIZE" -gt "3999999" ]; then
-echo " O sistema de arquivos comprimido é maior do que permite a especificação iso9660 para um único arquivo. Você deve tentar reduzir a quantidade de arquivos que você está tentando fazer backup e tentar novamente."
-echo " O sistema de arquivos comprimido é maior do que permite a especificação iso9660 para um único arquivo. Você deve tentar reduzir a quantidade de arquivos que você está tentando fazer backup e tentar novamente.">>$WORKDIR/refisefuqui.log
-
-exit 1
-fi
-
-
+	#checking the size of the compressed filesystem to ensure it meets the iso9660 spec for a single file" 
+	SQUASHFSSIZE=`ls -s $WORKDIR/ISOTMP/live/filesystem.squashfs | awk -F " " '{print $1}'`
+	if [ "$SQUASHFSSIZE" -gt "3999999" ]; then
+		echo $SpecIso9660 # ver variáveis
+		echo $SpecIso9660 >> $WORKDIR/refisefuqui.log
+		exit 1
+	fi
 }
 
-iso (){
+iso(){
+	CREATEISO="`which mkisofs`"
 
-CREATEISO="`which mkisofs`"
-if [ "$CREATEISO" = "" ]; then
-CREATEISO="`which genisoimage`"
-fi
+	if [ "$CREATEISO" = "" ]; then
+		CREATEISO="`which genisoimage`"
+	fi
 
-# check to see if the cd filesystem exists
+	# check to see if the cd filesystem exists
+	if [ ! -f "$WORKDIR/ISOTMP/live/filesystem.squashfs" ]; then
+		echo $MissingFiles # ver variáveis
+		echo $MissingFiles >> $WORKDIR/refisefuqui.log
+		exit 1
+	fi
 
-if [ ! -f "$WORKDIR/ISOTMP/live/filesystem.squashfs" ]; then
-echo "Está faltando o sistema de arquivos do CD.  Ou houve um problema na criação do arquivo de sistema comprimido ou você está tentando rodar o comando sudo refisefuqui dist iso antes de sudo refisefuqui dist cdfs."
-echo "Está faltando o sistema de arquivos do CD.  Ou houve um problema na criação do arquivo de sistema comprimido ou você está tentando rodar o comando sudo refisefuqui dist iso antes de sudo refisefuqui dist cdfs." >>$WORKDIR/refisefuqui.log
+	#checking the size of the compressed filesystem to ensure it meets the iso9660 spec for a single file" 
+	SQUASHFSSIZE=`ls -s $WORKDIR/ISOTMP/live/filesystem.squashfs | awk -F " " '{print $1}'`
+	if [ "$SQUASHFSSIZE" -gt "3999999" ]; then
+		echo $SpecIso9660 # ver variáveis
+		echo $SpecIso9660 >> $WORKDIR/refisefuqui.log
+		exit 1
+	fi
 
-exit 1
-fi
+	#isolinux mode
 
-#checking the size of the compressed filesystem to ensure it meets the iso9660 spec for a single file" 
-SQUASHFSSIZE=`ls -s $WORKDIR/ISOTMP/live/filesystem.squashfs | awk -F " " '{print $1}'`
-if [ "$SQUASHFSSIZE" -gt "3999999" ]; then
-echo " O sistema de arquivos comprimido é maior do que permite a especificação iso9660 para um único arquivo. Você deve tentar reduzir a quantidade de arquivos que você está tentando fazer backup e tentar novamente."
-echo " O sistema de arquivos comprimido é maior do que permite a especificação iso9660 para um único arquivo. Você deve tentar reduzir a quantidade de arquivos que você está tentando fazer backup e tentar novamente.">>$WORKDIR/refisefuqui.log
+	sleep 1
 
-exit 1
-fi
+	# STEP 6 - Make the ISO file
 
+	if [ "$ISOBOOT" = "GRUB" ]; then
+		echo "Criando $CUSTOMISO em $WORKDIR usando grub-mkrescue"
+		echo "Criando $CUSTOMISO em $WORKDIR usando grub-mkrescue" >>$WORKDIR/refisefuqui.log
+		grub-mkrescue -o $WORKDIR/$CUSTOMISO $WORKDIR/ISOTMP/ 2>>$WORKDIR/refisefuqui.log 1>>$WORKDIR/refisefuqui.log
+	else
+		echo "Criando $CUSTOMISO em $WORKDIR usando $CREATEISO"
+		echo "Criando $CUSTOMISO em $WORKDIR usando $CREATEISO" >>$WORKDIR/refisefuqui.log
+		$CREATEISO    \
+		-quiet \
+		-r    \
+		-V "$LIVECDLABEL"    \
+		-cache-inodes    \
+		-J    \
+		-l    \
+		-b isolinux/isolinux.bin    \
+		-c isolinux/boot.cat    \
+		-no-emul-boot    \
+		-boot-load-size 4    \
+		-boot-info-table    \
+		-o $WORKDIR/$CUSTOMISO "$WORKDIR/ISOTMP" 2>>$WORKDIR/refisefuqui.log 1>>$WORKDIR/refisefuqui.log
 
+		# create hybrid iso so it can be dd installed to a usb flash drive
+		echo "Tornando a ISO em uma imagem híbrida para poder ser instalada num pendrive ou gravada numa mídia óptica."
+		isohybrid $WORKDIR/$CUSTOMISO
+	fi
 
-#isolinux mode
+	# create the md5 sum file so the user doesn't have to - this is good so the iso file can later be tested to ensure it hasn't become corrupted
+	echo "Criando $CUSTOMISO.md5 em $WORKDIR"
+	echo "Criando $CUSTOMISO.md5 em $WORKDIR" >>$WORKDIR/refisefuqui.log
 
-sleep 1
+	cd $WORKDIR
+	md5sum $CUSTOMISO > $CUSTOMISO.md5
 
-# Step 6 - Make the ISO file
+	sleep 1
 
-if [ "$ISOBOOT" = "GRUB" ]; then
-
-echo "Criando $CUSTOMISO em $WORKDIR usando grub-mkrescue"
-echo "Criando $CUSTOMISO em $WORKDIR usando grub-mkrescue" >>$WORKDIR/refisefuqui.log
-grub-mkrescue -o $WORKDIR/$CUSTOMISO $WORKDIR/ISOTMP/ 2>>$WORKDIR/refisefuqui.log 1>>$WORKDIR/refisefuqui.log
-
-
-else
-echo "Criando $CUSTOMISO em $WORKDIR usando $CREATEISO"
-echo "Criando $CUSTOMISO em $WORKDIR usando $CREATEISO" >>$WORKDIR/refisefuqui.log
-$CREATEISO    \
- -quiet \
- -r    \
- -V "$LIVECDLABEL"    \
- -cache-inodes    \
- -J    \
- -l    \
- -b isolinux/isolinux.bin    \
- -c isolinux/boot.cat    \
- -no-emul-boot    \
- -boot-load-size 4    \
- -boot-info-table    \
- -o $WORKDIR/$CUSTOMISO "$WORKDIR/ISOTMP" 2>>$WORKDIR/refisefuqui.log 1>>$WORKDIR/refisefuqui.log
-
-# create hybrid iso so it can be dd installed to a usb flash drive
-
-echo "Tornando a ISO em uma imagem híbrida para poder ser instalada num pendrive ou gravada numa mídia óptica."
-
-isohybrid $WORKDIR/$CUSTOMISO
-fi
-# create the md5 sum file so the user doesn't have to - this is good so the iso file can later be tested to ensure it hasn't become corrupted
-
-
-echo "Criando $CUSTOMISO.md5 em $WORKDIR"
-echo "Criando $CUSTOMISO.md5 em $WORKDIR" >>$WORKDIR/refisefuqui.log
-
-cd $WORKDIR
-md5sum $CUSTOMISO > $CUSTOMISO.md5
-
-sleep 1
-
-
-echo "$WORKDIR/$CUSTOMISO está pronta para ser gravada ou testada em uma máquina vistual."
-echo " "
-echo "Verifique o tamanho e se for maior do que 700MB você precisará gravá-la em um DVD."
-echo " "
-ls -hs $WORKDIR/$CUSTOMISO
-ls -hs $WORKDIR/$CUSTOMISO >> $WORKDIR/refisefuqui.log
-echo " " 
-echo "É recomendável usar 'sudo refisefuqui clean' depois que você tiver gravado e testado a imagem $CUSTOMISO."
-echo " "
-
-
+	echo "$WORKDIR/$CUSTOMISO está pronta para ser gravada ou testada em uma máquina vistual."
+	echo " "
+	echo "Verifique o tamanho e se for maior do que 700MB você precisará gravá-la em um DVD."
+	echo " "
+	ls -hs $WORKDIR/$CUSTOMISO
+	ls -hs $WORKDIR/$CUSTOMISO >> $WORKDIR/refisefuqui.log
+	echo " " 
+	echo "É recomendável usar \"sudo refisefuqui clean\" depois que você tiver gravado e testado a imagem $CUSTOMISO."
+	echo " "
 }
 
 # check to see if either iso or cdfs options have been invoked and proceed accordingly
 
 if [ "$2" = "iso" ]; then
-iso $@
+	iso $@
 elif [ "$2" = "cdfs" ]; then
-cdfs $@
+	cdfs $@
 else
-cdfs $@
-iso $@
+	cdfs $@
+	iso $@
 fi
-
-
-
 
 exit 0

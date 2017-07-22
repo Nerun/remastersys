@@ -373,9 +373,9 @@ cdfs(){
 
 		#fix Thunar volmanrc for live
 		for i in `ls -d /home/*`; do
-			if [ /$i/.config/Thunar/volmanrc ]; then
-				sed -i -e 's/TRUE/FALSE/g' /$i/.config/Thunar/volmanrc
-				cp -f /$i/.config/volmanrc /root/.config/Thunar/volmanrc
+			if [ $i/.config/Thunar/volmanrc ]; then
+				sed -i -e 's/TRUE/FALSE/g' $i/.config/Thunar/volmanrc
+				cp -f $i/.config/volmanrc /root/.config/Thunar/volmanrc
 			fi
 		done
 	fi
@@ -463,9 +463,9 @@ cdfs(){
 	if [ "$1" = "backup" ]; then
 		#return Thunar volmanrc back to normal
 		for i in `ls -d /home/*`; do
-			if [ /$i/.config/Thunar/volmanrc ]; then
-				sed -i -e 's/FALSE/TRUE/g' /$i/.config/Thunar/volmanrc
-				cp -f /$i/.config/volmanrc /root/.config/Thunar/volmanrc
+			if [ $i/.config/Thunar/volmanrc ]; then
+				sed -i -e 's/FALSE/TRUE/g' $i/.config/Thunar/volmanrc
+				cp -f $i/.config/volmanrc /root/.config/Thunar/volmanrc
 			fi
 		done
 	fi

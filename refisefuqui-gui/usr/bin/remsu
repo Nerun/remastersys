@@ -18,8 +18,8 @@ testmode=`grep "1000" /etc/passwd | grep -v "Live"`
 
 if [ "$testmode" = "" ]; then
 #	gksudo "$@"
-	pkexec "$@"
+	pkexec env DISPLAY=$DISPLAY XAUTHORITY=$XAUTHORITY "$@"
 else
 #	gksu "$@"
-	pkexec "$@"
+	pkexec env DISPLAY=$DISPLAY XAUTHORITY=$XAUTHORITY "$@"
 fi

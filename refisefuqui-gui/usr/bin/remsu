@@ -17,7 +17,9 @@
 testmode=`grep "1000" /etc/passwd | grep -v "Live"`
 
 if [ "$testmode" = "" ]; then
-	gksudo "$@"
+#	gksudo "$@"
+	pkexec "$@"
 else
-	gksu "$@"
+#	gksu "$@"
+	pkexec "$@"
 fi

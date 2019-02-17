@@ -135,7 +135,7 @@ Installed-Size: $sizegui
 Maintainer: Nerun <nerunblogs@gmail.com>
 Architecture: all
 Version: $version
-Depends: gparted, xterm, yad, read-edid, gksu, refisefuqui (>= $version)
+Depends: gparted, xterm, yad, read-edid, refisefuqui (>= $version)
 Description: Remasteriza e cria backups do sistema Debian
  Esta é a interface visual do Refisefuqui.
  Para mais informações visite http://linuxernoob.blogspot.com.br" > control

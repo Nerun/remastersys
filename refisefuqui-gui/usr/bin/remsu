@@ -16,12 +16,14 @@
 
 testmode=`grep "1000" /etc/passwd | grep -v "Live"`
 
+STR=echo "$@" | sed 's/ gui/\\ gui/g'
+
 if [ "$testmode" = "" ]; then
 #	gksudo "$@"
 #	pkexec env DISPLAY=$DISPLAY XAUTHORITY=$XAUTHORITY "$@"
-    sudo "$@"
+    sudo "$STR"
 else
 #	gksu "$@"
 #	pkexec env DISPLAY=$DISPLAY XAUTHORITY=$XAUTHORITY "$@"
-    sudo su -c "$@"
+    sudo su -c "$STR"
 fi

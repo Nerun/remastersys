@@ -94,7 +94,7 @@ Installed-Size: $size
 Maintainer: Nerun <nerunblogs@gmail.com>
 Architecture: all
 Version: $version
-Depends: coreutils, dialog, memtest86+, mkisofs | genisoimage, findutils, grub-pc, syslinux | xorriso, os-prober, bash, passwd, sed, squashfs-tools, live-boot, live-config, live-config-sysvinit | live-config-systemd, live-boot-initramfs-tools, rsync, mount, laptop-detect, util-linux, hwdata
+Depends: coreutils, dialog, memtest86+, mkisofs | genisoimage, findutils, grub-pc, syslinux | xorriso, os-prober, bash, passwd, awk, sed, squashfs-tools, live-boot, live-config, live-config-sysvinit | live-config-systemd, live-boot-initramfs-tools, rsync, mount, laptop-detect, util-linux, hwdata
 Conffiles:
  /etc/refisefuqui/refisefuqui.version $a
  /etc/refisefuqui/preseed/custom.seed $b

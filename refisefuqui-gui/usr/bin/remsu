@@ -14,12 +14,12 @@
 #                                                    #
 ######################################################
 
-testmode=`grep "1000" /etc/passwd | grep -v "Live"`
+#testmode=`grep "1000" /etc/passwd | grep -v "Live"`
 
-if [ "$testmode" = "" ]; then
+#if [ "$testmode" = "" ]; then
 #	gksudo "$@"
-    sudo "$@"
-else
+#else
 #	gksu "$@"
-    sudo "$@"
-fi
+#fi
+
+sudo "$@"

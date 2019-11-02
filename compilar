@@ -153,6 +153,9 @@ nomegui="refisefuqui-gui_"$version"_all"
 mv refisefuqui $nome
 mv refisefuqui-gui $nomegui
 
+sudo chmod -R 755 $nome
+sudo chmod -R 755 $nomegui
+
 # Empacotando
 dpkg -b $nome
 dpkg -b $nomegui

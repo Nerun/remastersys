@@ -146,7 +146,7 @@ Description: Remasteriza e cria backups do sistema Debian
 cd ..
 cd ..
 
-# Renomar pasta refisefuqui para empacotamento
+# Renomear pasta refisefuqui para empacotamento
 nome="refisefuqui_"$version"_all"
 nomegui="refisefuqui-gui_"$version"_all"
 

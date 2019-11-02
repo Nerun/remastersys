@@ -94,7 +94,7 @@ Installed-Size: $size
 Maintainer: Nerun <nerunblogs@gmail.com>
 Architecture: all
 Version: $version
-Depends: coreutils, dialog, memtest86+, mkisofs | genisoimage, findutils, grub-pc, syslinux | xorriso, os-prober, bash, passwd, awk, sed, squashfs-tools, live-boot, live-config, live-config-sysvinit | live-config-systemd, live-boot-initramfs-tools, rsync, mount, laptop-detect, util-linux, hwdata
+Depends: awk, bash, coreutils, dialog, findutils, grub-pc, hwdata, laptop-detect, live-boot-initramfs-tools, live-boot, live-config-sysvinit | live-config-systemd, live-config, memtest86+, mkisofs | genisoimage, mount, os-prober, passwd, rsync, sed, squashfs-tools, sudo, syslinux | xorriso, util-linux
 Conffiles:
  /etc/refisefuqui/refisefuqui.version $a
  /etc/refisefuqui/preseed/custom.seed $b
@@ -135,7 +135,7 @@ Installed-Size: $sizegui
 Maintainer: Nerun <nerunblogs@gmail.com>
 Architecture: all
 Version: $version
-Depends: gparted, xterm, yad, read-edid, refisefuqui (>= $version)
+Depends: gparted, read-edid, refisefuqui (>= $version), xterm, yad
 Description: Remasteriza e cria backups do sistema Debian
  Esta é a interface visual do Refisefuqui.
  Para mais informações visite http://linuxernoob.blogspot.com.br" > control

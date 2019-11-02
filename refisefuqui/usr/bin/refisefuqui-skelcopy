@@ -1,18 +1,18 @@
 #!/bin/bash
 
-######################################################
+#####################################################
 #													#
-#  ReFiSeFuQui									   #
-#	Copyright 2013 Under the GNU GPL2 License	   #
-#	Fork of Remastersys							 #
-#	by Daniel "Nerun" Rodrigues					 #
+#  ReFiSeFuQui									    #
+#	Copyright 2013 Under the GNU GPL2 License	    #
+#	Fork of Remastersys							    #
+#	by Daniel "Nerun" Rodrigues					    #
 #													#
-#  Remastersys									   #
+#  Remastersys									    #
 #	Copyright 2007-2012 Under the GNU GPL2 License  #
-#	Originally Created February 12th, 2007		  #
-#	by Tony "Fragadelic" Brijeski				   #
+#	Originally Created February 12th, 2007		    #
+#	by Tony "Fragadelic" Brijeski				    #
 #													#
-######################################################
+#####################################################
 
 testroot="`whoami`"
 

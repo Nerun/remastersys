@@ -84,7 +84,7 @@ if [ "$GUI" != "" ]; then
 fi
 
 if [ "$DIALOG" = "" ]; then
-	echo "Não foi possível encontrar o dialog ou o zenity.  Saindo."
+	echo "Não foi possível encontrar o dialog ou o yad. Saindo."
 	exit 1
 fi
 

@@ -18,6 +18,9 @@
 
 # FUNÇÕES E VARIÁVEIS ## BEGIN ##############################
 
+# carrega arquivo de versão
+. /etc/refisefuqui/refisefuqui.version
+
 usoinfo(){
 	echo " "
 	echo "Uso do Instalador do ReFiSeFuQui $REFISEFUQUIVERSION:"

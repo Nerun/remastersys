@@ -3,7 +3,7 @@
 ######################################################
 #                                                    #
 #  ReFiSeFuQui                                       #
-#    Copyright 2013 Under the GNU GPL2 License       #
+#    Copyright 2013-2019 Under the GNU GPL2 License  #
 #    Fork of Remastersys                             #
 #    by Daniel "Nerun" Rodrigues                     #
 #                                                    #
@@ -15,6 +15,9 @@
 ######################################################
 
 # FUNÇÕES E VARIÁVEIS ## BEGIN ##############################
+
+# carrega arquivo de versão
+. /etc/refisefuqui/refisefuqui.version
 
 usoinfo(){
 	echo " "
@@ -57,9 +60,6 @@ MissingFiles="Está faltando o sistema de arquivos do CD. Ou houve um problema n
 # FUNÇÕES E VARIÁVEIS ## END ################################
 
 # checando pra ter certeza de que o script está rodando com privilégios de root
-
-# carrega arquivo de versão
-. /etc/refisefuqui/refisefuqui.version
 
 testroot="`whoami`"
 

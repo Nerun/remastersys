@@ -3,7 +3,7 @@
 ######################################################
 #                                                    #
 #  ReFiSeFuQui                                       #
-#    Copyright 2013 Under the GNU GPL2 License       #
+#    Copyright 2013-2019 Under the GNU GPL2 License  #
 #    Fork of Remastersys                             #
 #    by Daniel "Nerun" Rodrigues                     #
 #                                                    #
@@ -14,13 +14,28 @@
 #                                                    #
 ######################################################
 
-# >>>>>>>>>>>>>>>>>>>> revisar da linha 475 em diante
+# >>>>>>>>>>>>>>>>>>>> revisar da linha 490 em diante
+
+# FUNÇÕES E VARIÁVEIS ## BEGIN ##############################
+
+usoinfo(){
+	echo " "
+	echo "Uso do Instalador do ReFiSeFuQui $REFISEFUQUIVERSION:"
+	echo " "
+	echo "   sudo refisefuqui-installer"
+	echo " "
+	echo "   Bastará seguir as instruções do dialog."
+	echo " "
+}
+
+# FUNÇÕES E VARIÁVEIS ## END ################################
 
 # checando pra ter certeza de que o script está rodando com privilégios de root
 
 testroot="`whoami`"
 
 if [ "$testroot" != "root" ]; then
+    usoinfo # vide função
 	echo " Deve ser usado como superusuário. Saindo."
 	exit 1
 fi

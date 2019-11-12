@@ -7,7 +7,7 @@ Este é um instalador em modo visual ou linha de comando que usa apenas 3 parti�
 
 A partição swap será formatada automaticamente e as partições root e /home serão formatadas em ext3 ou ext4 conforme selecionado.
 
-Um único usuários erá criado no novo sistema a não ser que se trate da instalção de um backup, que pode conter mais usuários.
+Um único usuário erá criado no novo sistema a não ser que se trate da instalação de um backup, que pode conter mais usuários.
 
 O cfdisk é usado para particionamento a não ser que a interface visual esteja em uso, neste caso o gparted será a opção padrão. É altamente recomendável criar partições antes de usar o Instalador.
 

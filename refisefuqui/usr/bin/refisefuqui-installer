@@ -16,6 +16,16 @@
 
 # >>>>>>>>>>>>>>>>>>>> revisar da linha 706 em diante
 
+# checando pra ter certeza de que o script está rodando com privilégios de root
+
+testroot="`whoami`"
+
+if [ "$testroot" != "root" ]; then
+    usoinfo # vide função
+	echo " Deve ser usado como superusuário. Saindo."
+	exit 1
+fi
+
 # FUNÇÕES E VARIÁVEIS ## BEGIN ##############################
 
 # carrega arquivo de versão
@@ -32,16 +42,6 @@ usoinfo(){
 }
 
 # FUNÇÕES E VARIÁVEIS ## END ################################
-
-# checando pra ter certeza de que o script está rodando com privilégios de root
-
-testroot="`whoami`"
-
-if [ "$testroot" != "root" ]; then
-    usoinfo # vide função
-	echo " Deve ser usado como superusuário. Saindo."
-	exit 1
-fi
 
 # set options depending on mode - text or gui
 

@@ -472,7 +472,7 @@ if [ "$GUI" = "" ]; then
 	fi
 
 	if [ "$testmode" = "" ]; then
-		$DIALOG $TITLE"$TITLETEXT" $YESNO $TEXT"Confirme se esta informação está correta.\n\nO novo usuário $TARGETUSER será criado na partição $TARGETPART; o sistema de arquivos é $FSTYPE; o swap será instalado na partição $SWAP; e, o grub será instalado em $GRUBLOCTEXT.\n\nDeseja continuar?" $HEIGHT $WIDTH
+		$DIALOG $TITLE"$TITLETEXT" $YESNO $TEXT"Confirme se esta informação está correta.\n\nO novo usuário $TARGETUSER será criado na partição $TARGETPART; o sistema de arquivos é $FSTYPE; o swap será instalado na partição $SWAP; e, \no grub será instalado em $GRUBLOCTEXT.\n\nDeseja continuar?" $HEIGHT $WIDTH
 
 		if [ $? != 0 ]; then
 			exit 0
@@ -801,7 +801,7 @@ HOMETEXT="$HOMEPART não será formatado, mas será usado como /home"
 fi
 
 if [ "$testmode" = "" ]; then
-$DIALOG $TITLE"$TITLETEXT" $YESNO $TEXT"Confirme se esta informação está correta.\n\nO novo usuário $TARGETUSER será criado na partição $TARGETPART; o sistema de arquivos é $FSTYPE; o swap será instalado na partição $SWAP; e, o grub será instalado em $GRUBLOCTEXT.\n\nDeseja continuar?"
+$DIALOG $TITLE"$TITLETEXT" $YESNO $TEXT"Confirme se esta informação está correta.\n\nO novo usuário $TARGETUSER será criado na partição $TARGETPART; o sistema de arquivos é $FSTYPE; o swap será instalado na partição $SWAP; e, \no grub será instalado em $GRUBLOCTEXT.\n\nDeseja continuar?"
 if [ $? != 0 ]; then
   $DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Saindo do Instalador agora."
   exit 1

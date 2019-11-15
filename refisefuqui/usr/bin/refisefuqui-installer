@@ -190,8 +190,7 @@ if [ "$GUI" = "" ]; then
 	fi
 
 	#choose the partition to install to
-	CKLIVE=`mount | grep "live" | grep -v "loop"  | awk '{print $1}' | awk -F "/" '{print $3}'`
-	PARTITIONS=`cat /proc/partitions | grep -v "$CKLIVE" | grep -v "loop" | grep -v "sr0" | awk '{print $4}' | grep "[0-9]"`
+	PARTITIONS=`cat /proc/partitions | grep -v "loop" | grep -v "sr0" | awk '{print $4}' | grep "[0-9]"`
 	PARTINSTTEMP=`echo $PARTITIONS | sed -r "s/$SWAP//"`
 	PARTINST=`echo $PARTINSTTEMP`
 
@@ -380,9 +379,7 @@ if [ "$GUI" = "" ]; then
 
 		GrubMenu=()
 
-		CKLIVE=`mount | grep "live" | grep -v "loop" | awk '{print $1}' | awk -F "/" '{print $3}' | sed -e 's/[0-9]//g'`
-
-		Drives=$(cat /proc/partitions | grep -v "$CKLIVE" | grep -v loop | grep -v "Extended" | grep -v "extended" | grep -v "swap" | grep -v "Swap" | grep -v "Hidden" | grep -v major | grep -v "^$" | awk '{ print $4}')
+		Drives=$(cat /proc/partitions | grep -v loop | grep -v "Extended" | grep -v "extended" | grep -v "swap" | grep -v "Swap" | grep -v "Hidden" | grep -v major | grep -v "^$" | awk '{ print $4}')
 
 		for i in $Drives; do
 			PartDrive="$i"
@@ -576,8 +573,7 @@ else
     fi
 
     #choose the partition to install to
-    CKLIVE=`mount | grep "live" | grep -v "loop" | awk '{print $1}' | awk -F "/" '{print $3}'`
-    PARTITIONS=`cat /proc/partitions | grep -v "$CKLIVE" | grep -v "loop" | grep -v "sr0" | awk '{print $4}' | grep "[0-9]"`
+    PARTITIONS=`cat /proc/partitions | grep -v "loop" | grep -v "sr0" | awk '{print $4}' | grep "[0-9]"`
     PARTINSTTEMP=`echo $PARTITIONS | sed -r "s/$SWAP//"`
     PARTINST=`echo $PARTINSTTEMP`
     for i in $PARTINST; do
@@ -712,8 +708,7 @@ fi
 GrubSelectGUI () {
 
 GrubMenu=()
-CKLIVE=`mount | grep "live" | grep -v "loop" | awk '{print $1}' | awk -F "/" '{print $3}' | sed -e 's/[0-9]//g'`
-Drives=$(cat /proc/partitions | grep -v "$CKLIVE" | grep -v loop | grep -v "Extended" | grep -v "extended" | grep -v "swap" | grep -v "Swap" | grep -v "Hidden" | grep -v major | grep -v "^$" | awk '{ print $4}')
+Drives=$(cat /proc/partitions | grep -v loop | grep -v "Extended" | grep -v "extended" | grep -v "swap" | grep -v "Swap" | grep -v "Hidden" | grep -v major | grep -v "^$" | awk '{ print $4}')
 
 for i in $Drives; do
 PartDrive="$i"

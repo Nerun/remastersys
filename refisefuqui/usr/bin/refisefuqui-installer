@@ -139,8 +139,7 @@ if [ "$GUI" = "" ]; then
 	$DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Nós precisamos preparar o swap e instalar a partição agora.\n\n$PARTITIONPROG permitirá a você criar as novas pertições.\n\nVocê deve criar ou possuir ao menos 1 partição de sistema e 1 partição de swap.\n\nCaso você já possua as partições configuradas, apenas saia do $PARTITIONPROG e a instalação prosseguirá.\n\nClique OK para continuar." $HEIGHT $WIDTH
 
 	#choose the drive to partition
-	CKLIVE=`mount | grep "live" | grep -v "loop" | awk '{print $1}' | awk -F "/" '{print $3}' | sed -e 's/[0-9]//g'`
-	DRIVES=`cat /proc/partitions | grep -v "$CKLIVE" | grep -v loop | grep -v major | grep -v "^$" | awk '{print $4}' | grep -v "[0-9]"`
+	DRIVES=`cat /proc/partitions | grep -v loop | grep -v major | grep -v "^$" | awk '{print $4}' | grep -v "[0-9]"`
 
 	for i in $DRIVES; do
 		partdrive="$i"
@@ -533,8 +532,7 @@ killall -KILL udisks-daemon
 $DIALOG $TITLE"$TITLETEXT" $MSGBOX $TEXT"Nós precisamos preparar o swap e instalar a partição agora.\n\n$PARTITIONPROG permitirá a você criar as novas pertições.\n\nVocê deve criar ou possuir ao menos 1 partição de sistema e 1 partição de swap.\n\nCaso você já possua as partições configuradas, apenas saia do $PARTITIONPROG e a instalação prosseguirá.\n\nClique OK para continuar."
 
 #choose the drive to partition
-CKLIVE=`mount | grep "live" | grep -v "loop" | awk '{print $1}' | awk -F "/" '{print $3}' | sed -e 's/[0-9]//g'`
-DRIVES=`cat /proc/partitions | grep -v "$CKLIVE" | grep -v loop | grep -v major | grep -v "^$" | awk '{print $4}' | grep -v "[0-9]"`
+DRIVES=`cat /proc/partitions | grep -v loop | grep -v major | grep -v "^$" | awk '{print $4}' | grep -v "[0-9]"`
 
 for i in $DRIVES; do
   partdrive="$i"

@@ -4,8 +4,8 @@ Section: system
 Installed-Size: 148
 Maintainer: Nerun <nerunblogs@gmail.com>
 Architecture: all
-Version: 1.21
-Depends: gparted, read-edid, refisefuqui (>= 1.21), xterm, yad
+Version: 1.22
+Depends: gparted, read-edid, refisefuqui (>= 1.22), xterm, yad
 Description: Remasteriza e cria backups do sistema Debian
  Esta é a interface visual do Refisefuqui.
  Para mais informações visite http://linuxernoob.blogspot.com.br

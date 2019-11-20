@@ -1,7 +1,7 @@
 c65dd49abae1f5ff702ca5bd271eb640  etc/refisefuqui.conf
 44a12462ccadfc52a1fc44524bce52d8  etc/refisefuqui/refisefuqui-installer.conf
 1e2f702302c98833c275133c8ace5ab2  etc/refisefuqui/grub.png
-e661894ee1eb1ce6fcc7c385120c7662  etc/refisefuqui/refisefuqui.version
+f801c6449e976381ab448198a4cb6a70  etc/refisefuqui/refisefuqui.version
 7e3aa6d1958baf72d369392fdb175486  etc/refisefuqui/preseed/custom.seed
 9050ee938760305a2548eb88e5981442  etc/refisefuqui/grub/grub.cfg
 8d469fa4d3549469fbd91c198f0183b6  etc/refisefuqui/isolinux/isolinux.cfg
@@ -13,9 +13,9 @@ a90d8e3f458bad634de29af77bae19f6  etc/refisefuqui/isolinux/stdmenu.cfg
 1e2f702302c98833c275133c8ace5ab2  etc/refisefuqui/isolinux/splash.png
 d8076c2646464d9a6e6210a0d8e1508e  etc/refisefuqui/isolinux/isolinux.bin
 c9ee68c9523e8d7b2969f47da70947b6  usr/share/doc/refisefuqui/README.refisefuqui-installer
-51f65dd8d2808511229fa5af09bf1f06  usr/share/doc/refisefuqui/changelog.Debian.gz
+c8ae281d048cfb6b7276daaa3ee2217a  usr/share/doc/refisefuqui/changelog.Debian.gz
 d2b0a061e4c5c608ee449452f901d57a  usr/share/doc/refisefuqui/copyright
-51f65dd8d2808511229fa5af09bf1f06  usr/share/doc/refisefuqui/changelog.gz
+c8ae281d048cfb6b7276daaa3ee2217a  usr/share/doc/refisefuqui/changelog.gz
 fc514fe09b7fcb60d4f24b718792b42d  usr/share/doc/refisefuqui/README
 0794be9197ce4b9ea8f9c4332c7e7ff4  usr/share/man/man1/refisefuqui.1.gz
 3e85acc954503034fd0b39cb820a971a  usr/bin/refisefuqui-skelcopy
